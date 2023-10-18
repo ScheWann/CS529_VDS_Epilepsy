@@ -1,0 +1,89 @@
+{
+    "maxSize": 18, 
+    "maxLesions": 3,
+    "maxElectrodes": 114,
+    "maxPeaks": 7534,
+    "maxEvents": 2484,
+    "maxRois": 8,
+    "ep187": {
+        "lesions": 3,
+        "lesionArray": [1, 2, 3],
+        "bbox": {
+            "x": -98.18610191345215,
+            "y": -108.80819797515869,
+            "z": -118.60360145568848
+        },
+        "time": 600000, 
+        "rois": [100, 101, 201, 300, 301, 400, 401, 501],
+        "roiColor": [
+            ["#BFD2DE", "#03436b"],
+            ["#FFE5CF", "#753804"],
+            ["#D5ECD5", "#078707"],
+            ["#F7D4D4", "#a30707"],
+            ["#EAE1F2", "#6f0ac9"],
+            ["#E8DDDB", "#941b04"],
+            ["#F9E4F3", "#a11077"],
+            ["#bfa3a3", "#f70505"]
+        ],
+        "maxElectrodesInAnEvent": 55,
+        "sample1":{
+            "roiCount": [0, 1822, 2331, 29, 211, 13, 8, 1],
+            "lesions": 3,
+            "peaks": 4415,
+            "totalElectrodes": 114,
+            "totalEvents": 2484,
+            "totalrois": 8
+
+        },
+        "sample2":{
+            "roiCount": [0, 4263, 1194, 48, 124, 23, 11, 39],
+            "lesions": 3,
+            "peaks": 5702,
+            "totalElectrodes": 114,
+            "totalEvents": 1930,
+            "totalrois": 8
+        },
+        "sample3":{
+            "roiCount": [0, 5672, 1614, 15, 168, 7, 4, 54],
+            "lesions": 3,
+            "peaks": 7534,
+            "totalElectrodes": 114,
+            "totalEvents": 2128,
+            "totalrois": 8
+        }
+
+    },
+    "ep129":{
+        "lesions": 2,
+        "lesionArray": [1, 2],
+        "bbox": {
+            "x": -118.61639976501465,
+            "y": -105.94320249557495,
+            "z": -130.41164779663086
+        },
+        "time": 121000,
+        "rois": [0,1,2],
+        "roiColor": [
+            ["#BFD2DE", "#03436b"],
+            ["#FFE5CF", "#753804"],
+            ["#D5ECD5", "#078707"]
+        ],
+        "maxElectrodesInAnEvent": 79,
+        "sample1":{
+            "roiCount": [634, 444, 4025],
+            "lesions": 2,
+            "peaks": 5103,
+            "totalElectrodes": 79,
+            "totalEvents": 1097,
+            "totalrois": 3
+        },
+        "sample2":{
+            "roiCount": [47, 219, 773],
+            "lesions": 2,
+            "peaks": 1039,
+            "totalElectrodes": 79,
+            "totalEvents": 267,
+            "totalrois": 3
+        }
+    }
+}
