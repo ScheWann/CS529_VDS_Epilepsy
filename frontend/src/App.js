@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 
 function App() {
   const [data, setData] = useState([{}]);
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <div>
+      <BrainViewer />
       {typeof data.members === "undefined" ? (
         <p>Loading</p>
       ) : (
