@@ -1,3 +1,7 @@
+body {
+  margin: 0;
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +39,21 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* modify antd css style */
+.ant-layout-header {
+  padding: 0 20px
+}
+
+.projectTitle {
+  text-align: center;
+  color: white;
+  margin: 20px;
+}
+
+.BrainAndEEG {
+  display: flex;
+  background-color: white;
+  padding: 10px;
 }
