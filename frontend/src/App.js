@@ -1,4 +1,5 @@
 import "./App.css";
+import dataRegistry from "./data/dataRegistry.json"
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import React, { useState, useEffect } from "react";
@@ -8,12 +9,15 @@ const { Content, Footer, Sider } = Layout;
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState("EP129");
+  const [selectedPatient, setSelectedPatient] = useState("ep129");
   const [menuId, setMenuId] = useState(["1", "3"]);
-  const [BreadcrumbName, SetBreadcrumbName] = useState(["EP129", "Session 1"]);
+  const [BreadcrumbName, SetBreadcrumbName] = useState(["ep129", "Session 1"]);
+  const [lesionArray, SetlesionArray] = useState([1, 2])
 
+  // Control the display of breadcrumb
   const handleIDsSelect = (patient, id, name) => {
-    if (patient === "EP129") {
+    if (patient === "ep129") {
+      SetlesionArray(dataRegistry[patient].lesionArray)
       setSelectedPatient(patient);
       setMenuId(["1", id]);
       SetBreadcrumbName([patient, name]);
@@ -24,40 +28,43 @@ const App = () => {
     }
   };
 
+  // Control sessions by different patient
   const renderSessions = () => {
-    if (selectedPatient === "EP129") {
+    if (selectedPatient === "ep129") {
       return [
         {
           key: "3",
           label: "Session1",
-          onClick: () => handleIDsSelect("EP129", "3", "Session 1"),
+          onClick: () => handleIDsSelect("ep129", "3", "Session 1"),
         },
         {
           key: "4",
           label: "Session2",
-          onClick: () => handleIDsSelect("EP129", "4", "Session 2"),
+          onClick: () => handleIDsSelect("ep129", "4", "Session 2"),
         },
       ];
-    } else if (selectedPatient === "EP187") {
+    } else if (selectedPatient === "ep187") {
       return [
         {
           key: "5",
           label: "Session1",
-          onClick: () => handleIDsSelect("EP187", "5", "Session 1"),
+          onClick: () => handleIDsSelect("ep187", "5", "Session 1"),
         },
         {
           key: "6",
           label: "Session2",
-          onClick: () => handleIDsSelect("EP187", "6", "Session 2"),
+          onClick: () => handleIDsSelect("ep187", "6", "Session 2"),
         },
         {
           key: "7",
           label: "Session3",
-          onClick: () => handleIDsSelect("EP187", "7", "Session 3"),
+          onClick: () => handleIDsSelect("ep187", "7", "Session 3"),
         },
       ];
     }
   };
+
+  // Control patient array
   const items = [
     {
       key: "sub1",
@@ -66,13 +73,13 @@ const App = () => {
       children: [
         {
           key: "1",
-          label: "EP129",
-          onClick: () => handleIDsSelect("EP129", "3", "Session 1"),
+          label: "ep129",
+          onClick: () => handleIDsSelect("ep129", "3", "Session 1"),
         },
         {
           key: "2",
-          label: "EP187",
-          onClick: () => handleIDsSelect("EP187", "5", "Session 1"),
+          label: "ep187",
+          onClick: () => handleIDsSelect("ep187", "5", "Session 1"),
         },
       ],
     },
@@ -133,7 +140,10 @@ const App = () => {
               background: "white",
             }}
           >
-            <BrainViewer />
+            <BrainViewer 
+              patientID={selectedPatient}
+              lesionArray={lesionArray}
+            />
           </div>
         </Content>
         <Footer
