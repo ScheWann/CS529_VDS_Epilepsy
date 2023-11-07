@@ -11,41 +11,55 @@ This project is built by [flask](https://flask.palletsprojects.com/en/3.0.x/) + 
 ## Backend
 
 1. Go to backend folder
+
+    ```shell
+    cd backend
+    ```
+
 2. Create a virtual environment
 
-```
-python3 -m venv venv
-```
+    ```shell
+    python3 -m venv venv
+    ```
 
 3. Activate the virtual environment
 
-```
-source venv/bin/activate
-```
+    ```shell
+    # if you are Mac, do:
+    source venv/bin/activate
+
+    # if you are Windows, do:
+    .\venv\Scripts\activate
+    ```
 
 4. Install flask
 
-```
-pip3 install Flask
-```
+    ```shell
+    pip3 install Flask
+    ```
 
 5. Run flask
 
-```
-python3 server.py
-```
+    ```shell
+    flask run
+    ```
 
 ## Frontend
 
 1. Go to frontend folder
+
+    ```shell
+    cd frontend
+    ```
+
 2. Install dependency
 
-```
-npm install
-```
+    ```shell
+    npm install
+    ```
 
 3. Run React.js
 
-```
-npm start
-```
+    ```shell
+    npm start
+    ```
