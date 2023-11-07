@@ -22,6 +22,7 @@ const App = () => {
       setMenuId(["1", id]);
       SetBreadcrumbName([patient, name]);
     } else {
+      SetlesionArray(dataRegistry[patient].lesionArray)
       setSelectedPatient(patient);
       setMenuId(["2", id]);
       SetBreadcrumbName([patient, name]);
@@ -116,7 +117,6 @@ const App = () => {
           theme="dark"
           defaultSelectedKeys={menuId}
           selectedKeys={menuId}
-          openKeys={["sub1", "sub2"]}
           mode="inline"
           items={items}
         />

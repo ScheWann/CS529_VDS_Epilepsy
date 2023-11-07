@@ -53,7 +53,6 @@ export const BrainViewer = (props) => {
           eventid={eventid}
         /> */}
         <OrbitControls enablePan={true} />
-        <Stats />
       </Canvas>
     </div>
   );
