@@ -41,7 +41,7 @@ This project is built by [flask](https://flask.palletsprojects.com/en/3.0.x/) + 
 5. Run flask
 
     ```shell
-    flask run
+    python3 app.py
     ```
 
 ## Frontend

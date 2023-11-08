@@ -22,7 +22,7 @@ def fetch_eeg_data(
 
     eeg_data_df_filtered = eeg_data_df[
         (eeg_data_df["electrode"].isin(electrodes))
-        & (eeg_data_df["ms"] >= 90)
+        & (eeg_data_df["ms"] >= start_ms)
         & (eeg_data_df["ms"] <= start_ms + num_records)
     ]
     output = {}
