@@ -1,5 +1,5 @@
 import "./App.css";
-import dataRegistry from "./data/dataRegistry.json"
+import dataRegistry from "./data/dataRegistry.json";
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import React, { useState, useEffect } from "react";
@@ -12,17 +12,32 @@ const App = () => {
   const [selectedPatient, setSelectedPatient] = useState("ep129");
   const [menuId, setMenuId] = useState(["1", "3"]);
   const [BreadcrumbName, SetBreadcrumbName] = useState(["ep129", "Session 1"]);
-  const [lesionArray, SetlesionArray] = useState([1, 2])
+  const [lesionArray, SetlesionArray] = useState([1, 2]);
+  const defaultElList = [
+    26, 28, 36, 20, 32, 21, 22, 40, 41, 54, 19, 31, 39, 47, 48, 52, 56, 27, 29,
+    34, 35, 43, 49, 50, 53, 18, 33, 44, 30, 38, 51, 37, 108, 109, 107, 102, 112,
+    55, 45, 23, 103, 73, 74, 76, 75, 84, 89,
+  ];
+  const strElectrodes = defaultElList.join(",");
+
+  useEffect(() => {
+    fetch(
+      `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`
+    ).then(res => res.json())
+    .then((data) => {
+      console.log(data, 'EEEEEGGGGGGG')
+    });
+  }, []);
 
   // Control the display of breadcrumb
   const handleIDsSelect = (patient, id, name) => {
     if (patient === "ep129") {
-      SetlesionArray(dataRegistry[patient].lesionArray)
+      SetlesionArray(dataRegistry[patient].lesionArray);
       setSelectedPatient(patient);
       setMenuId(["1", id]);
       SetBreadcrumbName([patient, name]);
     } else {
-      SetlesionArray(dataRegistry[patient].lesionArray)
+      SetlesionArray(dataRegistry[patient].lesionArray);
       setSelectedPatient(patient);
       setMenuId(["2", id]);
       SetBreadcrumbName([patient, name]);
@@ -140,7 +155,7 @@ const App = () => {
               background: "white",
             }}
           >
-            <BrainViewer 
+            <BrainViewer
               patientID={selectedPatient}
               lesionArray={lesionArray}
             />
