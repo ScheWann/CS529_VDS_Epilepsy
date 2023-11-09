@@ -55,7 +55,7 @@ const App = () => {
     range: 1000,
   });
 
-  console.log(electrodeData, "make a test !!");
+  console.log(fullNetwork, "make a test !!");
   useEffect(() => {
     // fetch(
     //   `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`
@@ -161,12 +161,24 @@ const App = () => {
         {
           key: "1",
           label: "ep129",
-          onClick: () => handleIDsSelect("ep129", "3", "Session 1"),
+          onClick: () => {
+            handleIDsSelect("ep129", "3", "Session 1");
+            setPatientInfo({
+              patientID: "ep129",
+              sampleID: "sample1",
+            });
+          },
         },
         {
           key: "2",
           label: "ep187",
-          onClick: () => handleIDsSelect("ep187", "5", "Session 1"),
+          onClick: () => {
+            handleIDsSelect("ep187", "5", "Session 1");
+            setPatientInfo({
+              patientID: "ep187",
+              sampleID: "sample1",
+            });
+          },
         },
       ],
     },

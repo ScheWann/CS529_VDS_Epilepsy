@@ -46,7 +46,7 @@ export const BrainViewer = (props) => {
           selectedEventRange={props.selectedEventRange}
           timeRange={props.timeRange}
           events={props.events}
-          buttonValue={'Pause'}
+          buttonValue={'Play'}
           allnetwork={props.allnetworks}
           allnetworkWithEvent={props.allnetworksWithEvent}
           patientID={props.patientInformation.patientID}

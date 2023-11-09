@@ -37,9 +37,6 @@ export const ElectrodeLoader = ({
   useLayoutEffect(() => {
     isMountedRef.current = true;
     meshRef.current.setColorAt(0, new Color());
-    // console.log(electrodeData)
-
-    // console.log(selectedEventRange)
     return () => {
       isMountedRef.current = false;
     };
@@ -47,9 +44,11 @@ export const ElectrodeLoader = ({
 
   // instancing
   useLayoutEffect(() => {
+    console.log(events, 'check events //////////')
     if (!isMountedRef.current) return;
     if (buttonValue === 'Pause') return;
     let filteredData, freqData, freqDomain, circleRadius;
+    // based on the time range to filter to events happened on this time
     if (selectedEventRange) {
       filteredData = events.filter((el) =>
         el.time.some(
@@ -61,6 +60,7 @@ export const ElectrodeLoader = ({
 
       freqData = [];
       freqDomain = [];
+      // use for calculate the frequency of each electrode
       for (let i = 0; i < allnetwork.length - 1; i++) {
         const arr = allnetwork[i].electrodes;
         const result = arr.reduce(
@@ -146,7 +146,6 @@ export const ElectrodeLoader = ({
   useEffect(() => {
     if (!isMountedRef.current) return;
     let interval;
-    // console.log(sampleData)
     if (buttonValue === 'Pause') {
     let currentIndex = 0;
     interval = setInterval(() => {
@@ -154,7 +153,6 @@ export const ElectrodeLoader = ({
         clearInterval(interval);
       } else {
         const currentSample = sampleData[currentIndex];
-        // console.log(currentSample)
         let startElec = [
           ...new Set(
             currentSample
@@ -162,7 +160,7 @@ export const ElectrodeLoader = ({
               .map((item) => item.start)
           ),
         ];
-        // console.log(startElec)
+        
         electrodeData.forEach((electrode, index) => {
           if (startElec.includes(electrode["electrode_number"])) {
             meshRef.current.setColorAt(index, new Color(0x0af521));
