@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, Stats } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import dataRegisty from "../../data/dataRegistry.json";
 import { BrainObjectLoader } from "./brainObjectLoader";
@@ -13,7 +13,7 @@ export const BrainViewer = (props) => {
   const [allEvents, setAllEvents] = useState({});
 
   useEffect(() => {
-    fetch(`/data/all_events/${props.patientID}`)
+    fetch(`/data/all_events/${props.patientInformation.patientID}`)
       .then((res) => res.json())
       .then((data) => {
         setAllEvents(data);
@@ -36,22 +36,21 @@ export const BrainViewer = (props) => {
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         <BrainObjectLoader
-          patientID={props.patientID}
+          patientID={props.patientInformation.patientID}
           lesionArray={props.lesionArray}
         />
-        {/* <ElectrodeLoader
-          electrodeData={electrodeData}
-          sampleData={sample}
-          bbox={dataRegisty[patientInformation.id].bbox}
-          eegInBrain={eegInBrain}
-          selectedEventRange={selectedEventRange}
-          timeRange={time}
-          eventData={events}
-          allnetwork={allnetworks}
-          allnetworkWithEvent={allnetworksWithEvent}
-          patientID={patientInformation.id}
-          eventid={eventid}
-        /> */}
+        <ElectrodeLoader
+          electrodeData={props.electrodeData}
+          sampleData={props.sampleData}
+          bbox={dataRegisty[props.patientInformation.patientID].bbox}
+          selectedEventRange={props.selectedEventRange}
+          timeRange={props.timeRange}
+          events={props.events}
+          buttonValue={'Pause'}
+          allnetwork={props.allnetworks}
+          allnetworkWithEvent={props.allnetworksWithEvent}
+          patientID={props.patientInformation.patientID}
+        />
         <OrbitControls enablePan={true} />
       </Canvas>
     </div>
