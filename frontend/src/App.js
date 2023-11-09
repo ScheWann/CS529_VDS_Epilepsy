@@ -5,6 +5,7 @@ import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import React, { useState, useEffect } from "react";
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { json } from "d3";
 const { Content, Footer, Sider } = Layout;
 
 const App = () => {
@@ -21,11 +22,17 @@ const App = () => {
   const strElectrodes = defaultElList.join(",");
 
   useEffect(() => {
+    // fetch(
+    //   `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`
+    // ).then(res => res.json())
+    // .then((data) => {
+    //   console.log(data, 'EEG')
+    // });
     fetch(
-      `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`
+      `/data/electrodes/${selectedPatient}`
     ).then(res => res.json())
     .then((data) => {
-      console.log(data, 'EEEEEGGGGGGG')
+      console.log(data, '3Delectode')
     });
   }, []);
 

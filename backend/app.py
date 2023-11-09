@@ -2,7 +2,7 @@ from flask import Flask, jsonify, send_from_directory
 from markupsafe import escape
 from dotenv import load_dotenv
 from os import getenv
-from eeg import eeg
+from process import eeg, process
 
 # loading env variable from .env
 load_dotenv()
@@ -37,6 +37,20 @@ def get_eeg_data(
     output = eeg.fetch_eeg_data(patient_id, sample_id, electrodes, start, num_records)
     return jsonify(output)
 
+
+# get 3D electrode data
+@app.route(
+    "/data/electrodes/<patient_id>",
+    methods=["GET"],
+)
+def get_3D_electrode_data(
+    patient_id: str
+):
+    
+    patient_id = str(patient_id)
+
+    output = process.fetch_3D_electrode_data(patient_id)
+    return jsonify(output.to_dict(orient="records"))
 
 if __name__ == "__main__":
     app.run(debug=True)
