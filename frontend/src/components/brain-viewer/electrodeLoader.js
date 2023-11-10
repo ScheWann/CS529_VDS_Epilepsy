@@ -31,7 +31,6 @@ export const ElectrodeLoader = ({
   buttonValue,
   // sliderObj
 }) => {
-
   const isMountedRef = useRef(false);
   const meshRef = useRef();
   useLayoutEffect(() => {
@@ -44,10 +43,10 @@ export const ElectrodeLoader = ({
 
   // instancing
   useLayoutEffect(() => {
-    console.log(events, 'check events //////////')
     if (!isMountedRef.current) return;
-    if (buttonValue === 'Pause') return;
+    if (buttonValue === "Pause") return;
     let filteredData, freqData, freqDomain, circleRadius;
+
     // based on the time range to filter to events happened on this time
     if (selectedEventRange) {
       filteredData = events.filter((el) =>
@@ -60,7 +59,8 @@ export const ElectrodeLoader = ({
 
       freqData = [];
       freqDomain = [];
-      // use for calculate the frequency of each electrode
+
+      // use for calculate the frequency of active electrodes and array
       for (let i = 0; i < allnetwork.length - 1; i++) {
         const arr = allnetwork[i].electrodes;
         const result = arr.reduce(
@@ -80,6 +80,7 @@ export const ElectrodeLoader = ({
         );
 
         freqData.push(result);
+        // Get the minimum and maximum electrode frequency
         freqDomain.push(...extent(result.frequency));
       }
 
@@ -87,23 +88,20 @@ export const ElectrodeLoader = ({
         .domain([0, max(freqDomain) === 0 ? 1 : max(freqDomain)])
         .range([1, 2]);
     }
+    // Color electrodes in the same ROI
     electrodeData.forEach((electrode, index) => {
-      // if (seeRoi) {
-      allnetwork.forEach((network, netIndex) => {
-        if (
-          network.roi !== "roi" &&
-          network.electrodes.includes(electrode["electrode_number"])
-        ) {
-          meshRef.current.setColorAt(index, new Color(colorslist[netIndex]));
-          object.scale.set(1, 1, 1);
-        }
-      });
-      // } else {
+      //   allnetwork.forEach((network, netIndex) => {
+      //     if (
+      //       network.roi !== "roi" &&
+      //       network.electrodes.includes(electrode["electrode_number"])
+      //     ) {
+      //       meshRef.current.setColorAt(index, new Color(colorslist[netIndex]));
+      //       object.scale.set(1, 1, 1);
+      //     }
+      //   });
+
+      // Color active electrodes in the same ROI
       if (selectedEventRange) {
-        // if (electrode['electrode_number'] === eegInBrain) {
-        //     meshRef.current.setColorAt(index, new Color(0x0AF521));
-        //     object.scale.set(1.25, 1.25, 1.25)
-        // } else {
         let inside = false;
         for (let r = 0; r < freqData.length; r++) {
           if (
@@ -126,10 +124,7 @@ export const ElectrodeLoader = ({
           meshRef.current.setColorAt(index, new Color(0x000000));
           object.scale.set(1, 1, 1);
         }
-        // }
-        // sliderObj([selectedEventRange[0], selectedEventRange[selectedEventRange.length - 1]])
       }
-      // }
 
       object.position.set(
         electrode.position[0],
@@ -146,52 +141,51 @@ export const ElectrodeLoader = ({
   useEffect(() => {
     if (!isMountedRef.current) return;
     let interval;
-    if (buttonValue === 'Pause') {
-    let currentIndex = 0;
-    interval = setInterval(() => {
-      if (currentIndex >= sampleData.length) {
-        clearInterval(interval);
-      } else {
-        const currentSample = sampleData[currentIndex];
-        let startElec = [
-          ...new Set(
-            currentSample
-              .slice(0, Math.round(currentSample.length))
-              .map((item) => item.start)
-          ),
-        ];
-        
-        electrodeData.forEach((electrode, index) => {
-          if (startElec.includes(electrode["electrode_number"])) {
-            meshRef.current.setColorAt(index, new Color(0x0af521));
-            object.scale.set(1.25, 1.25, 1.25);
-          } else {
-            meshRef.current.setColorAt(index, new Color(0x000000));
-            object.scale.set(1, 1, 1);
-          }
+    if (buttonValue === "Pause") {
+      let currentIndex = 0;
+      interval = setInterval(() => {
+        if (currentIndex >= sampleData.length) {
+          clearInterval(interval);
+        } else {
+          const currentSample = sampleData[currentIndex];
+          let startElec = [
+            ...new Set(
+              currentSample
+                .slice(0, Math.round(currentSample.length))
+                .map((item) => item.start)
+            ),
+          ];
 
-          object.position.set(
-            electrode.position[0],
-            electrode.position[1],
-            electrode.position[2]
-          );
-          object.updateMatrix();
-          meshRef.current.setMatrixAt(index, object.matrix);
-        });
+          electrodeData.forEach((electrode, index) => {
+            if (startElec.includes(electrode["electrode_number"])) {
+              meshRef.current.setColorAt(index, new Color(0x0af521));
+              object.scale.set(1.25, 1.25, 1.25);
+            } else {
+              meshRef.current.setColorAt(index, new Color(0x000000));
+              object.scale.set(1, 1, 1);
+            }
 
-        meshRef.current.instanceMatrix.needsUpdate = true;
+            object.position.set(
+              electrode.position[0],
+              electrode.position[1],
+              electrode.position[2]
+            );
+            object.updateMatrix();
+            meshRef.current.setMatrixAt(index, object.matrix);
+          });
 
-        currentIndex = (currentIndex + 1) % sampleData.length;
-        meshRef.current.instanceColor.needsUpdate = true;
+          meshRef.current.instanceMatrix.needsUpdate = true;
 
-        // if (currentIndex === 0) {
-        //     sliderObj([0, 0]);
-        // } else {
-        //     sliderObj([(currentIndex - 1) * timeRange, currentIndex * timeRange]);
-        // }
-      }
-    }, 1000);
+          currentIndex = (currentIndex + 1) % sampleData.length;
+          meshRef.current.instanceColor.needsUpdate = true;
 
+          // if (currentIndex === 0) {
+          //     sliderObj([0, 0]);
+          // } else {
+          //     sliderObj([(currentIndex - 1) * timeRange, currentIndex * timeRange]);
+          // }
+        }
+      }, 1000);
     }
     return () => clearInterval(interval);
   }, [electrodeData, sampleData]);

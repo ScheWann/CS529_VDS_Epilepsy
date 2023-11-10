@@ -17,7 +17,6 @@ export const BrainViewer = (props) => {
       .then((res) => res.json())
       .then((data) => {
         setAllEvents(data);
-        console.log(data, '////')
       });
   }, []);
 

@@ -55,7 +55,6 @@ const App = () => {
     range: 1000,
   });
 
-  console.log(fullNetwork, "make a test !!");
   useEffect(() => {
     // fetch(
     //   `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`
