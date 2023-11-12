@@ -32,10 +32,10 @@ This project is built by [flask](https://flask.palletsprojects.com/en/3.0.x/) + 
     .\venv\Scripts\activate
     ```
 
-4. Install flask
+4. Install dependencies from requirements.txt
 
     ```shell
-    pip3 install Flask
+    pip install -r requirements.txt
     ```
 
 5. Run flask
