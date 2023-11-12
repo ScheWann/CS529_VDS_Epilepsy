@@ -9,7 +9,6 @@ const width = window.innerWidth / 3 - 10;
 const height = window.innerHeight / 2.6 - 10;
 
 export const BrainViewer = (props) => {
-  
   const [allEvents, setAllEvents] = useState({});
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export const BrainViewer = (props) => {
           timeRange={props.timeRange}
           events={props.events}
           buttonValue={'Play'}
-          allnetwork={props.allnetworks}
+          allnetwork={props.allnetwork}
           allnetworkWithEvent={props.allnetworksWithEvent}
           patientID={props.patientInformation.patientID}
         />

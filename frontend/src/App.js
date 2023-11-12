@@ -1,10 +1,13 @@
-import "./App.css";
-import dataRegistry from "./data/dataRegistry.json";
-import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
-import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import React, { useState, useEffect } from "react";
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
+
+import "./App.css";
+import dataRegistry from "./data/dataRegistry.json";
+
+import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
+import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
+import { NetworkViewer } from "./components/network-viewer/networkViewer.js";
 
 import { useFullNetwork } from "./library/useFullNetwork";
 import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
@@ -237,7 +240,7 @@ const App = () => {
               background: "white",
             }}
           >
-            {allEventData ? (
+            {allEventData && fullNetwork && electrodeData ? (
               <BrainViewer
                 patientInformation={patientInfo}
                 lesionArray={lesionArray}
@@ -245,8 +248,17 @@ const App = () => {
                 sampleData={sampleData}
                 timeRange={1000}
                 events={allEventData[patientInfo.sampleID]}
-                allnetworks={fullNetwork}
+                allnetwork={fullNetwork}
                 allnetworksWithEvent={fullEventNetwork}
+                selectedEventRange={[103, 113]}
+              />
+            ) : null}
+
+            {allEventData && fullNetwork && electrodeData ? (
+              <NetworkViewer
+                events={allEventData[patientInfo.sampleID]}
+                allnetwork={fullNetwork}
+                electrodeData={electrodeData}
                 selectedEventRange={[103, 113]}
               />
             ) : null}
