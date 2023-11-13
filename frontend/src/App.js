@@ -64,7 +64,7 @@ const App = () => {
     sampleID: patientInfo.sampleID,
     eventID: 1,
   });
-
+  // console.log(sampleData, '/SmapleData')
   useEffect(() => {
     // fetch(
     //   `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`

@@ -12,6 +12,7 @@ export const CurveLoader = ({
   electrodeData,
   propagationData,
   patientID,
+  segement,
   bbox,
   selectedElectrode,
 }) => {
@@ -33,6 +34,11 @@ export const CurveLoader = ({
     return new Line(geometry, material);
   };
 
+  // initial curves
+  const initialCurves = () => {
+    selectedElectrode = null;
+  };
+
   // clear all curves when changing tabs or electrodes
   const clearCurves = () => {
     curveObjectsRef.current.forEach((curve) => {
@@ -44,10 +50,19 @@ export const CurveLoader = ({
   };
 
   useEffect(() => {
+    // initial curves
+    initialCurves();
+  }, [segement]);
+
+  useEffect(() => {
     // Clear existing curves
     clearCurves();
 
-    if (propagationData && electrodeData && selectedElectrode != null) {
+    if (
+      propagationData &&
+      electrodeData &&
+      selectedElectrode != null
+    ) {
       const filteredPropagationData = propagationData.filter(
         (link) => link.source.electrode_number === selectedElectrode
       );

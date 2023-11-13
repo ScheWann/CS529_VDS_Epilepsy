@@ -34,13 +34,12 @@ export const ElectrodeLoader = ({
   // allnetworkWithEvent,
   // patientID,
   // eventid,
-  // seeRoi,
   segement,
   objCenter,
   setSelectedElectrode,
+  propagationData,
   allnetworkWithEvent,
   setElectrodeScreenPositions,
-  // sliderObj
 }) => {
   const isMountedRef = useRef(false);
   const meshRef = useRef();
@@ -65,7 +64,6 @@ export const ElectrodeLoader = ({
     if (intersects.length > 0) {
       const instanceId = intersects[0].instanceId;
       const selectedElectrode = electrodeData[instanceId];
-      console.log(selectedElectrode.electrode_number, "??????");
       setSelectedElectrode(selectedElectrode.electrode_number); // Assuming electrode_number is the ID
     }
   };
@@ -75,7 +73,6 @@ export const ElectrodeLoader = ({
     if (!isMountedRef.current) return;
     if (segement === "Propogation") return;
     let filteredData, freqData, freqDomain, circleRadius;
-
     // based on the time range to filter to events happened on this time
     if (selectedEventRange) {
       filteredData = events.filter((el) =>
@@ -111,12 +108,11 @@ export const ElectrodeLoader = ({
         // Get the minimum and maximum electrode frequency
         freqDomain.push(...extent(result.frequency));
       }
-      console.log(freqData, "////////");
       circleRadius = scaleLinear()
         .domain([0, max(freqDomain) === 0 ? 1 : max(freqDomain)])
         .range([1, 2]);
     }
-    
+
     // Color electrodes in the same ROI
     electrodeData.forEach((electrode, index) => {
       if (segement == "ROI") {
@@ -199,7 +195,6 @@ export const ElectrodeLoader = ({
   useEffect(() => {
     if (!isMountedRef.current) return;
     let interval;
-    console.log(segement, "opopop");
     if (segement === "Propogation") {
       let currentIndex = 0;
       interval = setInterval(() => {
@@ -234,17 +229,51 @@ export const ElectrodeLoader = ({
           });
 
           meshRef.current.instanceMatrix.needsUpdate = true;
-
           currentIndex = (currentIndex + 1) % sampleData.length;
           meshRef.current.instanceColor.needsUpdate = true;
 
-          // if (currentIndex === 0) {
-          //     sliderObj([0, 0]);
-          // } else {
-          //     sliderObj([(currentIndex - 1) * timeRange, currentIndex * timeRange]);
-          // }
         }
       }, 1000);
+    }
+    if (segement == "Curve") {
+      // Create a set of source electrode numbers
+      const sourceElectrodes = new Set(
+        propagationData.map((link) => link.source.electrode_number)
+      );
+
+      electrodeData.forEach((electrode, index) => {
+        const isSourceElectrode = sourceElectrodes.has(
+          electrode.electrode_number
+        );
+        // based on the different ROI set different color
+        if(isSourceElectrode) {
+          allnetwork.forEach((network, netIndex) => {
+            if (
+              network.roi !== "roi" &&
+              network.electrodes.includes(electrode.electrode_number)
+            ) {
+              meshRef.current.setColorAt(index, new Color(colorslist[netIndex]));
+              object.scale.set(2, 2, 2);
+            } 
+          });
+        } else {
+          meshRef.current.setColorAt(index, new Color(0x000000));
+          object.scale.set(1, 1, 1);
+        }
+
+        object.position.set(
+          electrode.position[0],
+          electrode.position[1],
+          electrode.position[2]
+        );
+
+        object.updateMatrix();
+        meshRef.current.setMatrixAt(index, object.matrix);
+
+      });
+
+      meshRef.current.instanceMatrix.needsUpdate = true;
+      meshRef.current.instanceColor.needsUpdate = true;
     }
     return () => clearInterval(interval);
   }, [electrodeData, sampleData, segement]);

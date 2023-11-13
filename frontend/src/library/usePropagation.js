@@ -13,7 +13,6 @@ export const usePropagation = ({ patientID, sampleID, eventID }) => {
     // Function to enrich propagation data with electrode positions
     const enrichPropagationData = () => {
       if (propagationData && electrodeData) {
-        console.log('yes')
         return propagationData[0].network.map(link => ({
           source: findElectrode(link.source),
           target: findElectrode(link.target)

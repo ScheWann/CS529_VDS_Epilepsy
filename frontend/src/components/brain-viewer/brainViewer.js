@@ -33,7 +33,6 @@ export const BrainViewer = (props) => {
   ]);
 
   const changeSegement = (value) => {
-    console.log(value);
     setSegment(value);
   };
 
@@ -67,6 +66,7 @@ export const BrainViewer = (props) => {
             segement={segement}
             objCenter={objCenter}
             cameraRef={cameraRef.current}
+            propagationData={props.propagationData}
             setSelectedElectrode={setSelectedElectrode}
             setElectrodeScreenPositions={setElectrodeScreenPositions}
             electrodeData={props.electrodeData}
@@ -81,6 +81,7 @@ export const BrainViewer = (props) => {
           />
           {segement == "Curve" ? 
           <CurveLoader
+            segement={segement}
             bbox={dataRegisty[props.patientInformation.patientID].bbox}
             patientID={props.patientInformation.patientID}
             electrodeData={props.electrodeData} 
