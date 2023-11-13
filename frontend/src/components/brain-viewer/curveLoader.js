@@ -33,6 +33,7 @@ export const CurveLoader = ({
     return new Line(geometry, material);
   };
 
+  // clear all curves when changing tabs or electrodes
   const clearCurves = () => {
     curveObjectsRef.current.forEach((curve) => {
       scene.remove(curve);
@@ -45,6 +46,7 @@ export const CurveLoader = ({
   useEffect(() => {
     // Clear existing curves
     clearCurves();
+
     if (propagationData && electrodeData && selectedElectrode != null) {
       const filteredPropagationData = propagationData.filter(
         (link) => link.source.electrode_number === selectedElectrode

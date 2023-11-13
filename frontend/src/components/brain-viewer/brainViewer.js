@@ -91,7 +91,7 @@ export const BrainViewer = (props) => {
           <OrbitControls enablePan={true} />
         </Canvas>
       </div>
-      <Test electrodeScreenPositions={electrodeScreenPositions} />
+      {/* <Test electrodeScreenPositions={electrodeScreenPositions} /> */}
     </div>
   );
 };

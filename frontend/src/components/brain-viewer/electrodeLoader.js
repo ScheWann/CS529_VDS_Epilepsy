@@ -53,18 +53,19 @@ export const ElectrodeLoader = ({
     };
   }, []);
 
+  // clicking electrode method
   const handleCanvasClick = (event) => {
     const rect = gl.domElement.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-  
+
     const raycaster = new Raycaster();
     raycaster.setFromCamera({ x, y }, camera);
     const intersects = raycaster.intersectObject(meshRef.current, true);
     if (intersects.length > 0) {
       const instanceId = intersects[0].instanceId;
       const selectedElectrode = electrodeData[instanceId];
-      console.log(selectedElectrode.electrode_number, '??????')
+      console.log(selectedElectrode.electrode_number, "??????");
       setSelectedElectrode(selectedElectrode.electrode_number); // Assuming electrode_number is the ID
     }
   };
@@ -115,6 +116,7 @@ export const ElectrodeLoader = ({
         .domain([0, max(freqDomain) === 0 ? 1 : max(freqDomain)])
         .range([1, 2]);
     }
+    
     // Color electrodes in the same ROI
     electrodeData.forEach((electrode, index) => {
       if (segement == "ROI") {
@@ -169,11 +171,15 @@ export const ElectrodeLoader = ({
     meshRef.current.instanceMatrix.needsUpdate = true;
     meshRef.current.instanceColor.needsUpdate = true;
   }, [allnetwork, electrodeData, events, selectedEventRange, segement]);
+
+  // use for clicking on electrode to get the curve propagation
   useEffect(() => {
     const canvas = gl.domElement;
-    canvas.addEventListener('click', handleCanvasClick);
-    return () => canvas.removeEventListener('click', handleCanvasClick);
+    canvas.addEventListener("click", handleCanvasClick);
+    return () => canvas.removeEventListener("click", handleCanvasClick);
   }, [gl, camera, electrodeData, setSelectedElectrode]);
+
+  // get the center 3D position based on the 3D brain
   useEffect(() => {
     const projectedPositions = electrodeData.map((electrode) =>
       projectRelativeToCenter(
@@ -193,7 +199,7 @@ export const ElectrodeLoader = ({
   useEffect(() => {
     if (!isMountedRef.current) return;
     let interval;
-    console.log(segement, 'opopop')
+    console.log(segement, "opopop");
     if (segement === "Propogation") {
       let currentIndex = 0;
       interval = setInterval(() => {

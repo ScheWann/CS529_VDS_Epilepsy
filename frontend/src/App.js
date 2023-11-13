@@ -262,14 +262,14 @@ const App = () => {
               />
             ) : null}
 
-            {allEventData && fullNetwork && electrodeData ? (
+            {/* {allEventData && fullNetwork && electrodeData ? (
               <NetworkViewer
                 events={allEventData[patientInfo.sampleID]}
                 allnetwork={fullNetwork}
                 electrodeData={electrodeData}
                 selectedEventRange={[103, 113]}
               />
-            ) : null}
+            ) : null} */}
           </div>
         </Content>
         <Footer
