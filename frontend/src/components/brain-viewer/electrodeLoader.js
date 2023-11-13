@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Color, Object3D, Vector3, CatmullRomCurve3, BufferGeometry, LineBasicMaterial, Line } from "three";
+import { Color, Object3D, Vector3, Raycaster } from "three";
 import { extent, scaleLinear, max } from "d3";
 import { useThree } from "@react-three/fiber";
 
@@ -37,14 +37,14 @@ export const ElectrodeLoader = ({
   // seeRoi,
   segement,
   objCenter,
+  setSelectedElectrode,
   allnetworkWithEvent,
   setElectrodeScreenPositions,
   // sliderObj
 }) => {
-  
   const isMountedRef = useRef(false);
   const meshRef = useRef();
-  console.log(allnetworkWithEvent, 'iopiop')
+  const { camera, gl } = useThree();
   useLayoutEffect(() => {
     isMountedRef.current = true;
     meshRef.current.setColorAt(0, new Color());
@@ -52,6 +52,22 @@ export const ElectrodeLoader = ({
       isMountedRef.current = false;
     };
   }, []);
+
+  const handleCanvasClick = (event) => {
+    const rect = gl.domElement.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  
+    const raycaster = new Raycaster();
+    raycaster.setFromCamera({ x, y }, camera);
+    const intersects = raycaster.intersectObject(meshRef.current, true);
+    if (intersects.length > 0) {
+      const instanceId = intersects[0].instanceId;
+      const selectedElectrode = electrodeData[instanceId];
+      console.log(selectedElectrode.electrode_number, '??????')
+      setSelectedElectrode(selectedElectrode.electrode_number); // Assuming electrode_number is the ID
+    }
+  };
 
   // instancing
   useLayoutEffect(() => {
@@ -153,7 +169,11 @@ export const ElectrodeLoader = ({
     meshRef.current.instanceMatrix.needsUpdate = true;
     meshRef.current.instanceColor.needsUpdate = true;
   }, [allnetwork, electrodeData, events, selectedEventRange, segement]);
-
+  useEffect(() => {
+    const canvas = gl.domElement;
+    canvas.addEventListener('click', handleCanvasClick);
+    return () => canvas.removeEventListener('click', handleCanvasClick);
+  }, [gl, camera, electrodeData, setSelectedElectrode]);
   useEffect(() => {
     const projectedPositions = electrodeData.map((electrode) =>
       projectRelativeToCenter(

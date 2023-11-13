@@ -13,6 +13,7 @@ export const CurveLoader = ({
   propagationData,
   patientID,
   bbox,
+  selectedElectrode,
 }) => {
   const { scene } = useThree();
   const curveObjectsRef = useRef([]);
@@ -21,7 +22,7 @@ export const CurveLoader = ({
     const midPoint = new Vector3(
       (sourcePos.x + targetPos.x) / 2,
       (sourcePos.y + targetPos.y) / 2,
-      (sourcePos.z + targetPos.z) / 2 
+      (sourcePos.z + targetPos.z) / 2
     );
 
     const curve = new CatmullRomCurve3([sourcePos, midPoint, targetPos]);
@@ -44,9 +45,11 @@ export const CurveLoader = ({
   useEffect(() => {
     // Clear existing curves
     clearCurves();
-
-    if (propagationData && electrodeData) {
-      propagationData.forEach((link) => {
+    if (propagationData && electrodeData && selectedElectrode != null) {
+      const filteredPropagationData = propagationData.filter(
+        (link) => link.source.electrode_number === selectedElectrode
+      );
+      filteredPropagationData.forEach((link) => {
         const sourceElectrode = electrodeData.find(
           (e) => e.electrode_number === link.source.electrode_number
         );
@@ -74,7 +77,7 @@ export const CurveLoader = ({
       });
     }
     return () => clearCurves();
-  }, [electrodeData, propagationData, scene]);
+  }, [electrodeData, propagationData, scene, selectedElectrode]);
 
   return null;
 };

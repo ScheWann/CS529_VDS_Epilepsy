@@ -15,6 +15,7 @@ export const BrainViewer = (props) => {
   const [allEvents, setAllEvents] = useState({});
   const [objCenter, setObjCenter] = useState({});
   const [electrodeScreenPositions, setElectrodeScreenPositions] = useState([]);
+  const [selectedElectrode, setSelectedElectrode] = useState(null);
   const [segement, setSegment] = useState("ROI");
   const cameraRef = useRef();
 
@@ -66,6 +67,7 @@ export const BrainViewer = (props) => {
             segement={segement}
             objCenter={objCenter}
             cameraRef={cameraRef.current}
+            setSelectedElectrode={setSelectedElectrode}
             setElectrodeScreenPositions={setElectrodeScreenPositions}
             electrodeData={props.electrodeData}
             sampleData={props.sampleData}
@@ -83,6 +85,7 @@ export const BrainViewer = (props) => {
             patientID={props.patientInformation.patientID}
             electrodeData={props.electrodeData} 
             propagationData={props.propagationData}
+            selectedElectrode={selectedElectrode}
           /> : null}
 
           <OrbitControls enablePan={true} />
