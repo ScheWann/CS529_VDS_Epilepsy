@@ -16,3 +16,19 @@ def fetch_3D_electrode_data(
     eeg_data_df = pd.read_csv(file_path)
 
     return eeg_data_df
+
+def fetch_propagation_data(
+     patient_id: str,
+     sample_id:str,
+     event_id: int   
+):
+    file_path = os.path.join(
+    "/Users/siyuanzhao/Documents/DATADIR/patients",
+    patient_id,
+    sample_id,
+    f"{patient_id}_sorted_data.json",
+    )
+
+    propagation_df = pd.read_json(file_path)
+    propagation_filtered_by_event_df = propagation_df[propagation_df["eventIndex"] == event_id]
+    return propagation_filtered_by_event_df

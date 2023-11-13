@@ -5,6 +5,7 @@ export const BrainObjectLoader = (props) => {
     return (
         <group>
             <ModelLoader
+                setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain.obj`}
                 color="#505050"
                 opacity={0.15}

@@ -52,5 +52,24 @@ def get_3D_electrode_data(
     output = process.fetch_3D_electrode_data(patient_id)
     return jsonify(output.to_dict(orient="records"))
 
+
+# get electrode propagation data
+@app.route(
+    "/data/electrodes/propagation/<patient_id>/<sample_id>/<event_id>",
+    methods=["GET"],
+)
+def get_electrode_propagation_data(
+    patient_id: str,
+    sample_id: str,
+    event_id: int   
+):
+    patient_id = str(patient_id)
+    sample_id = str(sample_id)
+    event_id = int(event_id)
+
+    output = process.fetch_propagation_data(patient_id, sample_id, event_id)
+    return jsonify(output.to_dict(orient="records"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)

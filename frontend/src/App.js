@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu } from "antd";
 
 import "./App.css";
 import dataRegistry from "./data/dataRegistry.json";
@@ -14,6 +14,7 @@ import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
 import { useFullEventData } from "./library/useFullEventData";
 import { useElectrodeData } from "./library/useElectrodeData";
 import { useSamples } from "./library/useSamples";
+import { usePropagation } from "./library/usePropagation.js";
 const { Content, Footer, Sider } = Layout;
 
 const App = () => {
@@ -56,6 +57,12 @@ const App = () => {
     patientID: patientInfo.patientID,
     sampleID: patientInfo.sampleID,
     range: 1000,
+  });
+
+  const propagationData = usePropagation({
+    patientID: patientInfo.patientID,
+    sampleID: patientInfo.sampleID,
+    eventID: 1,
   });
 
   useEffect(() => {
@@ -242,6 +249,7 @@ const App = () => {
           >
             {allEventData && fullNetwork && electrodeData ? (
               <BrainViewer
+                propagationData={propagationData}
                 patientInformation={patientInfo}
                 lesionArray={lesionArray}
                 electrodeData={electrodeData}
