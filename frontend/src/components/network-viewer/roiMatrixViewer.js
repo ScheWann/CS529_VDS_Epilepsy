@@ -63,7 +63,7 @@ export const RoiMatrixViewer = ({ allnetworksWithEvent, setSelectedROINetwork, s
       {filteredAllnetworksWithEvent.map((network, index) => (
         <Card key={`card-${index}`}
         title={`ROI ${index}`}
-        style={{marginRight: 5, padding: 0}}
+        style={{marginRight: 5, padding: 0, cursor: "pointer"}}
         onClick={() => handleCardClick(network, index)}
         >
           <svg

@@ -6,19 +6,18 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
   const roiNetwork = selectedROINetwork["network"];
   const ref = useRef();
   const cardRef = useRef();
-  const [cardSize, setCardSize] = useState({ width: 380, height: 380 }); 
+  const [cardSize, setCardSize] = useState({});
 
   useEffect(() => {
-    console.log(cardRef.current.getBoundingClientRect(), '890890890')
     if (cardRef.current) {
       const { width, height } = cardRef.current.getBoundingClientRect();
       setCardSize({ width, height });
     }
-  }, [selectedROINetwork]); 
+  }, [selectedROINetwork]);
 
   useEffect(() => {
     if (roiNetwork && cardSize.width && cardSize.height) {
-    d3.select(ref.current).selectAll("*").remove();
+      d3.select(ref.current).selectAll("*").remove();
       const nodes = Array.from(
         new Set(roiNetwork.flatMap((link) => [link.source, link.target])),
         (id) => ({ id })
@@ -34,10 +33,17 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
         .forceSimulation(nodes)
         .force(
           "link",
-          d3.forceLink(links).id((d) => d.id)
+          d3
+            .forceLink(links)
+            .id((d) => d.id)
+            .distance(150)
+            .strength(0.1)
         )
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(cardSize.width / 2, cardSize.height / 2));
+        .force(
+          "center",
+          d3.forceCenter(cardSize.width / 2, cardSize.height / 2)
+        );
 
       const svg = d3
         .select(ref.current)
@@ -62,7 +68,7 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
         .selectAll("circle")
         .data(nodes)
         .join("circle")
-        .attr("r", 5)
+        .attr("r", 10)
         .attr("fill", selectedROIColor)
         .call(drag(simulation));
 
@@ -117,14 +123,22 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
           .on("end", dragended);
       }
     }
-  }, [selectedROINetwork]);
+  }, [selectedROINetwork, cardSize]);
 
   return (
-    <Card ref={cardRef} style={{ marginTop: 10, width:"49%" }}>
+    <Card ref={cardRef} style={{ marginTop: 10, width: "49%" }}>
       {roiNetwork ? (
-        <svg id="nodeViewer" ref={ref} />
+        <svg ref={ref} />
       ) : (
-        <Empty style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center"}} description={"Click one ROI first"} />
+        <Empty
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+          description={"Click one ROI first"}
+        />
       )}
     </Card>
   );
