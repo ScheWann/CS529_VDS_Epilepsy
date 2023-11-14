@@ -313,7 +313,7 @@ const App = () => {
                 />
               ) : null}
 
-              {selectedROINetwork && selectedROIColor ? (
+              {selectedROINetwork ? (
                 <NodeViewer
                   selectedROINetwork={selectedROINetwork}
                   selectedROIColor={selectedROIColor}

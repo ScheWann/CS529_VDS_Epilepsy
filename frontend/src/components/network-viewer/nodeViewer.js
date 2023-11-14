@@ -9,6 +9,7 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
   const [cardSize, setCardSize] = useState({ width: 380, height: 380 }); 
 
   useEffect(() => {
+    console.log(cardRef.current.getBoundingClientRect(), '890890890')
     if (cardRef.current) {
       const { width, height } = cardRef.current.getBoundingClientRect();
       setCardSize({ width, height });
@@ -17,7 +18,7 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
 
   useEffect(() => {
     if (roiNetwork && cardSize.width && cardSize.height) {
-    d3.select(ref.current).selectAll("nodeViewer").remove();
+    d3.select(ref.current).selectAll("*").remove();
       const nodes = Array.from(
         new Set(roiNetwork.flatMap((link) => [link.source, link.target])),
         (id) => ({ id })
@@ -123,7 +124,7 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
       {roiNetwork ? (
         <svg id="nodeViewer" ref={ref} />
       ) : (
-        <Empty description={"Click one ROI first"} />
+        <Empty style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center"}} description={"Click one ROI first"} />
       )}
     </Card>
   );
