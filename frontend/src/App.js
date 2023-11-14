@@ -8,6 +8,7 @@ import dataRegistry from "./data/dataRegistry.json";
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import { NetworkViewer } from "./components/network-viewer/networkViewer.js";
+import { MatrixViewer } from "./components/network-viewer/MatrixViewer.js";
 
 import { useFullNetwork } from "./library/useFullNetwork";
 import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
@@ -34,6 +35,7 @@ const App = () => {
   const [lesionArray, SetlesionArray] = useState([1, 2]);
   // use for showing EEG data
   const [eegData, setEEGData] = useState();
+  const [selectedMatrix, setSelectedMatrix] = useState(null);
   // use for set EEG container width and height set
   const [width, setWidth] = useState(0);
   const parentRef = useRef();
@@ -258,12 +260,9 @@ const App = () => {
               background: "white",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-around" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               {allEventData && fullNetwork && electrodeData ? (
-                <Card
-                  ref={parentRef}
-                  className="brainViewer"
-                >
+                <Card ref={parentRef} className="brainViewer">
                   <BrainViewer
                     propagationData={propagationData}
                     patientInformation={patientInfo}
@@ -280,10 +279,7 @@ const App = () => {
               ) : null}
 
               {eegData ? (
-                <Card
-                  ref={parentRef}
-                  className="eegContainer"
-                >
+                <Card ref={parentRef} className="eegContainer">
                   <EEGDataViewer
                     containerWidth={width}
                     patientID={selectedPatient}
@@ -302,6 +298,11 @@ const App = () => {
                 selectedEventRange={[103, 113]}
               />
             ) : null} */}
+            {fullEventNetwork ? (
+                <MatrixViewer
+                  allnetworksWithEvent={fullEventNetwork[1]}
+                />
+            ) : null}
           </div>
         </Content>
         <Footer

@@ -112,7 +112,7 @@ export const ElectrodeLoader = ({
         .domain([0, max(freqDomain) === 0 ? 1 : max(freqDomain)])
         .range([1, 2]);
     }
-
+    console.log(freqData, 'waht athtah')
     // Color electrodes in the same ROI
     electrodeData.forEach((electrode, index) => {
       if (segement == "ROI") {
@@ -240,7 +240,7 @@ export const ElectrodeLoader = ({
       const sourceElectrodes = new Set(
         propagationData.map((link) => link.source.electrode_number)
       );
-      console.log(sourceElectrodes, '//filtered propogation?')
+
       electrodeData.forEach((electrode, index) => {
         const isSourceElectrode = sourceElectrodes.has(
           electrode.electrode_number
