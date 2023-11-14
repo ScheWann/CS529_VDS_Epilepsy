@@ -6,7 +6,17 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
   const roiNetwork = selectedROINetwork["network"];
   const ref = useRef();
   const cardRef = useRef();
+  const linkRef = useRef();
   const [cardSize, setCardSize] = useState({});
+
+  function highlightLinks(node, highlight) {
+    linkRef.current
+      .style("stroke", function (d) {
+        return d.source.id === node.id || d.target.id === node.id
+          ? (highlight ? "red" : "#999")
+          : "#999";
+      });
+  }  
 
   useEffect(() => {
     if (cardRef.current) {
@@ -18,6 +28,7 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
   useEffect(() => {
     if (roiNetwork && cardSize.width && cardSize.height) {
       d3.select(ref.current).selectAll("*").remove();
+
       const nodes = Array.from(
         new Set(roiNetwork.flatMap((link) => [link.source, link.target])),
         (id) => ({ id })
@@ -50,7 +61,6 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
         .attr("width", cardSize.width)
         .attr("height", cardSize.height);
 
-      // Create links
       const link = svg
         .append("g")
         .attr("stroke", "#999")
@@ -60,17 +70,37 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
         .join("line")
         .attr("stroke-width", (d) => Math.sqrt(d.value));
 
-      // Create nodes
       const node = svg
         .append("g")
         .attr("stroke", "#fff")
         .attr("stroke-width", 1.5)
         .selectAll("circle")
         .data(nodes)
-        .join("circle")
-        .attr("r", 10)
+        .enter()
+        .append("circle")
+        .attr("r", 15)
         .attr("fill", selectedROIColor)
         .call(drag(simulation));
+
+      const labels = svg
+        .append("g")
+        .attr("class", "labels")
+        .selectAll("text")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("dy", ".35em")
+        .text((d) => d.id);
+
+      linkRef.current = svg
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .selectAll("line")
+        .data(links)
+        .join("line")
+        .attr("stroke-width", (d) => Math.sqrt(d.value));
 
       // Set up simulation
       simulation.nodes(nodes).on("tick", ticked);
@@ -85,6 +115,7 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
           .attr("y2", (d) => d.target.y);
 
         node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+        labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
       }
 
       // Set up simulation
@@ -96,24 +127,27 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
           .attr("y2", (d) => d.target.y);
 
         node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+        labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
       });
 
       function drag(simulation) {
-        function dragstarted(event) {
+        function dragstarted(event, d) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
           event.subject.fy = event.subject.y;
+          highlightLinks(d, true);
         }
 
-        function dragged(event) {
+        function dragged(event, d) {
           event.subject.fx = event.x;
           event.subject.fy = event.y;
         }
 
-        function dragended(event) {
+        function dragended(event, d) {
           if (!event.active) simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;
+          highlightLinks(d, false);
         }
 
         return d3
