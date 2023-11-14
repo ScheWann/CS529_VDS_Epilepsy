@@ -52,6 +52,16 @@ body {
   margin: 20px;
 }
 
+.brainViewer {
+  width: 49%;
+}
+
+.eegContainer {
+  overflow: scroll;
+  height: 50vh;
+  width: 49%;
+}
+
 .BrainAndEEG {
   display: flex;
   background-color: white;

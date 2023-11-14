@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu } from "antd";
+import { Breadcrumb, Layout, Menu, Card } from "antd";
 
 import "./App.css";
 import dataRegistry from "./data/dataRegistry.json";
@@ -32,12 +32,19 @@ const App = () => {
   });
   // use for showing lesion array and send it to 3D brain to display
   const [lesionArray, SetlesionArray] = useState([1, 2]);
-  // const defaultElList = [
-  //   26, 28, 36, 20, 32, 21, 22, 40, 41, 54, 19, 31, 39, 47, 48, 52, 56, 27, 29,
-  //   34, 35, 43, 49, 50, 53, 18, 33, 44, 30, 38, 51, 37, 108, 109, 107, 102, 112,
-  //   55, 45, 23, 103, 73, 74, 76, 75, 84, 89,
-  // ];
-  // const strElectrodes = defaultElList.join(",");
+  // use for showing EEG data
+  const [eegData, setEEGData] = useState();
+  // use for set EEG container width and height set
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const parentRef = useRef();
+
+  const defaultElList = [
+    26, 28, 36, 20, 32, 21, 22, 40, 41, 54, 19, 31, 39, 47, 48, 52, 56, 27, 29,
+    34, 35, 43, 49, 50, 53, 18, 33, 44, 30, 38, 51, 37, 108, 109, 107, 102, 112,
+    55, 45, 23, 103, 73, 74, 76, 75, 84, 89,
+  ];
+  const strElectrodes = defaultElList.join(",");
 
   const allEventData = useFullEventData({ patientID: patientInfo.patientID });
 
@@ -64,14 +71,25 @@ const App = () => {
     sampleID: patientInfo.sampleID,
     eventID: 1,
   });
-  // console.log(sampleData, '/SmapleData')
+
   useEffect(() => {
-    // fetch(
-    //   `/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`
-    // ).then(res => res.json())
-    // .then((data) => {
-    //   console.log(data, 'EEG')
-    // });
+    fetch(`/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEEGData(data);
+      })
+      .then(() => {
+        if (parentRef.current) {
+          const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+              setWidth(parentRef.current.offsetWidth);
+              setHeight(parentRef.current.offsetHeight);
+            }
+          });
+          resizeObserver.observe(parentRef.current);
+          return () => resizeObserver.disconnect();
+        }
+      });
     fetch(`/data/electrodes/${selectedPatient}`)
       .then((res) => res.json())
       .then((data) => {
@@ -247,20 +265,42 @@ const App = () => {
               background: "white",
             }}
           >
-            {allEventData && fullNetwork && electrodeData ? (
-              <BrainViewer
-                propagationData={propagationData}
-                patientInformation={patientInfo}
-                lesionArray={lesionArray}
-                electrodeData={electrodeData}
-                sampleData={sampleData}
-                timeRange={1000}
-                events={allEventData[patientInfo.sampleID]}
-                allnetwork={fullNetwork}
-                allnetworksWithEvent={fullEventNetwork}
-                selectedEventRange={[103, 113]}
-              />
-            ) : null}
+            <div style={{ display: "flex", justifyContent: "space-around" }}>
+              {allEventData && fullNetwork && electrodeData ? (
+                <Card
+                  ref={parentRef}
+                  className="brainViewer"
+                >
+                  <BrainViewer
+                    propagationData={propagationData}
+                    patientInformation={patientInfo}
+                    lesionArray={lesionArray}
+                    electrodeData={electrodeData}
+                    sampleData={sampleData}
+                    timeRange={1000}
+                    events={allEventData[patientInfo.sampleID]}
+                    allnetwork={fullNetwork}
+                    allnetworksWithEvent={fullEventNetwork}
+                    selectedEventRange={[103, 113]}
+                  />
+                </Card>
+              ) : null}
+
+              {eegData ? (
+                <Card
+                  ref={parentRef}
+                  className="eegContainer"
+                >
+                  <EEGDataViewer
+                    containerWidth={width}
+                    containerHeight={height}
+                    patientID={selectedPatient}
+                    lesionArray={lesionArray}
+                    data={eegData}
+                  />
+                </Card>
+              ) : null}
+            </div>
 
             {/* {allEventData && fullNetwork && electrodeData ? (
               <NetworkViewer

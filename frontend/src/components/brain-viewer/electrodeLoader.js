@@ -240,7 +240,7 @@ export const ElectrodeLoader = ({
       const sourceElectrodes = new Set(
         propagationData.map((link) => link.source.electrode_number)
       );
-
+      console.log(sourceElectrodes, '//filtered propogation?')
       electrodeData.forEach((electrode, index) => {
         const isSourceElectrode = sourceElectrodes.has(
           electrode.electrode_number
