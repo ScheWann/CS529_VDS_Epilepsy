@@ -48,7 +48,7 @@ export const EEGDataViewer = ({ data, containerWidth }) => {
         .datum(bands)
         .attr("class", "area")
         .attr("d", area)
-        .style("fill", "rgba(0, 0, 255, 1)");
+        .style("fill", "#0077b6");
 
       svg.selectAll(".area").selectAll("path").style("stroke-width", 50);
 
