@@ -8,7 +8,7 @@ export const RoiMatrixViewer = ({ allnetworksWithEvent, setSelectedROINetwork, s
     filteredAllnetworksWithEvent.map(() => React.createRef())
   );
   const size = 300;
-  const margin = { top: 20, right: 50, bottom: 20, left: 20 };
+  const margin = { top: 20, right: 50, bottom: 20, left: 10 };
   const colorslist = [
     "#1f77b4",
     "#ff7f0e",

@@ -10,17 +10,19 @@ export const NodeViewer = ({ selectedROINetwork, selectedROIColor }) => {
   const [cardSize, setCardSize] = useState({});
 
   function highlightLinks(node, highlight) {
-    linkRef.current
-      .style("stroke", function (d) {
-        return d.source.id === node.id || d.target.id === node.id
-          ? (highlight ? "red" : "#999")
-          : "#999";
-      });
-  }  
+    linkRef.current.style("stroke", (d) => {
+      return d.source.id === node.id || d.target.id === node.id
+        ? highlight
+          ? "red"
+          : "#999"
+        : "#999";
+    });
+  }
 
   useEffect(() => {
     if (cardRef.current) {
       const { width, height } = cardRef.current.getBoundingClientRect();
+      console.log(width, height, "is that because of you????");
       setCardSize({ width, height });
     }
   }, [selectedROINetwork]);
