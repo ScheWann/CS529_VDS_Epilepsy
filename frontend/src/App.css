@@ -54,11 +54,12 @@ body {
 
 .brainViewer {
   width: 49%;
+  height: 49vh;
 }
 
 .eegContainer {
   overflow: scroll;
-  height: 50vh;
+  height: 49vh;
   width: 49%;
 }
 

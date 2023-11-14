@@ -36,7 +36,6 @@ const App = () => {
   const [eegData, setEEGData] = useState();
   // use for set EEG container width and height set
   const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
   const parentRef = useRef();
 
   const defaultElList = [
@@ -83,17 +82,11 @@ const App = () => {
           const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
               setWidth(parentRef.current.offsetWidth);
-              setHeight(parentRef.current.offsetHeight);
             }
           });
           resizeObserver.observe(parentRef.current);
           return () => resizeObserver.disconnect();
         }
-      });
-    fetch(`/data/electrodes/${selectedPatient}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "3Delectode");
       });
   }, []);
 
@@ -293,7 +286,6 @@ const App = () => {
                 >
                   <EEGDataViewer
                     containerWidth={width}
-                    containerHeight={height}
                     patientID={selectedPatient}
                     lesionArray={lesionArray}
                     data={eegData}

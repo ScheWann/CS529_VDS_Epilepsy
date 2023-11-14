@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-export const EEGDataViewer = ({ data, containerWidth, containerHeight }) => {
+export const EEGDataViewer = ({ data, containerWidth }) => {
   const chartContainerRef = useRef();
 
   useEffect(() => {
