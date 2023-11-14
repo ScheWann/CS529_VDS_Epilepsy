@@ -8,7 +8,7 @@ export const EEGDataViewer = ({ data, containerWidth }) => {
     if (data) {
       drawCharts();
     }
-  }, [data]);
+  }, [data, containerWidth]);
 
   const drawCharts = () => {
     // Clear existing charts before drawing new ones
@@ -18,8 +18,8 @@ export const EEGDataViewer = ({ data, containerWidth }) => {
 
     keysToDraw.forEach((key) => {
       const chartData = data[key];
-      const margin = { top: 10, right: 20, bottom: 30, left: 70 };
-      const width = containerWidth * 0.9 - margin.left - margin.right;
+      const margin = { top: 10, right: 20, bottom: 30, left: 20 };
+      const width = containerWidth * 0.95 - margin.left - margin.right;
       const height = 100;
 
       const svg = d3

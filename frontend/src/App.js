@@ -213,19 +213,12 @@ const App = () => {
   ];
 
   return (
-    <Layout Layout hasSider>
+    <Layout>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-        }}
+        style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0, }}
       >
         {collapsed ? (
           <div className="projectTitle">
@@ -245,12 +238,7 @@ const App = () => {
           items={items}
         />
       </Sider>
-      <Layout
-        style={{
-          marginLeft: 200,
-        }}
-      >
-        <Layout>
+      <Layout>
           <Content
             style={{
               margin: "0 16px",
@@ -321,7 +309,6 @@ const App = () => {
             Khaleghi
           </Footer>
         </Layout>
-      </Layout>
     </Layout>
   );
 };
