@@ -213,15 +213,19 @@ const App = () => {
   ];
 
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
+    <Layout Layout hasSider>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        style={{
+          overflow: "auto",
+          height: "100vh",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+        }}
       >
         {collapsed ? (
           <div className="projectTitle">
@@ -241,56 +245,61 @@ const App = () => {
           items={items}
         />
       </Sider>
-      <Layout>
-        <Content
-          style={{
-            margin: "0 16px",
-          }}
-        >
-          <Breadcrumb
+      <Layout
+        style={{
+          marginLeft: 200,
+        }}
+      >
+        <Layout>
+          <Content
             style={{
-              margin: "16px 0",
-            }}
-            items={BreadcrumbName.map((item) => ({ title: item }))}
-          />
-          <div
-            style={{
-              padding: 20,
-              minHeight: 360,
-              background: "white",
+              margin: "0 16px",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              {allEventData && fullNetwork && electrodeData ? (
-                <Card ref={parentRef} className="brainViewer">
-                  <BrainViewer
-                    propagationData={propagationData}
-                    patientInformation={patientInfo}
-                    lesionArray={lesionArray}
-                    electrodeData={electrodeData}
-                    sampleData={sampleData}
-                    timeRange={1000}
-                    events={allEventData[patientInfo.sampleID]}
-                    allnetwork={fullNetwork}
-                    allnetworksWithEvent={fullEventNetwork}
-                    selectedEventRange={[103, 113]}
-                  />
-                </Card>
-              ) : null}
+            <Breadcrumb
+              style={{
+                margin: "16px 0",
+              }}
+              items={BreadcrumbName.map((item) => ({ title: item }))}
+            />
+            <div
+              style={{
+                padding: 20,
+                minHeight: 360,
+                background: "white",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                {allEventData && fullNetwork && electrodeData ? (
+                  <Card ref={parentRef} className="brainViewer">
+                    <BrainViewer
+                      propagationData={propagationData}
+                      patientInformation={patientInfo}
+                      lesionArray={lesionArray}
+                      electrodeData={electrodeData}
+                      sampleData={sampleData}
+                      timeRange={1000}
+                      events={allEventData[patientInfo.sampleID]}
+                      allnetwork={fullNetwork}
+                      allnetworksWithEvent={fullEventNetwork}
+                      selectedEventRange={[103, 113]}
+                    />
+                  </Card>
+                ) : null}
 
-              {eegData ? (
-                <Card ref={parentRef} className="eegContainer">
-                  <EEGDataViewer
-                    containerWidth={width}
-                    patientID={selectedPatient}
-                    lesionArray={lesionArray}
-                    data={eegData}
-                  />
-                </Card>
-              ) : null}
-            </div>
+                {eegData ? (
+                  <Card ref={parentRef} className="eegContainer">
+                    <EEGDataViewer
+                      containerWidth={width}
+                      patientID={selectedPatient}
+                      lesionArray={lesionArray}
+                      data={eegData}
+                    />
+                  </Card>
+                ) : null}
+              </div>
 
-            {/* {allEventData && fullNetwork && electrodeData ? (
+              {/* {allEventData && fullNetwork && electrodeData ? (
               <NetworkViewer
                 events={allEventData[patientInfo.sampleID]}
                 allnetwork={fullNetwork}
@@ -298,21 +307,20 @@ const App = () => {
                 selectedEventRange={[103, 113]}
               />
             ) : null} */}
-            {fullEventNetwork ? (
-                <MatrixViewer
-                  allnetworksWithEvent={fullEventNetwork[1]}
-                />
-            ) : null}
-          </div>
-        </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          EpliepsyBrain ©2023 Created by Siyuan Zhao, Nasibeh Hashmati, Hamed
-          Khaleghi
-        </Footer>
+              {fullEventNetwork ? (
+                <MatrixViewer allnetworksWithEvent={fullEventNetwork[1]} />
+              ) : null}
+            </div>
+          </Content>
+          <Footer
+            style={{
+              textAlign: "center",
+            }}
+          >
+            EpliepsyBrain ©2023 Created by Siyuan Zhao, Nasibeh Hashmati, Hamed
+            Khaleghi
+          </Footer>
+        </Layout>
       </Layout>
     </Layout>
   );
