@@ -8,7 +8,8 @@ import dataRegistry from "./data/dataRegistry.json";
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import { NetworkViewer } from "./components/network-viewer/networkViewer.js";
-import { MatrixViewer } from "./components/network-viewer/MatrixViewer.js";
+import { RoiMatrixViewer } from "./components/network-viewer/roiMatrixViewer.js";
+import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
 
 import { useFullNetwork } from "./library/useFullNetwork";
 import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
@@ -35,9 +36,11 @@ const App = () => {
   const [lesionArray, SetlesionArray] = useState([1, 2]);
   // use for showing EEG data
   const [eegData, setEEGData] = useState();
-  const [selectedMatrix, setSelectedMatrix] = useState(null);
+  // use for select roi and show 2D network
+  const [selectedROINetwork, setSelectedROINetwork] = useState({});
   // use for set EEG container width and height set
   const [width, setWidth] = useState(0);
+  const [selectedROIColor, setSelectedROIColor] = useState("");
   const parentRef = useRef();
 
   const defaultElList = [
@@ -218,7 +221,13 @@ const App = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0, }}
+        style={{
+          overflow: "auto",
+          height: "100vh",
+          position: "sticky",
+          top: 0,
+          left: 0,
+        }}
       >
         {collapsed ? (
           <div className="projectTitle">
@@ -239,55 +248,55 @@ const App = () => {
         />
       </Sider>
       <Layout>
-          <Content
+        <Content
+          style={{
+            margin: "0 16px",
+          }}
+        >
+          <Breadcrumb
             style={{
-              margin: "0 16px",
+              margin: "16px 0",
+            }}
+            items={BreadcrumbName.map((item) => ({ title: item }))}
+          />
+          <div
+            style={{
+              padding: 20,
+              minHeight: 360,
+              background: "white",
             }}
           >
-            <Breadcrumb
-              style={{
-                margin: "16px 0",
-              }}
-              items={BreadcrumbName.map((item) => ({ title: item }))}
-            />
-            <div
-              style={{
-                padding: 20,
-                minHeight: 360,
-                background: "white",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {allEventData && fullNetwork && electrodeData ? (
-                  <Card ref={parentRef} className="brainViewer">
-                    <BrainViewer
-                      propagationData={propagationData}
-                      patientInformation={patientInfo}
-                      lesionArray={lesionArray}
-                      electrodeData={electrodeData}
-                      sampleData={sampleData}
-                      timeRange={1000}
-                      events={allEventData[patientInfo.sampleID]}
-                      allnetwork={fullNetwork}
-                      allnetworksWithEvent={fullEventNetwork}
-                      selectedEventRange={[103, 113]}
-                    />
-                  </Card>
-                ) : null}
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {allEventData && fullNetwork && electrodeData ? (
+                <Card ref={parentRef} className="brainViewer">
+                  <BrainViewer
+                    propagationData={propagationData}
+                    patientInformation={patientInfo}
+                    lesionArray={lesionArray}
+                    electrodeData={electrodeData}
+                    sampleData={sampleData}
+                    timeRange={1000}
+                    events={allEventData[patientInfo.sampleID]}
+                    allnetwork={fullNetwork}
+                    allnetworksWithEvent={fullEventNetwork}
+                    selectedEventRange={[103, 113]}
+                  />
+                </Card>
+              ) : null}
 
-                {eegData ? (
-                  <Card ref={parentRef} className="eegContainer">
-                    <EEGDataViewer
-                      containerWidth={width}
-                      patientID={selectedPatient}
-                      lesionArray={lesionArray}
-                      data={eegData}
-                    />
-                  </Card>
-                ) : null}
-              </div>
+              {eegData ? (
+                <Card ref={parentRef} className="eegContainer">
+                  <EEGDataViewer
+                    containerWidth={width}
+                    patientID={selectedPatient}
+                    lesionArray={lesionArray}
+                    data={eegData}
+                  />
+                </Card>
+              ) : null}
+            </div>
 
-              {/* {allEventData && fullNetwork && electrodeData ? (
+            {/* {allEventData && fullNetwork && electrodeData ? (
               <NetworkViewer
                 events={allEventData[patientInfo.sampleID]}
                 allnetwork={fullNetwork}
@@ -295,20 +304,33 @@ const App = () => {
                 selectedEventRange={[103, 113]}
               />
             ) : null} */}
+            <div style={{ display: "flex" }}>
               {fullEventNetwork ? (
-                <MatrixViewer allnetworksWithEvent={fullEventNetwork[1]} />
+                <RoiMatrixViewer
+                  allnetworksWithEvent={fullEventNetwork[1]}
+                  setSelectedROINetwork={setSelectedROINetwork}
+                  setSelectedROIColor={setSelectedROIColor}
+                />
+              ) : null}
+
+              {selectedROINetwork && selectedROIColor ? (
+                <NodeViewer
+                  selectedROINetwork={selectedROINetwork}
+                  selectedROIColor={selectedROIColor}
+                />
               ) : null}
             </div>
-          </Content>
-          <Footer
-            style={{
-              textAlign: "center",
-            }}
-          >
-            EpliepsyBrain ©2023 Created by Siyuan Zhao, Nasibeh Hashmati, Hamed
-            Khaleghi
-          </Footer>
-        </Layout>
+          </div>
+        </Content>
+        <Footer
+          style={{
+            textAlign: "center",
+          }}
+        >
+          EpliepsyBrain ©2023 Created by Siyuan Zhao, Nasibeh Hashmati, Hamed
+          Khaleghi
+        </Footer>
+      </Layout>
     </Layout>
   );
 };

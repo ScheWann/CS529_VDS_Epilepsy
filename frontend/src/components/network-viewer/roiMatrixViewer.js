@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { Card } from "antd";
 import * as d3 from "d3";
 
-export const MatrixViewer = ({ allnetworksWithEvent }) => {
+export const RoiMatrixViewer = ({ allnetworksWithEvent, setSelectedROINetwork, setSelectedROIColor }) => {
   const filteredAllnetworksWithEvent = allnetworksWithEvent.slice(0, 3);
   const svgRefs = useRef(
     filteredAllnetworksWithEvent.map(() => React.createRef())
   );
   const size = 300;
-  const cellPadding = 2;
   const margin = { top: 20, right: 50, bottom: 20, left: 20 };
   const colorslist = [
     "#1f77b4",
@@ -21,6 +20,12 @@ export const MatrixViewer = ({ allnetworksWithEvent }) => {
     "#bfa3a3",
   ];
 
+  const handleCardClick = (networkData, index) => {
+    setSelectedROINetwork(networkData)
+    setSelectedROIColor(colorslist[index])
+    console.log(networkData, "checknetwork bro");
+  };
+
   useEffect(() => {
     filteredAllnetworksWithEvent.forEach((network, index) => {
       const svg = d3.select(svgRefs.current[index].current);
@@ -29,8 +34,6 @@ export const MatrixViewer = ({ allnetworksWithEvent }) => {
       const matrixData = network.matrix;
       const numRows = matrixData.length;
       const numCols = matrixData[0].length;
-      const width = size - margin.left - margin.right;
-      const height = size - margin.top - margin.bottom;
       const cellSize = size * 0.9 / Math.max(numRows, numCols);
 
       // Define the color scale
@@ -53,14 +56,15 @@ export const MatrixViewer = ({ allnetworksWithEvent }) => {
         });
       });
     });
-  }, [filteredAllnetworksWithEvent]);
+  }, [filteredAllnetworksWithEvent, setSelectedROINetwork, setSelectedROIColor]);
 
   return (
     <div style={{ display: "flex", marginTop: 10 }}>
-      {filteredAllnetworksWithEvent.map((_, index) => (
+      {filteredAllnetworksWithEvent.map((network, index) => (
         <Card key={`card-${index}`}
-        title={`ROI${index}`}
+        title={`ROI ${index}`}
         style={{marginRight: 5, padding: 0}}
+        onClick={() => handleCardClick(network, index)}
         >
           <svg
             className="matrixViewer"

@@ -18,7 +18,7 @@ export const EEGDataViewer = ({ data, containerWidth }) => {
 
     keysToDraw.forEach((key) => {
       const chartData = data[key];
-      const margin = { top: 10, right: 20, bottom: 30, left: 20 };
+      const margin = { top: 10, right: 20, bottom: 30, left: 80 };
       const width = containerWidth * 0.95 - margin.left - margin.right;
       const height = 100;
 
