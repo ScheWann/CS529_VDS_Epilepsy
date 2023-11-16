@@ -141,10 +141,9 @@ export const SimilarViewer = ({
         .selectAll("line")
         .data(links)
         .join("line")
-        .attr("stroke-width", (d) => Math.sqrt(d.value));
 
       linkRef.current = link;
-      
+
       const node = svg
         .append("g")
         .attr("stroke", "#fff")
@@ -169,15 +168,6 @@ export const SimilarViewer = ({
         .attr("text-anchor", "middle")
         .attr("dy", ".10em")
         .text((d) => d.id);
-
-      linkRef.current = svg
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
-        .selectAll("line")
-        .data(links)
-        .join("line")
-        .attr("stroke-width", (d) => Math.sqrt(d.value));
 
       // Set up simulation
       simulation.nodes(nodes).on("tick", ticked);
