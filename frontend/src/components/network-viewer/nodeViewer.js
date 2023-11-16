@@ -58,7 +58,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
           d3
             .forceLink(links)
             .id((d) => d.id)
-            .distance(180)
+            .distance(100)
             .strength(0.1)
         )
         .force("charge", d3.forceManyBody())
@@ -69,8 +69,8 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
 
       const svg = d3
         .select(ref.current)
-        .attr("width", cardSize.width * 0.98)
-        .attr("height", cardSize.height * 0.98);
+        .attr("width", cardSize.width * 0.9)
+        .attr("height", cardSize.height * 0.9);
 
       const link = svg
         .append("g")

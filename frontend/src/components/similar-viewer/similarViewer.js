@@ -104,7 +104,7 @@ export const SimilarViewer = ({
           d3
             .forceLink(links)
             .id((d) => d.id)
-            .distance(180)
+            .distance(100)
             .strength(0.1)
         )
         .force("charge", d3.forceManyBody())
@@ -115,8 +115,8 @@ export const SimilarViewer = ({
 
       const svg = d3
         .select(ref.current)
-        .attr("width", cardSize.width * 0.98)
-        .attr("height", cardSize.height * 0.98);
+        .attr("width", cardSize.width * 0.9)
+        .attr("height", cardSize.height * 0.9);
 
       const link = svg
         .append("g")
@@ -238,7 +238,7 @@ export const SimilarViewer = ({
               <div style={{ marginRight: 10, color: "#333" }}>Events:</div>
               <Select
                 size={"middle"}
-                defaultValue={similarEventsOptions}
+                defaultValue={selectedEvent}
                 onChange={changeEvent}
                 style={{
                   width: 200,
