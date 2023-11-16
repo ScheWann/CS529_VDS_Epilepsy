@@ -8,8 +8,8 @@ import { CurveLoader } from "./curveLoader";
 import { Segmented } from "antd";
 import { Test } from "../network-viewer/test";
 
-const width = window.innerWidth / 3 - 10;
-const height = window.innerHeight / 2.6 - 10;
+const width = window.innerWidth / 3;
+const height = window.innerHeight / 3;
 
 export const BrainViewer = (props) => {
   const [allEvents, setAllEvents] = useState({});
@@ -35,15 +35,26 @@ export const BrainViewer = (props) => {
   const changeSegement = (value) => {
     setSegment(value);
   };
+  const changeROI = (value) => {
+    let roiIndex = parseInt(value.replace(/[^\d]/g, ''));
+    props.setROI(roiIndex);
+  };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ height: height, width: width }}>
+    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Segmented
           options={["ROI", "Frequncy", "Propogation", "Curve"]}
           onChange={changeSegement}
           defaultValue={"ROI"}
         />
+        <Segmented
+          options={["ROI 0", "ROI 1", "ROI 2"]}
+          onChange={changeROI}
+          defaultValue={"ROI 1"}
+        />
+      </div>
+      <div style={{ height: height, width: width }}>
         <Canvas>
           <PerspectiveCamera
             makeDefault
@@ -79,15 +90,16 @@ export const BrainViewer = (props) => {
             allnetworkWithEvent={props.allnetworksWithEvent}
             patientID={props.patientInformation.patientID}
           />
-          {segement == "Curve" ? 
-          <CurveLoader
-            segement={segement}
-            bbox={dataRegisty[props.patientInformation.patientID].bbox}
-            patientID={props.patientInformation.patientID}
-            electrodeData={props.electrodeData} 
-            propagationData={props.propagationData}
-            selectedElectrode={selectedElectrode}
-          /> : null}
+          {segement == "Curve" ? (
+            <CurveLoader
+              segement={segement}
+              bbox={dataRegisty[props.patientInformation.patientID].bbox}
+              patientID={props.patientInformation.patientID}
+              electrodeData={props.electrodeData}
+              propagationData={props.propagationData}
+              selectedElectrode={selectedElectrode}
+            />
+          ) : null}
 
           <OrbitControls enablePan={true} />
         </Canvas>

@@ -23,7 +23,6 @@ export const RoiMatrixViewer = ({ allnetworksWithEvent, setSelectedROINetwork, s
   const handleCardClick = (networkData, index) => {
     setSelectedROINetwork(networkData)
     setSelectedROIColor(colorslist[index])
-    console.log(networkData, "checknetwork bro");
   };
 
   useEffect(() => {

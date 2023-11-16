@@ -10,6 +10,7 @@ import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import { NetworkViewer } from "./components/network-viewer/networkViewer.js";
 import { RoiMatrixViewer } from "./components/network-viewer/roiMatrixViewer.js";
 import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
+import { SimilarViewer } from "./components/similar-viewer/similarViewer.js";
 
 import { useFullNetwork } from "./library/useFullNetwork";
 import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
@@ -17,6 +18,8 @@ import { useFullEventData } from "./library/useFullEventData";
 import { useElectrodeData } from "./library/useElectrodeData";
 import { useSamples } from "./library/useSamples";
 import { usePropagation } from "./library/usePropagation.js";
+import { useSimilarityData } from "./library/useSimilarityData.js";
+
 const { Content, Footer, Sider } = Layout;
 
 const App = () => {
@@ -40,7 +43,10 @@ const App = () => {
   const [selectedROINetwork, setSelectedROINetwork] = useState({});
   // use for set EEG container width and height set
   const [width, setWidth] = useState(0);
+  // for showing the corresponding color based on the 3D brain ROI color
   const [selectedROIColor, setSelectedROIColor] = useState("");
+  // for choosing different ROI to show 2D nodes
+  const [ROI, setROI] = useState(2);
   const parentRef = useRef();
 
   const defaultElList = [
@@ -75,6 +81,11 @@ const App = () => {
     sampleID: patientInfo.sampleID,
     eventID: 1,
   });
+
+  const similarityData  = useSimilarityData({
+    patientID: patientInfo.patientID,
+    sampleID: patientInfo.sampleID,
+  })
 
   useEffect(() => {
     fetch(`/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`)
@@ -280,6 +291,7 @@ const App = () => {
                     allnetwork={fullNetwork}
                     allnetworksWithEvent={fullEventNetwork}
                     selectedEventRange={[103, 113]}
+                    setROI={setROI}
                   />
                 </Card>
               ) : null}
@@ -304,18 +316,27 @@ const App = () => {
                 selectedEventRange={[103, 113]}
               />
             ) : null} */}
-            <div style={{ display: "flex" }}>
-              {fullEventNetwork ? (
+            <div style={{ display: "flex", height: "40vh", justifyContent: "space-between" }}>
+              {/* {fullEventNetwork ? (
                 <RoiMatrixViewer
                   allnetworksWithEvent={fullEventNetwork[1]}
                   setSelectedROINetwork={setSelectedROINetwork}
                   setSelectedROIColor={setSelectedROIColor}
                 />
+              ) : null} */}
+
+              {fullEventNetwork ? (
+                <NodeViewer
+                  allnetworksWithEvent={fullEventNetwork[1]}
+                  ROI={ROI}
+                />
               ) : null}
 
-              {selectedROINetwork ? (
-                <NodeViewer
-                  selectedROINetwork={selectedROINetwork}
+              {fullEventNetwork && similarityData ? (
+                <SimilarViewer
+                  allnetworksWithEvent={fullEventNetwork}
+                  similarityData={similarityData}
+                  ROI={ROI}
                   selectedROIColor={selectedROIColor}
                 />
               ) : null}

@@ -1,8 +1,12 @@
-import { Card, Empty } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Select, Card, Empty } from "antd";
 import * as d3 from "d3";
 
-export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
+export const SimilarViewer = ({
+  allnetworksWithEvent,
+  similarityData,
+  ROI,
+}) => {
   const colorslist = [
     "#1f77b4",
     "#ff7f0e",
@@ -13,12 +17,22 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
     "#e377c2",
     "#bfa3a3",
   ];
-  const roiNetwork = allnetworksWithEvent[ROI]["network"];
   const selectedROIColor = colorslist[ROI];
+
+  const [similarNodesArray, setSimilarNodesArray] = useState([]);
+  const [selectedNetwork, setSelectedNetwork] = useState(null);
+  const [similarEventsOptions, SetSimilarEventsOptions] = useState({});
+  const [selectedEvent, setSelectedEvent] = useState(2);
+  const [cardSize, setCardSize] = useState({});
+
   const ref = useRef();
   const cardRef = useRef();
   const linkRef = useRef();
-  const [cardSize, setCardSize] = useState({});
+
+  const changeEvent = (value) => {
+    setSelectedEvent(value);
+  };
+
   function highlightLinks(node, highlight) {
     linkRef.current.style("stroke", (d) => {
       return d.source.id === node.id || d.target.id === node.id
@@ -30,22 +44,53 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
   }
 
   useEffect(() => {
-    if (cardRef.current) {
-      const { width, height } = cardRef.current.getBoundingClientRect();
-      setCardSize({ width, height });
+    let tempSimilarNodesArray = [];
+    let tempSimilarEventsOptions = [];
+    similarityData[1].neighbors.forEach((element, index) => {
+      let similarNodesObj = {
+        id: element,
+        network: allnetworksWithEvent[element],
+      };
+
+      let similarEventsObj = {
+        label: element,
+        value: index,
+      };
+      tempSimilarNodesArray.push(similarNodesObj);
+      tempSimilarEventsOptions.push(similarEventsObj);
+    });
+
+    setSimilarNodesArray(tempSimilarNodesArray);
+    SetSimilarEventsOptions(tempSimilarEventsOptions);
+    // Check and set the selected network after updating the similarNodesArray
+    if (
+      tempSimilarNodesArray.length > 0 &&
+      tempSimilarNodesArray[selectedEvent].network
+    ) {
+      setSelectedNetwork(
+        tempSimilarNodesArray[selectedEvent].network[ROI]["network"]
+      );
     }
-  }, [allnetworksWithEvent]);
+  }, [allnetworksWithEvent, similarityData, ROI, selectedEvent]);
 
   useEffect(() => {
-    if (roiNetwork && cardSize.width && cardSize.height) {
+    if (cardRef.current) {
+      const { width, height } = cardRef.current.getBoundingClientRect();
+      console.log(width, height, "opopopoop");
+      setCardSize({ width, height });
+    }
+  }, [allnetworksWithEvent, selectedNetwork]);
+
+  useEffect(() => {
+    if (selectedNetwork && cardSize.width && cardSize.height) {
       d3.select(ref.current).selectAll("*").remove();
 
       const nodes = Array.from(
-        new Set(roiNetwork.flatMap((link) => [link.source, link.target])),
+        new Set(selectedNetwork.flatMap((link) => [link.source, link.target])),
         (id) => ({ id })
       );
 
-      const links = roiNetwork.map((link) => ({
+      const links = selectedNetwork.map((link) => ({
         source: nodes.find((n) => n.id === link.source),
         target: nodes.find((n) => n.id === link.target),
       }));
@@ -170,21 +215,49 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
     }
   }, [allnetworksWithEvent, cardSize, ROI]);
 
-  return (
-    <Card ref={cardRef} style={{ marginTop: 10, width: "49%" }}>
-      {roiNetwork.length ? (
-        <svg ref={ref} />
-      ) : (
-        <Empty
-          style={{
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-          description={"There is no actived electrodes"}
-        />
-      )}
-    </Card>
-  );
+  if (selectedNetwork) {
+    // Render NodeViewer if selectedNetwork is set
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "49%",
+        }}
+      >
+        <Card
+          ref={cardRef}
+          style={{ marginTop: 10, height: "calc(100% - 10px)" }}
+        >
+          <div style={{ display: "flex", float: "right", alignItems: "center" }}>
+            <div style={{marginRight: 10, color: "#333"}}>Events:</div>
+            <Select
+              size={"middle"}
+              defaultValue={similarEventsOptions}
+              onChange={changeEvent}
+              style={{
+                width: 200,
+              }}
+              options={similarEventsOptions}
+            />
+          </div>
+          {selectedNetwork.length ? (
+            <svg ref={ref} />
+          ) : (
+            <Empty
+              style={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+              description={"No similar event is showing"}
+            />
+          )}
+        </Card>
+      </div>
+    );
+  } else {
+    return null;
+  }
 };
