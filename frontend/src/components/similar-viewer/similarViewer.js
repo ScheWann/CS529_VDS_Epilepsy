@@ -29,18 +29,35 @@ export const SimilarViewer = ({
   const ref = useRef();
   const cardRef = useRef();
   const linkRef = useRef();
+  const nodeRef = useRef();
 
   const changeEvent = (value) => {
     setSelectedEvent(value);
   };
 
   function highlightLinks(node, highlight) {
-    linkRef.current.style("stroke", (d) => {
-      return d.source.id === node.id || d.target.id === node.id
-        ? highlight
-          ? "red"
-          : "#999"
-        : "#999";
+    // Create a set to store connected node ids
+    const connectedNodeIds = new Set();
+
+    // Highlight or reset links and collect connected node ids
+    linkRef.current.each(function (d) {
+      if (d.source.id === node.id || d.target.id === node.id) {
+        d3.select(this).style("stroke", highlight ? "red" : "#999");
+        connectedNodeIds.add(d.source.id);
+        connectedNodeIds.add(d.target.id);
+      } else {
+        d3.select(this).style("stroke", "#999");
+      }
+    });
+
+    // Highlight or reset nodes based on connectedNodeIds
+    nodeRef.current.each(function (n) {
+      if (connectedNodeIds.has(n.id)) {
+        d3.select(this).attr("fill", highlight ? "red" : selectedROIColor);
+      } else if (n.id !== node.id) {
+        // Ensure the currently dragged node remains highlighted
+        d3.select(this).attr("fill", selectedROIColor);
+      }
     });
   }
 
@@ -77,7 +94,6 @@ export const SimilarViewer = ({
   useEffect(() => {
     if (cardRef.current) {
       const { width, height } = cardRef.current.getBoundingClientRect();
-      console.log(width, height, "opopopoop");
       setCardSize({ width, height });
     }
   }, [allnetworksWithEvent, selectedNetwork]);
@@ -127,6 +143,8 @@ export const SimilarViewer = ({
         .join("line")
         .attr("stroke-width", (d) => Math.sqrt(d.value));
 
+      linkRef.current = link;
+      
       const node = svg
         .append("g")
         .attr("stroke", "#fff")
@@ -138,6 +156,8 @@ export const SimilarViewer = ({
         .attr("r", 15)
         .attr("fill", selectedROIColor)
         .call(drag(simulation));
+
+      nodeRef.current = node;
 
       const labels = svg
         .append("g")
@@ -231,8 +251,14 @@ export const SimilarViewer = ({
           ref={cardRef}
           style={{ marginTop: 10, height: "calc(100% - 10px)" }}
         >
-          <div style={{display: "flex", justifyContent:"space-between", alignItems: "center"}}>
-            <div style={{marginLeft: 10, color: "#333"}}>Similar graph</div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ marginLeft: 10, color: "#333" }}>Similar graph</div>
             <div
               style={{ display: "flex", float: "right", alignItems: "center" }}
             >

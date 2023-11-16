@@ -18,16 +18,34 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
   const ref = useRef();
   const cardRef = useRef();
   const linkRef = useRef();
+  const nodeRef = useRef();
   const [cardSize, setCardSize] = useState({});
+
   function highlightLinks(node, highlight) {
-    linkRef.current.style("stroke", (d) => {
-      return d.source.id === node.id || d.target.id === node.id
-        ? highlight
-          ? "red"
-          : "#999"
-        : "#999";
+    // Create a set to store connected node ids
+    const connectedNodeIds = new Set();
+  
+    // Highlight or reset links and collect connected node ids
+    linkRef.current.each(function (d) {
+      if (d.source.id === node.id || d.target.id === node.id) {
+        d3.select(this).style("stroke", highlight ? "red" : "#999");
+        connectedNodeIds.add(d.source.id);
+        connectedNodeIds.add(d.target.id);
+      } else {
+        d3.select(this).style("stroke", "#999");
+      }
     });
-  }
+  
+    // Highlight or reset nodes based on connectedNodeIds
+    nodeRef.current.each(function (n) {
+      if (connectedNodeIds.has(n.id)) {
+        d3.select(this).attr("fill", highlight ? "red" : selectedROIColor);
+      } else if (n.id !== node.id) {
+        // Ensure the currently dragged node remains highlighted
+        d3.select(this).attr("fill", selectedROIColor);
+      }
+    });
+  }  
 
   useEffect(() => {
     if (cardRef.current) {
@@ -78,8 +96,9 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         .attr("stroke-opacity", 0.6)
         .selectAll("line")
         .data(links)
-        .join("line")
-        .attr("stroke-width", (d) => Math.sqrt(d.value));
+        .join("line");
+
+      linkRef.current = link;
 
       const node = svg
         .append("g")
@@ -93,6 +112,8 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         .attr("fill", selectedROIColor)
         .call(drag(simulation));
 
+      nodeRef.current = node;
+
       const labels = svg
         .append("g")
         .attr("class", "labels")
@@ -103,15 +124,6 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         .attr("text-anchor", "middle")
         .attr("dy", ".10em")
         .text((d) => d.id);
-
-      linkRef.current = svg
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
-        .selectAll("line")
-        .data(links)
-        .join("line")
-        .attr("stroke-width", (d) => Math.sqrt(d.value));
 
       // Set up simulation
       simulation.nodes(nodes).on("tick", ticked);
@@ -172,7 +184,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
 
   return (
     <Card ref={cardRef} style={{ marginTop: 10, width: "49%" }}>
-      <div style={{marginLeft: 10, color: "#333"}}>2D electrodes graph</div>
+      <div style={{ marginLeft: 10, color: "#333" }}>2D electrodes graph</div>
       {roiNetwork.length ? (
         <svg ref={ref} />
       ) : (
