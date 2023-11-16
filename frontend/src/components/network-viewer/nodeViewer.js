@@ -24,7 +24,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
   function highlightLinks(node, highlight) {
     // Create a set to store connected node ids
     const connectedNodeIds = new Set();
-  
+
     // Highlight or reset links and collect connected node ids
     linkRef.current.each(function (d) {
       if (d.source.id === node.id || d.target.id === node.id) {
@@ -35,7 +35,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         d3.select(this).style("stroke", "#999");
       }
     });
-  
+
     // Highlight or reset nodes based on connectedNodeIds
     nodeRef.current.each(function (n) {
       if (connectedNodeIds.has(n.id)) {
@@ -45,7 +45,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         d3.select(this).attr("fill", selectedROIColor);
       }
     });
-  }  
+  }
 
   useEffect(() => {
     if (cardRef.current) {
@@ -89,6 +89,14 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         .select(ref.current)
         .attr("width", cardSize.width * 0.9)
         .attr("height", cardSize.height * 0.9);
+        
+      svg
+        .append("image")
+        .attr("href", "/brain.jpeg")
+        .attr("width", cardSize.width * 0.95)
+        .attr("height", cardSize.height * 0.95)
+        .attr("x", 0)
+        .attr("y", 0);
 
       const link = svg
         .append("g")
