@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Select, Card, Empty } from "antd";
+// import { BlockOutlined } from '@ant-design/icons';
 import * as d3 from "d3";
 
 export const SimilarViewer = ({
@@ -229,17 +230,22 @@ export const SimilarViewer = ({
           ref={cardRef}
           style={{ marginTop: 10, height: "calc(100% - 10px)" }}
         >
-          <div style={{ display: "flex", float: "right", alignItems: "center" }}>
-            <div style={{marginRight: 10, color: "#333"}}>Events:</div>
-            <Select
-              size={"middle"}
-              defaultValue={similarEventsOptions}
-              onChange={changeEvent}
-              style={{
-                width: 200,
-              }}
-              options={similarEventsOptions}
-            />
+          <div style={{display: "flex", justifyContent:"space-between", alignItems: "center"}}>
+            <div style={{marginLeft: 10, color: "#333"}}>Similar graph</div>
+            <div
+              style={{ display: "flex", float: "right", alignItems: "center" }}
+            >
+              <div style={{ marginRight: 10, color: "#333" }}>Events:</div>
+              <Select
+                size={"middle"}
+                defaultValue={similarEventsOptions}
+                onChange={changeEvent}
+                style={{
+                  width: 200,
+                }}
+                options={similarEventsOptions}
+              />
+            </div>
           </div>
           {selectedNetwork.length ? (
             <svg ref={ref} />

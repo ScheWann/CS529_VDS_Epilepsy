@@ -172,6 +172,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
 
   return (
     <Card ref={cardRef} style={{ marginTop: 10, width: "49%" }}>
+      <div style={{marginLeft: 10, color: "#333"}}>2D electrodes graph</div>
       {roiNetwork.length ? (
         <svg ref={ref} />
       ) : (

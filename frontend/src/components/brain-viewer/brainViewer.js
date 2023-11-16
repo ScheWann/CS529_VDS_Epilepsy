@@ -51,7 +51,7 @@ export const BrainViewer = (props) => {
         <Segmented
           options={["ROI 0", "ROI 1", "ROI 2"]}
           onChange={changeROI}
-          defaultValue={"ROI 1"}
+          defaultValue={"ROI 2"}
         />
       </div>
       <div style={{ height: height, width: width }}>
