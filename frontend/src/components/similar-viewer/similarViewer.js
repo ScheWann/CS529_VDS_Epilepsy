@@ -187,6 +187,7 @@ export const SimilarViewer = ({
         labels.attr("x", (d) => d.x).attr("y", (d) => d.y);
       });
 
+      // froce node function
       function drag(simulation) {
         function dragstarted(event, d) {
           if (!event.active) simulation.alphaTarget(0.3).restart();

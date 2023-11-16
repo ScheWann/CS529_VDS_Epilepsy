@@ -56,6 +56,7 @@ const App = () => {
   ];
   const strElectrodes = defaultElList.join(",");
 
+  // get each related data 
   const allEventData = useFullEventData({ patientID: patientInfo.patientID });
 
   const fullNetwork = useFullNetwork({
