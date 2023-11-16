@@ -8,8 +8,8 @@ import { CurveLoader } from "./curveLoader";
 import { Segmented } from "antd";
 import { Test } from "../network-viewer/test";
 
-const width = window.innerWidth / 3;
-const height = window.innerHeight / 3;
+const width = window.innerWidth / 2.5;
+const height = window.innerHeight / 2.5;
 
 export const BrainViewer = (props) => {
   const [allEvents, setAllEvents] = useState({});
