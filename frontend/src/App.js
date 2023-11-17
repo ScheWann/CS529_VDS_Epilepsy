@@ -4,7 +4,7 @@ import { Breadcrumb, Layout, Menu, Card } from "antd";
 
 import "./App.css";
 import dataRegistry from "./data/dataRegistry.json";
-
+// import brainIcon from "../public/brain-svgrepo-com.svg"
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
@@ -220,7 +220,7 @@ const App = () => {
       >
         {collapsed ? (
           <div className="projectTitle">
-            <img src="/brain-svgrepo-com.svg" alt="Your SVG" />
+            <img src="./brain-svgrepo-com.svg" alt="Your SVG" />
           </div>
         ) : (
           <div className="projectTitle">
