@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/CS529_VDS_Epilepsy/static/css/main.32628685.css",
-    "main.js": "/CS529_VDS_Epilepsy/static/js/main.f73bf41e.js",
+    "main.js": "/CS529_VDS_Epilepsy/static/js/main.ed24472c.js",
     "static/js/787.9e9f4ffd.chunk.js": "/CS529_VDS_Epilepsy/static/js/787.9e9f4ffd.chunk.js",
     "index.html": "/CS529_VDS_Epilepsy/index.html",
     "main.32628685.css.map": "/CS529_VDS_Epilepsy/static/css/main.32628685.css.map",
-    "main.f73bf41e.js.map": "/CS529_VDS_Epilepsy/static/js/main.f73bf41e.js.map",
+    "main.ed24472c.js.map": "/CS529_VDS_Epilepsy/static/js/main.ed24472c.js.map",
     "787.9e9f4ffd.chunk.js.map": "/CS529_VDS_Epilepsy/static/js/787.9e9f4ffd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.32628685.css",
-    "static/js/main.f73bf41e.js"
+    "static/js/main.ed24472c.js"
   ]
 }
