@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { PieChartOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, Card } from "antd";
 
@@ -17,6 +17,7 @@ import { useElectrodeData } from "./library/useElectrodeData";
 import { useSamples } from "./library/useSamples";
 import { usePropagation } from "./library/usePropagation.js";
 import { useSimilarityData } from "./library/useSimilarityData.js";
+import { useEggData } from "./library/useEggData.js";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -35,27 +36,24 @@ const App = () => {
   });
   // use for showing lesion array and send it to 3D brain to display
   const [lesionArray, SetlesionArray] = useState([1, 2]);
-  // use for showing EEG data
-  const [eegData, setEEGData] = useState();
-  // use for select roi and show 2D network
-  const [selectedROINetwork, setSelectedROINetwork] = useState({});
   // use for set EEG container width and height set
   const [width, setWidth] = useState(0);
   // for showing the corresponding color based on the 3D brain ROI color
   const [selectedROIColor, setSelectedROIColor] = useState("");
   // for choosing different ROI to show 2D nodes
   const [ROI, setROI] = useState(2);
-  const parentRef = useRef();
-
-  const defaultElList = [
-    26, 28, 36, 20, 32, 21, 22, 40, 41, 54, 19, 31, 39, 47, 48, 52, 56, 27, 29,
-    34, 35, 43, 49, 50, 53, 18, 33, 44, 30, 38, 51, 37, 108, 109, 107, 102, 112,
-    55, 45, 23, 103, 73, 74, 76, 75, 84, 89,
-  ];
-  const strElectrodes = defaultElList.join(",");
-
-  // get each related data 
+  const parentRef = useCallback(node => {
+    if (node !== null) {
+      setWidth(node.getBoundingClientRect().width);
+    }
+  }, []);
+  // get each related data
   const allEventData = useFullEventData({ patientID: patientInfo.patientID });
+
+  const eegData = useEggData({
+    patientID: patientInfo.patientID,
+    sampleID: patientInfo.sampleID,
+  });
 
   const fullNetwork = useFullNetwork({
     patientID: patientInfo.patientID,
@@ -81,29 +79,10 @@ const App = () => {
     eventID: 1,
   });
 
-  const similarityData  = useSimilarityData({
+  const similarityData = useSimilarityData({
     patientID: patientInfo.patientID,
     sampleID: patientInfo.sampleID,
-  })
-
-  useEffect(() => {
-    fetch(`/data/patient/ep129/eeg/sample1/0/500/${strElectrodes}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setEEGData(data);
-      })
-      .then(() => {
-        if (parentRef.current) {
-          const resizeObserver = new ResizeObserver((entries) => {
-            for (let entry of entries) {
-              setWidth(parentRef.current.offsetWidth);
-            }
-          });
-          resizeObserver.observe(parentRef.current);
-          return () => resizeObserver.disconnect();
-        }
-      });
-  }, []);
+  });
 
   // Control the display of breadcrumb
   const handleIDsSelect = (patient, id, name) => {
@@ -278,7 +257,7 @@ const App = () => {
           >
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               {allEventData && fullNetwork && electrodeData ? (
-                <Card ref={parentRef} className="brainViewer">
+                <Card className="brainViewer">
                   <BrainViewer
                     propagationData={propagationData}
                     patientInformation={patientInfo}
@@ -307,8 +286,13 @@ const App = () => {
               ) : null}
             </div>
 
-            <div style={{ display: "flex", height: "40vh", justifyContent: "space-between" }}>
-
+            <div
+              style={{
+                display: "flex",
+                height: "40vh",
+                justifyContent: "space-between",
+              }}
+            >
               {fullEventNetwork ? (
                 <NodeViewer
                   allnetworksWithEvent={fullEventNetwork[1]}
