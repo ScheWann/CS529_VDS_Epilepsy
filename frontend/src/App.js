@@ -7,8 +7,6 @@ import dataRegistry from "./data/dataRegistry.json";
 
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
-import { NetworkViewer } from "./components/network-viewer/networkViewer.js";
-import { RoiMatrixViewer } from "./components/network-viewer/roiMatrixViewer.js";
 import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
 import { SimilarViewer } from "./components/similar-viewer/similarViewer.js";
 
@@ -309,22 +307,7 @@ const App = () => {
               ) : null}
             </div>
 
-            {/* {allEventData && fullNetwork && electrodeData ? (
-              <NetworkViewer
-                events={allEventData[patientInfo.sampleID]}
-                allnetwork={fullNetwork}
-                electrodeData={electrodeData}
-                selectedEventRange={[103, 113]}
-              />
-            ) : null} */}
             <div style={{ display: "flex", height: "40vh", justifyContent: "space-between" }}>
-              {/* {fullEventNetwork ? (
-                <RoiMatrixViewer
-                  allnetworksWithEvent={fullEventNetwork[1]}
-                  setSelectedROINetwork={setSelectedROINetwork}
-                  setSelectedROIColor={setSelectedROIColor}
-                />
-              ) : null} */}
 
               {fullEventNetwork ? (
                 <NodeViewer
