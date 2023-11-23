@@ -92,7 +92,7 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
         
       svg
         .append("image")
-        .attr("href", "./brain.jpeg")
+        .attr("href", "/brain.jpeg")
         .attr("width", cardSize.width * 0.95)
         .attr("height", cardSize.height * 0.95)
         .attr("x", 0)

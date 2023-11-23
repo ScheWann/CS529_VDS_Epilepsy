@@ -219,11 +219,11 @@ const App = () => {
       >
         {collapsed ? (
           <div className="projectTitle">
-            <img src="./brain-svgrepo-com.svg" alt="Your SVG" />
+            <img src="/brain-svgrepo-com.svg" alt="Your SVG" />
           </div>
         ) : (
           <div className="projectTitle">
-            <img src="./brain-svgrepo-com.svg" alt="Your SVG" />
+            <img src="/brain-svgrepo-com.svg" alt="Your SVG" />
             <div style={{ fontSize: 16, padding: 5 }}>EpliepsyBrain</div>
           </div>
         )}
