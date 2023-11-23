@@ -3,7 +3,7 @@ import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
-export const ModelLoader = ({ url, color, opacity, transparent, type, setObjCenter }) => {
+export const ModelLoader = ({ url, color, opacity, transparent, type, setObjCenter, subType }) => {
   const obj = useLoader(OBJLoader, url);
   
   // get the brain center for projection
@@ -19,6 +19,13 @@ export const ModelLoader = ({ url, color, opacity, transparent, type, setObjCent
 
   useEffect(() => {
     if (type === 'brain' && typeof setObjCenter === 'function') {
+      const offset = center.clone().negate();
+      obj.position.add(offset);
+            if (subType === 'left') {
+              obj.position.x -= 30;
+            } else if (subType === 'right') {
+              obj.position.x += 30;
+            }
       setObjCenter(center);
     }
   }, [center, type, setObjCenter]);
