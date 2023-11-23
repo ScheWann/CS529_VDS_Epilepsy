@@ -8,28 +8,35 @@ export const BrainObjectLoader = (props) => {
                 setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_left.obj`}
                 color="red"
-                opacity={0.2}
+                opacity={0.8}
                 transparent={true}
+                depthWrite={false}
                 type="brain"
                 subType="left"
+                renderOrder={2}
             />
             <ModelLoader
                 setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_right.obj`}
                 color="blue"
-                opacity={0.2}
+                opacity={0.8}
                 transparent={true}
+                depthWrite={false}
                 type="brain"
                 subType="right"
+                renderOrder={1}
             />
-            {/* <ModelLoader
+            <ModelLoader
                 setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain.obj`}
                 color="#505050"
                 opacity={0.15}
                 transparent={true}
+                depthWrite={false}
                 type="brain"
-            /> */}
+                subType="none"
+                renderOrder={3}
+            />
             {props.lesionArray.map((lesion, index) => {
                 return (
                     <ModelLoader
