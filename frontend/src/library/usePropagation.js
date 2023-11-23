@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { json, csv } from "d3";
 
-export const usePropagation = ({ patientID, sampleID, eventID }) => {
+export const usePropagation = ({ patientID, sampleID}) => {
   const [electrodeData, setElectrodeData] = useState(null);
   const [propagationData, setPropogationData] = useState(null);
   const [enrichedData, setEnrichedData] = useState([]);
@@ -15,8 +15,14 @@ export const usePropagation = ({ patientID, sampleID, eventID }) => {
 
   // Function to enrich propagation data with electrode positions
   const enrichPropagationData = () => {
-    if (propagationData && electrodeData) {
+    if (propagationData && electrodeData && patientID === 'ep129') { 
       return propagationData.network[0].map((link) => ({
+        source: findElectrode(link.source),
+        target: findElectrode(link.target),
+      }));
+    }
+    if (propagationData && electrodeData && patientID === 'ep187') { 
+      return propagationData.network[13].map((link) => ({
         source: findElectrode(link.source),
         target: findElectrode(link.target),
       }));
@@ -25,7 +31,7 @@ export const usePropagation = ({ patientID, sampleID, eventID }) => {
   };
 
   useEffect(() => {
-    if (patientID && sampleID && eventID) {
+    if (patientID === "ep129" && sampleID) {
       csv(electrodeUrl).then((data) => {
         // Convert the 'electrode_number' from string to number for each item
         data = data.map((item) => {
@@ -39,8 +45,22 @@ export const usePropagation = ({ patientID, sampleID, eventID }) => {
       json(propagationUrl).then((data) => {
         setPropogationData(data);
       });
+    } else {
+      csv(electrodeUrl).then((data) => {
+        // Convert the 'electrode_number' from string to number for each item
+        data = data.map((item) => {
+          return {
+            ...item,
+            electrode_number: Number(item.electrode_number),
+          };
+        });
+        setElectrodeData(data);
+      });
+      json(`https://raw.githubusercontent.com/ScheWann/CS529_VDS_Epilepsy/Siyuan/frontend/src/data/electrodes/${patientID}/${sampleID}/${patientID}_${sampleID}_electrode_event45.json`).then((data) => {
+      setPropogationData(data);
+      });
     }
-  }, [patientID, sampleID, eventID]);
+  }, [patientID, sampleID]);
 
   useEffect(() => {
     setEnrichedData(enrichPropagationData());

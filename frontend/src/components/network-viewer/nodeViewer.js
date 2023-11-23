@@ -2,7 +2,7 @@ import { Card, Empty } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
-export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
+export const NodeViewer = ({ allnetworksWithEvent, ROI, patientID }) => {
   const colorslist = [
     "#1f77b4",
     "#ff7f0e",
@@ -13,7 +13,13 @@ export const NodeViewer = ({ allnetworksWithEvent, ROI }) => {
     "#e377c2",
     "#bfa3a3",
   ];
-  const roiNetwork = allnetworksWithEvent[ROI]["network"];
+  let roiNetwork;
+  if(patientID === "ep129") {
+    roiNetwork = allnetworksWithEvent[1][ROI]["network"];
+  } else {
+    roiNetwork = allnetworksWithEvent[45][ROI]["network"];
+  }
+
   const selectedROIColor = colorslist[ROI];
   const ref = useRef();
   const cardRef = useRef();

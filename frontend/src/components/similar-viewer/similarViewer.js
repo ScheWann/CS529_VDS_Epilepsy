@@ -5,6 +5,7 @@ import * as d3 from "d3";
 
 export const SimilarViewer = ({
   allnetworksWithEvent,
+  patientID,
   similarityData,
   ROI,
 }) => {
@@ -64,20 +65,35 @@ export const SimilarViewer = ({
   useEffect(() => {
     let tempSimilarNodesArray = [];
     let tempSimilarEventsOptions = [];
-    similarityData[1].neighbors.forEach((element, index) => {
-      let similarNodesObj = {
-        id: element,
-        network: allnetworksWithEvent[element],
-      };
+    if(patientID === "ep129") {
+      similarityData[1].neighbors.forEach((element, index) => {
+        let similarNodesObj = {
+          id: element,
+          network: allnetworksWithEvent[element],
+        };
 
-      let similarEventsObj = {
-        label: element,
-        value: index,
-      };
-      tempSimilarNodesArray.push(similarNodesObj);
-      tempSimilarEventsOptions.push(similarEventsObj);
-    });
-
+        let similarEventsObj = {
+          label: element,
+          value: index,
+        };
+        tempSimilarNodesArray.push(similarNodesObj);
+        tempSimilarEventsOptions.push(similarEventsObj);
+      });
+    } else {
+      similarityData[13].neighbors.forEach((element, index) => {
+        let similarNodesObj = {
+          id: element,
+          network: allnetworksWithEvent[element],
+        };
+  
+        let similarEventsObj = {
+          label: element,
+          value: index,
+        };
+        tempSimilarNodesArray.push(similarNodesObj);
+        tempSimilarEventsOptions.push(similarEventsObj);
+      });
+    }
     setSimilarNodesArray(tempSimilarNodesArray);
     SetSimilarEventsOptions(tempSimilarEventsOptions);
     // Check and set the selected network after updating the similarNodesArray

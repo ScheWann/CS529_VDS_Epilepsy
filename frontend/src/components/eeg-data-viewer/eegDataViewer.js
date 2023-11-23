@@ -13,7 +13,7 @@ export const EEGDataViewer = ({ data, containerWidth }) => {
   const drawCharts = () => {
     // Clear existing charts before drawing new ones
     d3.select(chartContainerRef.current).selectAll("#eegDataViewer").remove();
-    const keysToDraw = [18, 19, 20, 21, 22, 23, 26, 27, 28, 29];
+    const keysToDraw = Object.keys(data);
 
     keysToDraw.forEach((key) => {
       const chartData = data[key];

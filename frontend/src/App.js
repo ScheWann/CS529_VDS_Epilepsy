@@ -23,14 +23,14 @@ const { Content, Footer, Sider } = Layout;
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   // use for controlling the patient chosen on main page
-  const [selectedPatient, setSelectedPatient] = useState("ep129");
+  const [selectedPatient, setSelectedPatient] = useState("ep187");
   // use for controlling the menu on main page
-  const [menuId, setMenuId] = useState(["1", "3"]);
+  const [menuId, setMenuId] = useState(["2", "5"]);
   // use for showing breadcrumb on main page
-  const [BreadcrumbName, SetBreadcrumbName] = useState(["ep129", "Session 1"]);
+  const [BreadcrumbName, SetBreadcrumbName] = useState(["ep187", "Session 1"]);
   // use for storing patient and sample information and send
   const [patientInfo, setPatientInfo] = useState({
-    patientID: "ep129",
+    patientID: "ep187",
     sampleID: "sample1",
   });
   // use for showing lesion array and send it to 3D brain to display
@@ -75,7 +75,6 @@ const App = () => {
   const propagationData = usePropagation({
     patientID: patientInfo.patientID,
     sampleID: patientInfo.sampleID,
-    eventID: 1,
   });
 
   const similarityData = useSimilarityData({
@@ -294,13 +293,15 @@ const App = () => {
             >
               {fullEventNetwork ? (
                 <NodeViewer
-                  allnetworksWithEvent={fullEventNetwork[1]}
+                  patientID={patientInfo.patientID}
+                  allnetworksWithEvent={fullEventNetwork}
                   ROI={ROI}
                 />
               ) : null}
 
               {fullEventNetwork && similarityData ? (
                 <SimilarViewer
+                  patientID={patientInfo.patientID}
                   allnetworksWithEvent={fullEventNetwork}
                   similarityData={similarityData}
                   ROI={ROI}
