@@ -67,7 +67,7 @@ export const BrainViewer = (props) => {
       const geometry = child.geometry;
       if (geometry.isBufferGeometry) {
         // Create an edge geometry
-        const edges = new THREE.EdgesGeometry(geometry); // Consider adjusting the angle threshold if necessary
+        const edges = new THREE.EdgesGeometry(geometry);
         const line = new THREE.LineSegments(edges);
         const positionAttribute = line.geometry.attributes.position;
 
