@@ -7,10 +7,9 @@ export const BrainObjectLoader = (props) => {
             <ModelLoader
                 setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_left.obj`}
-                color="red"
-                opacity={0.8}
+                color="#F6D5A2"
+                opacity={1}
                 transparent={true}
-                depthWrite={false}
                 type="brain"
                 subType="left"
                 renderOrder={2}
@@ -18,10 +17,9 @@ export const BrainObjectLoader = (props) => {
             <ModelLoader
                 setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_right.obj`}
-                color="blue"
-                opacity={0.8}
+                color="#D6D0BA"
+                opacity={1}
                 transparent={true}
-                depthWrite={false}
                 type="brain"
                 subType="right"
                 renderOrder={1}
@@ -29,10 +27,9 @@ export const BrainObjectLoader = (props) => {
             <ModelLoader
                 setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain.obj`}
-                color="#505050"
+                color="#B0C4DE"
                 opacity={0.15}
                 transparent={true}
-                depthWrite={false}
                 type="brain"
                 subType="none"
                 renderOrder={3}

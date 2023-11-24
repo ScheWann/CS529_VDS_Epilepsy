@@ -21,7 +21,7 @@ export const BrainViewer = (props) => {
     setSegment(value);
   };
   const changeROI = (value) => {
-    let roiIndex = parseInt(value.replace(/[^\d]/g, ''));
+    let roiIndex = parseInt(value.replace(/[^\d]/g, ""));
     props.setROI(roiIndex);
   };
 
@@ -53,6 +53,22 @@ export const BrainViewer = (props) => {
           />
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} />
+          <directionalLight
+            castShadow 
+            position={[0, 5, 5]}
+            intensity={1}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+            shadow-camera-near={0.5}
+            shadow-camera-far={500}
+            shadow-camera-left={-5}
+            shadow-camera-right={5}
+            shadow-camera-top={5}
+            shadow-camera-bottom={-5}
+          />
+          <directionalLight
+            position={[-250, -10, 0]}
+          />
           <BrainObjectLoader
             setObjCenter={setObjCenter}
             patientID={props.patientInformation.patientID}

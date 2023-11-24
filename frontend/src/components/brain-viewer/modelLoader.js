@@ -22,9 +22,11 @@ export const ModelLoader = ({ url, color, opacity, transparent, type, setObjCent
       const offset = center.clone().negate();
       obj.position.add(offset);
             if (subType === 'left') {
-              obj.position.x -= 30;
+              obj.position.x -= 28;
+              obj.position.z += 10;
             } else if (subType === 'right') {
-              obj.position.x += 30;
+              obj.position.x += 28;
+              obj.position.z += 10;
             }
       setObjCenter(center);
     }
@@ -33,14 +35,12 @@ export const ModelLoader = ({ url, color, opacity, transparent, type, setObjCent
 
   obj.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // child.material.color = new THREE.Color(color);
-      // child.material.opacity = opacity;
-      // child.material.transparent = transparent;
       child.material = new THREE.MeshStandardMaterial({
         color: new THREE.Color(color),
         opacity: opacity,
+        roughness: 0.8,
+        metalness: 0.0,
         transparent: transparent,
-        depthWrite: !transparent,
       });
     }
   });
