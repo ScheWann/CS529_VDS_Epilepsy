@@ -57,21 +57,20 @@ export const BrainViewer = (props) => {
     });
   };
 
-
   const projectBrainModelTo2D = () => {
     if (!brainModel || !brainModel.children) return;
-    
+
     let screenPositions = [];
-    brainModel.children.forEach(child => {
+    brainModel.children.forEach((child) => {
       if (!child.isMesh) return;
-  
+
       const geometry = child.geometry;
       if (geometry.isBufferGeometry) {
         // Create an edge geometry
         const edges = new THREE.EdgesGeometry(geometry); // Consider adjusting the angle threshold if necessary
         const line = new THREE.LineSegments(edges);
         const positionAttribute = line.geometry.attributes.position;
-  
+
         // Iterate over all vertices
         for (let i = 0; i < positionAttribute.count; i++) {
           const vertex = new THREE.Vector3();
@@ -81,7 +80,7 @@ export const BrainViewer = (props) => {
         }
       }
     });
-  
+
     create2DVisualization(screenPositions);
   };
 
@@ -95,26 +94,33 @@ export const BrainViewer = (props) => {
   };
 
   const create2DVisualization = (screenPositions) => {
-    const svg = d3.select("#brainSvg").append("svg")
-                  .attr("width", width)
-                  .attr("height", height);
-  
+    const svg = d3
+      .select("#brainSvg")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
     // Calculate the convex hull
-    const hull = d3.polygonHull(screenPositions.map(d => [d.x, d.y]));
-  
+    const hull = d3.polygonHull(screenPositions.map((d) => [d.x, d.y]));
+
     // Draw the convex hull as a path
-    svg.append("path")
-       .data([hull]) // Use the array of hull points
-       .attr("d", d3.line()
-                    .x(d => d[0])
-                    .y(d => d[1]))
-       .attr("stroke", "black")
-       .attr("fill", "none");
-  
+    svg
+      .append("path")
+      .data([hull])
+      .attr(
+        "d",
+        d3
+          .line()
+          .x((d) => d[0])
+          .y((d) => d[1])
+      )
+      .attr("stroke", "black")
+      .attr("fill", "none");
+
     if (props.onSvgCreated) {
       props.onSvgCreated(svg.node());
     }
-  };  
+  };
 
   useEffect(() => {
     if (brainModel && cameraRef.current) {
