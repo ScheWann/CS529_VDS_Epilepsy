@@ -24,6 +24,55 @@ export const BrainViewer = (props) => {
     let roiIndex = parseInt(value.replace(/[^\d]/g, ""));
     props.setROI(roiIndex);
   };
+
+  const getScreenPosition = (object3D) => {
+
+    const vector = new THREE.Vector3();
+
+    // Transform the 3D position to camera space
+    vector.setFromMatrixPosition(object3D.matrixWorld);
+    vector.project(cameraRef.current);
+
+    // Convert the normalized device coordinates to screen space
+    const x = (vector.x * 0.5 + 0.5) * width * 1.5;
+    const y = -(vector.y * 0.5 - 0.5) * height * 1.5;
+
+    return { x, y };
+  };
+
+  // Function to convert electrode data to 2D screen positions
+  const getElectrodeScreenPositions = () => {
+    return props.electrodeData.map((electrode) => {
+      const position3D = new THREE.Vector3(...electrode.position);
+      const screenPosition = getScreenPosition({
+        matrixWorld: new THREE.Matrix4().setPosition(position3D),
+      });
+  
+      // Include the label attribute in the returned object
+      return {
+        ...screenPosition,
+        label: electrode.label,
+      };
+    });
+  };
+
+  useEffect(() => {
+    const checkCameraAndCalculatePositions = () => {
+      if (cameraRef.current && props.electrodeData) {
+        clearInterval(intervalId); 
+        const screenPositions = getElectrodeScreenPositions();
+        props.setElectrodeScreenPositions(screenPositions)
+      } else {
+        console.log("Waiting for camera and electrode data...");
+      }
+    };
+  
+    // Set up an interval to repeatedly check for the camera and electrode data
+    const intervalId = setInterval(checkCameraAndCalculatePositions, 500);
+  
+    // Clean up the interval when the component unmounts or dependencies change
+    return () => clearInterval(intervalId);
+  }, [props.electrodeData]);
   
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>

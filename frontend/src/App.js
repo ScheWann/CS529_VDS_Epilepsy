@@ -295,7 +295,7 @@ const App = () => {
                 justifyContent: "space-between",
               }}
             >
-              {fullEventNetwork ? (
+              {fullNetwork ? (
                 // <NodeViewer
                 //   patientID={patientInfo.patientID}
                 //   allnetworksWithEvent={fullEventNetwork}
@@ -303,6 +303,7 @@ const App = () => {
                 // />
                 <ProjectionNodeViewer 
                 electrodeScreenPositions={electrodeScreenPositions}
+                allnetwork={fullNetwork}
                 />
               ) : null}
 

@@ -15,12 +15,6 @@ const colorslist = [
   "#e377c2",
   "#bfa3a3",
 ];
-// const projectRelativeToCenter = (position, center, scaleFactor) => {
-//   return {
-//     x: (position.x - center.x) * scaleFactor,
-//     y: (position.y - center.y) * scaleFactor,
-//   };
-// };
 
 export const ElectrodeLoader = ({
   electrodeData,
