@@ -16,6 +16,7 @@ const colorslist = [
 export const ProjectionNodeViewer = ({
   electrodeScreenPositions,
   allnetwork,
+  brainSvgData,
 }) => {
   const d3Container = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
@@ -46,15 +47,27 @@ export const ProjectionNodeViewer = ({
   }, []);
 
   useEffect(() => {
+    if (brainSvgData) {
+      const container = document.getElementById("brainSvg");
+      container.innerHTML = "";
+      container.appendChild(brainSvgData.cloneNode(true));
+    }
+  }, [brainSvgData]);
+
+  useEffect(() => {
     if (
       electrodeScreenPositions &&
       d3Container.current &&
       svgDimensions.width &&
       svgDimensions.height
     ) {
-      const svg = d3.select(d3Container.current);
-      svg.selectAll("*").remove();
-      const { width, height } = svgDimensions;
+
+      d3.select(d3Container.current).selectAll("svg").remove();
+      const svg = d3
+        .select(d3Container.current)
+        .append("svg")
+        .attr("width", svgDimensions.width)
+        .attr("height", svgDimensions.height);
 
       // Calculate range of x,y values
       const xValues = electrodeScreenPositions.map((d) => d.x);
@@ -65,9 +78,8 @@ export const ProjectionNodeViewer = ({
       const yMax = Math.max(...yValues);
 
       // Calculate dynamic xOffset and yOffset to center circles
-      const xOffset = (width - (xMax - xMin)) / 2 - xMin;
-      const yOffset = (height - (yMax - yMin)) / 2 - yMin;
-      svg.attr("width", width).attr("height", height);
+      const xOffset = (svgDimensions.width - (xMax - xMin)) / 2 - xMin;
+      const yOffset = (svgDimensions.height - (yMax - yMin)) / 2 - yMin;
 
       svg
         .selectAll(".electrode-circle")
@@ -84,7 +96,29 @@ export const ProjectionNodeViewer = ({
 
   return (
     <Card style={{ marginTop: 10, width: "49%" }}>
-      <svg ref={d3Container}></svg>
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div
+          id="electrodeScreenPositionSvg"
+          ref={d3Container}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+          }}
+        ></div>
+        <div
+          id="brainSvg"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+          }}
+        ></div>
+      </div>
     </Card>
   );
 };

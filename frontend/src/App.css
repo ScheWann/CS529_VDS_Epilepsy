@@ -77,3 +77,11 @@ body {
   background-color: white;
   padding: 10px;
 }
+
+#brainSvg {
+  z-index: 1; 
+}
+
+#electrodeScreenPositionSvg { 
+  z-index: 2; 
+}

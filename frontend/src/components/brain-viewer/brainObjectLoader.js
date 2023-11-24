@@ -12,6 +12,7 @@ export const BrainObjectLoader = (props) => {
                 type="brain"
                 subType="left"
                 renderOrder={2}
+                onLoaded={props.onModelLoaded} 
             />
             <ModelLoader
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_right.obj`}
@@ -21,6 +22,7 @@ export const BrainObjectLoader = (props) => {
                 type="brain"
                 subType="right"
                 renderOrder={1}
+                onLoaded={props.onModelLoaded} 
             />
             <ModelLoader
                 url={`${partURL}${props.patientID}/${props.patientID}_brain.obj`}
@@ -30,6 +32,7 @@ export const BrainObjectLoader = (props) => {
                 type="brain"
                 subType="none"
                 renderOrder={3}
+                onLoaded={props.onModelLoaded}  
             />
             {props.lesionArray.map((lesion, index) => {
                 return (

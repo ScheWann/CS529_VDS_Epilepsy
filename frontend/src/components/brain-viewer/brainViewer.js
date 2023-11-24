@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
+import * as d3 from "d3";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useEffect, useState, useRef } from "react";
 import dataRegisty from "../../data/dataRegistry.json";
@@ -14,6 +15,7 @@ const height = window.innerHeight / 2.5;
 export const BrainViewer = (props) => {
   const [selectedElectrode, setSelectedElectrode] = useState(null);
   const [segement, setSegment] = useState("ROI");
+  const [brainModel, setBrainModel] = useState(null);
   const cameraRef = useRef();
 
   const changeSegement = (value) => {
@@ -26,7 +28,6 @@ export const BrainViewer = (props) => {
   };
 
   const getScreenPosition = (object3D) => {
-
     const vector = new THREE.Vector3();
 
     // Transform the 3D position to camera space
@@ -47,7 +48,7 @@ export const BrainViewer = (props) => {
       const screenPosition = getScreenPosition({
         matrixWorld: new THREE.Matrix4().setPosition(position3D),
       });
-  
+
       // Include the label attribute in the returned object
       return {
         ...screenPosition,
@@ -56,24 +57,89 @@ export const BrainViewer = (props) => {
     });
   };
 
+
+  const projectBrainModelTo2D = () => {
+    if (!brainModel || !brainModel.children) return;
+    
+    let screenPositions = [];
+    brainModel.children.forEach(child => {
+      if (!child.isMesh) return;
+  
+      const geometry = child.geometry;
+      if (geometry.isBufferGeometry) {
+        // Create an edge geometry
+        const edges = new THREE.EdgesGeometry(geometry); // Consider adjusting the angle threshold if necessary
+        const line = new THREE.LineSegments(edges);
+        const positionAttribute = line.geometry.attributes.position;
+  
+        // Iterate over all vertices
+        for (let i = 0; i < positionAttribute.count; i++) {
+          const vertex = new THREE.Vector3();
+          vertex.fromBufferAttribute(positionAttribute, i);
+          const screenPos = projectToScreen(vertex, child, cameraRef.current);
+          screenPositions.push(screenPos);
+        }
+      }
+    });
+  
+    create2DVisualization(screenPositions);
+  };
+
+  const projectToScreen = (vertex, object3D, camera) => {
+    const worldVertex = vertex.clone().applyMatrix4(object3D.matrixWorld);
+    worldVertex.project(camera);
+    return {
+      x: (worldVertex.x * 0.5 + 0.5) * width,
+      y: -(worldVertex.y * 0.5 - 0.5) * height,
+    };
+  };
+
+  const create2DVisualization = (screenPositions) => {
+    const svg = d3.select("#brainSvg").append("svg")
+                  .attr("width", width)
+                  .attr("height", height);
+  
+    // Calculate the convex hull
+    const hull = d3.polygonHull(screenPositions.map(d => [d.x, d.y]));
+  
+    // Draw the convex hull as a path
+    svg.append("path")
+       .data([hull]) // Use the array of hull points
+       .attr("d", d3.line()
+                    .x(d => d[0])
+                    .y(d => d[1]))
+       .attr("stroke", "black")
+       .attr("fill", "none");
+  
+    if (props.onSvgCreated) {
+      props.onSvgCreated(svg.node());
+    }
+  };  
+
+  useEffect(() => {
+    if (brainModel && cameraRef.current) {
+      projectBrainModelTo2D();
+    }
+  }, [brainModel]);
+
   useEffect(() => {
     const checkCameraAndCalculatePositions = () => {
       if (cameraRef.current && props.electrodeData) {
-        clearInterval(intervalId); 
+        clearInterval(intervalId);
         const screenPositions = getElectrodeScreenPositions();
-        props.setElectrodeScreenPositions(screenPositions)
+        props.setElectrodeScreenPositions(screenPositions);
       } else {
         console.log("Waiting for camera and electrode data...");
       }
     };
-  
+
     // Set up an interval to repeatedly check for the camera and electrode data
     const intervalId = setInterval(checkCameraAndCalculatePositions, 500);
-  
+
     // Clean up the interval when the component unmounts or dependencies change
     return () => clearInterval(intervalId);
   }, [props.electrodeData]);
-  
+
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -119,6 +185,7 @@ export const BrainViewer = (props) => {
           <BrainObjectLoader
             patientID={props.patientInformation.patientID}
             lesionArray={props.lesionArray}
+            onModelLoaded={setBrainModel}
           />
           <ElectrodeLoader
             segement={segement}

@@ -8,7 +8,7 @@ import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
 import { SimilarViewer } from "./components/similar-viewer/similarViewer.js";
-import { ProjectionNodeViewer } from "./components/network-viewer/projectionNodeViewer.js"
+import { ProjectionNodeViewer } from "./components/network-viewer/projectionNodeViewer.js";
 
 import { useFullNetwork } from "./library/useFullNetwork";
 import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
@@ -44,7 +44,10 @@ const App = () => {
   const [ROI, setROI] = useState(2);
   // for getting the 2D position in screen
   const [electrodeScreenPositions, setElectrodeScreenPositions] = useState([]);
-  const parentRef = useCallback(node => {
+  // for setting the 2D brain svg
+  const [svgData, setSvgData] = useState(null);
+
+  const parentRef = useCallback((node) => {
     if (node !== null) {
       setWidth(node.getBoundingClientRect().width);
     }
@@ -84,6 +87,11 @@ const App = () => {
     patientID: patientInfo.patientID,
     sampleID: patientInfo.sampleID,
   });
+
+  // Store the SVG data in the state
+  const handleReceiveSvg = (svg) => {
+    setSvgData(svg);
+  };
 
   // Control the display of breadcrumb
   const handleIDsSelect = (patient, id, name) => {
@@ -272,6 +280,7 @@ const App = () => {
                     allnetworksWithEvent={fullEventNetwork}
                     selectedEventRange={[103, 113]}
                     setROI={setROI}
+                    onSvgCreated={handleReceiveSvg}
                   />
                 </Card>
               ) : null}
@@ -301,9 +310,10 @@ const App = () => {
                 //   allnetworksWithEvent={fullEventNetwork}
                 //   ROI={ROI}
                 // />
-                <ProjectionNodeViewer 
-                electrodeScreenPositions={electrodeScreenPositions}
-                allnetwork={fullNetwork}
+                <ProjectionNodeViewer
+                  electrodeScreenPositions={electrodeScreenPositions}
+                  allnetwork={fullNetwork}
+                  brainSvgData={svgData}
                 />
               ) : null}
 

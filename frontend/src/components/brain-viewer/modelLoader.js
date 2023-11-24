@@ -11,6 +11,7 @@ export const ModelLoader = ({
   type,
   subType,
   renderOrder,
+  onLoaded
 }) => {
   const obj = useLoader(OBJLoader, url);
 
@@ -37,8 +38,11 @@ export const ModelLoader = ({
         obj.position.z += 10;
       }
     }
+    if (onLoaded && obj) {
+      onLoaded(obj);
+    }
     obj.renderOrder = renderOrder;
-  }, [center, type, subType, renderOrder]);
+  }, [center, type, subType, renderOrder, onLoaded]);
 
   obj.traverse((child) => {
     if (child instanceof THREE.Mesh) {
