@@ -15,31 +15,23 @@ const colorslist = [
   "#e377c2",
   "#bfa3a3",
 ];
-const projectRelativeToCenter = (position, center, scaleFactor) => {
-  return {
-    x: (position.x - center.x) * scaleFactor,
-    y: (position.y - center.y) * scaleFactor,
-  };
-};
+// const projectRelativeToCenter = (position, center, scaleFactor) => {
+//   return {
+//     x: (position.x - center.x) * scaleFactor,
+//     y: (position.y - center.y) * scaleFactor,
+//   };
+// };
 
 export const ElectrodeLoader = ({
   electrodeData,
   sampleData,
   bbox,
-  // eegInBrain,
   selectedEventRange,
-  // timeRange,
   events,
   allnetwork,
-  // allnetworkWithEvent,
-  // patientID,
-  // eventid,
   segement,
-  objCenter,
   setSelectedElectrode,
   propagationData,
-  allnetworkWithEvent,
-  setElectrodeScreenPositions,
 }) => {
   const isMountedRef = useRef(false);
   const meshRef = useRef();
@@ -174,23 +166,6 @@ export const ElectrodeLoader = ({
     canvas.addEventListener("click", handleCanvasClick);
     return () => canvas.removeEventListener("click", handleCanvasClick);
   }, [gl, camera, electrodeData, setSelectedElectrode]);
-
-  // get the center 3D position based on the 3D brain
-  useEffect(() => {
-    const projectedPositions = electrodeData.map((electrode) =>
-      projectRelativeToCenter(
-        new Vector3(
-          electrode.position[0],
-          electrode.position[1],
-          electrode.position[2]
-        ),
-        objCenter,
-        2
-      )
-    );
-
-    setElectrodeScreenPositions(projectedPositions);
-  }, [electrodeData, objCenter]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;

@@ -5,7 +5,6 @@ export const BrainObjectLoader = (props) => {
     return (
         <group>
             <ModelLoader
-                setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_left.obj`}
                 color="#F6D5A2"
                 opacity={1}
@@ -15,7 +14,6 @@ export const BrainObjectLoader = (props) => {
                 renderOrder={2}
             />
             <ModelLoader
-                setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_right.obj`}
                 color="#D6D0BA"
                 opacity={1}
@@ -25,7 +23,6 @@ export const BrainObjectLoader = (props) => {
                 renderOrder={1}
             />
             <ModelLoader
-                setObjCenter={props.setObjCenter}
                 url={`${partURL}${props.patientID}/${props.patientID}_brain.obj`}
                 color="#B0C4DE"
                 opacity={0.15}

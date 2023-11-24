@@ -8,6 +8,7 @@ import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
 import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
 import { SimilarViewer } from "./components/similar-viewer/similarViewer.js";
+import { ProjectionNodeViewer } from "./components/network-viewer/projectionNodeViewer.js"
 
 import { useFullNetwork } from "./library/useFullNetwork";
 import { useFullNetworkPerEvent } from "./library/useFullNetworkPerEvent";
@@ -41,6 +42,8 @@ const App = () => {
   const [selectedROIColor, setSelectedROIColor] = useState("");
   // for choosing different ROI to show 2D nodes
   const [ROI, setROI] = useState(2);
+  // for getting the 2D position in screen
+  const [electrodeScreenPositions, setElectrodeScreenPositions] = useState([]);
   const parentRef = useCallback(node => {
     if (node !== null) {
       setWidth(node.getBoundingClientRect().width);
@@ -259,6 +262,7 @@ const App = () => {
                   <BrainViewer
                     propagationData={propagationData}
                     patientInformation={patientInfo}
+                    setElectrodeScreenPositions={setElectrodeScreenPositions}
                     lesionArray={lesionArray}
                     electrodeData={electrodeData}
                     sampleData={sampleData}
@@ -292,10 +296,13 @@ const App = () => {
               }}
             >
               {fullEventNetwork ? (
-                <NodeViewer
-                  patientID={patientInfo.patientID}
-                  allnetworksWithEvent={fullEventNetwork}
-                  ROI={ROI}
+                // <NodeViewer
+                //   patientID={patientInfo.patientID}
+                //   allnetworksWithEvent={fullEventNetwork}
+                //   ROI={ROI}
+                // />
+                <ProjectionNodeViewer 
+                electrodeScreenPositions={electrodeScreenPositions}
                 />
               ) : null}
 
