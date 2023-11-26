@@ -148,15 +148,11 @@ export const BrainViewer = (props) => {
     // Clean up the interval when the component unmounts or dependencies change
     return () => clearInterval(intervalId);
   }, [props.electrodeData]);
-  useEffect(() => {
-    // Load the JSON data
-    // d3.json("/Users/siyuanzhao/Documents/GitHub/CS529_VDS_Epilepsy/backend/key_points.json").then((jdata) => {
-    //   setKeyPointsData(jdata);
-    // });
-    fetch("/key_points.json")
-      .then((response) => response.json())
-      .then((data) => setKeyPointsData(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("/key_points.json")
+  //     .then((response) => response.json())
+  //     .then((data) => setKeyPointsData(data));
+  // }, []);
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
