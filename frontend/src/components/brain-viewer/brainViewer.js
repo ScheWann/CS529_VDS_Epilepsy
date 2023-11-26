@@ -1,12 +1,14 @@
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import * as d3 from "d3";
+
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { useEffect, useState, useRef } from "react";
 import dataRegisty from "../../data/dataRegistry.json";
 import { BrainObjectLoader } from "./brainObjectLoader";
 import { ElectrodeLoader } from "./electrodeLoader";
 import { CurveLoader } from "./curveLoader";
+import { KeyPoints } from "./keyPoints";
 import { Segmented } from "antd";
 
 const width = window.innerWidth / 2.5;
@@ -16,6 +18,7 @@ export const BrainViewer = (props) => {
   const [selectedElectrode, setSelectedElectrode] = useState(null);
   const [segement, setSegment] = useState("ROI");
   const [brainModel, setBrainModel] = useState(null);
+  const [keyPointsData, setKeyPointsData] = useState([]);
   const cameraRef = useRef();
 
   const changeSegement = (value) => {
@@ -145,7 +148,15 @@ export const BrainViewer = (props) => {
     // Clean up the interval when the component unmounts or dependencies change
     return () => clearInterval(intervalId);
   }, [props.electrodeData]);
-
+  useEffect(() => {
+    // Load the JSON data
+    // d3.json("/Users/siyuanzhao/Documents/GitHub/CS529_VDS_Epilepsy/backend/key_points.json").then((jdata) => {
+    //   setKeyPointsData(jdata);
+    // });
+    fetch("/key_points.json")
+      .then((response) => response.json())
+      .then((data) => setKeyPointsData(data));
+  }, []);
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -193,6 +204,9 @@ export const BrainViewer = (props) => {
             lesionArray={props.lesionArray}
             onModelLoaded={setBrainModel}
           />
+          {/* {keyPointsData.length > 0 && (
+            <KeyPoints points={keyPointsData} color="red" position={{ x: -100, y: -110, z: -120 }} />
+          )} */}
           <ElectrodeLoader
             segement={segement}
             cameraRef={cameraRef.current}
