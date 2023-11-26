@@ -304,7 +304,7 @@ const App = () => {
                 justifyContent: "space-between",
               }}
             >
-              {fullNetwork ? (
+              {fullNetwork && svgData? (
                 // <NodeViewer
                 //   patientID={patientInfo.patientID}
                 //   allnetworksWithEvent={fullEventNetwork}

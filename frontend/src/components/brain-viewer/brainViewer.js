@@ -18,8 +18,22 @@ export const BrainViewer = (props) => {
   const [selectedElectrode, setSelectedElectrode] = useState(null);
   const [segement, setSegment] = useState("ROI");
   const [brainModel, setBrainModel] = useState(null);
-  const [keyPointsData, setKeyPointsData] = useState([]);
+  // const [keyPointsData, setKeyPointsData] = useState([]);
   const cameraRef = useRef();
+
+  const handleButtonClick = () => {
+    if (!cameraRef.current || !brainModel || !props.electrodeData) return;
+    updateProjections();
+  };
+
+  const updateProjections = () => {
+    console.log("changed projection");
+
+    if (!cameraRef.current || !brainModel || !props.electrodeData) return;
+    const screenPositions = getElectrodeScreenPositions();
+    props.setElectrodeScreenPositions(screenPositions);
+    projectBrainModelTo2D();
+  };
 
   const changeSegement = (value) => {
     setSegment(value);
@@ -84,7 +98,9 @@ export const BrainViewer = (props) => {
       }
     });
 
-    create2DVisualization(screenPositions);
+    if (props.onSvgCreated) {
+      props.onSvgCreated(screenPositions);
+    }
   };
 
   const projectToScreen = (vertex, object3D, camera) => {
@@ -94,35 +110,6 @@ export const BrainViewer = (props) => {
       x: (worldVertex.x * 0.5 + 0.5) * width,
       y: -(worldVertex.y * 0.5 - 0.5) * height,
     };
-  };
-
-  const create2DVisualization = (screenPositions) => {
-    const svg = d3
-      .select("#brainSvg")
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height);
-
-    // Calculate the convex hull
-    const hull = d3.polygonHull(screenPositions.map((d) => [d.x, d.y]));
-
-    // Draw the convex hull as a path
-    svg
-      .append("path")
-      .data([hull])
-      .attr(
-        "d",
-        d3
-          .line()
-          .x((d) => d[0])
-          .y((d) => d[1])
-      )
-      .attr("stroke", "black")
-      .attr("fill", "none");
-
-    if (props.onSvgCreated) {
-      props.onSvgCreated(svg.node());
-    }
   };
 
   useEffect(() => {
@@ -145,7 +132,7 @@ export const BrainViewer = (props) => {
     // Set up an interval to repeatedly check for the camera and electrode data
     const intervalId = setInterval(checkCameraAndCalculatePositions, 500);
 
-    // Clean up the interval when the component unmounts or dependencies change
+    // Clean up the interval
     return () => clearInterval(intervalId);
   }, [props.electrodeData]);
   // useEffect(() => {
@@ -166,6 +153,7 @@ export const BrainViewer = (props) => {
           onChange={changeROI}
           defaultValue={"ROI 2"}
         />
+        <button onClick={handleButtonClick}>Update Projection</button>
       </div>
       <div style={{ height: height, width: width }}>
         <Canvas>
@@ -230,7 +218,15 @@ export const BrainViewer = (props) => {
             />
           ) : null}
 
-          <OrbitControls enablePan={true} />
+          <OrbitControls
+            ref={(control) => {
+              // Attach the controls to the camera ref
+              if (control && cameraRef.current) {
+                cameraRef.current.controls = control;
+              }
+            }}
+            enablePan={true}
+          />
         </Canvas>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Card } from "antd";
+import { Card, Spin } from "antd";
 
 const colorslist = [
   "#1f77b4",
@@ -47,27 +47,35 @@ export const ProjectionNodeViewer = ({
   }, []);
 
   useEffect(() => {
-    if (brainSvgData) {
-      const container = document.getElementById("brainSvg");
-      container.innerHTML = "";
-      container.appendChild(brainSvgData.cloneNode(true));
-    }
-  }, [brainSvgData]);
-
-  useEffect(() => {
     if (
       electrodeScreenPositions &&
       d3Container.current &&
       svgDimensions.width &&
-      svgDimensions.height
+      svgDimensions.height &&
+      brainSvgData
     ) {
-
       d3.select(d3Container.current).selectAll("svg").remove();
       const svg = d3
         .select(d3Container.current)
         .append("svg")
         .attr("width", svgDimensions.width)
         .attr("height", svgDimensions.height);
+
+      const hull = d3.polygonHull(brainSvgData.map((d) => [d.x, d.y]));
+
+      // Draw the convex hull as a path
+      svg
+        .append("path")
+        .data([hull])
+        .attr(
+          "d",
+          d3
+            .line()
+            .x((d) => d[0])
+            .y((d) => d[1])
+        )
+        .attr("stroke", "black")
+        .attr("fill", "none");
 
       // Calculate range of x,y values
       const xValues = electrodeScreenPositions.map((d) => d.x);
@@ -92,7 +100,7 @@ export const ProjectionNodeViewer = ({
         .attr("r", 5)
         .attr("fill", (d) => roiColorMapping[d.label] || "blue");
     }
-  }, [electrodeScreenPositions, roiColorMapping, svgDimensions]);
+  }, [electrodeScreenPositions, roiColorMapping, svgDimensions, brainSvgData]);
 
   return (
     <Card style={{ marginTop: 10, width: "49%" }}>
