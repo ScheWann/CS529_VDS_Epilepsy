@@ -47,6 +47,7 @@ body {
 }
 
 .ant-card-body {
+  width: 100%;
   padding: 5px !important;
   height: 100%
 }
