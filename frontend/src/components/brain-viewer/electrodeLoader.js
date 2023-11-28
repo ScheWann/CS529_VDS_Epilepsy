@@ -30,6 +30,8 @@ export const ElectrodeLoader = ({
   const isMountedRef = useRef(false);
   const meshRef = useRef();
   const { camera, gl } = useThree();
+  const [selectedElectrodeIndex, setSelectedElectrodeIndex] = useState(null);
+
   useLayoutEffect(() => {
     isMountedRef.current = true;
     meshRef.current.setColorAt(0, new Color());
@@ -50,6 +52,9 @@ export const ElectrodeLoader = ({
       const instanceId = intersects[0].instanceId;
       const selectedElectrode = electrodeData[instanceId];
       setSelectedElectrode(selectedElectrode.electrode_number);
+      setSelectedElectrodeIndex(instanceId);
+    } else {
+      setSelectedElectrodeIndex(null);
     }
   };
 
@@ -199,7 +204,6 @@ export const ElectrodeLoader = ({
           meshRef.current.instanceMatrix.needsUpdate = true;
           currentIndex = (currentIndex + 1) % sampleData.length;
           meshRef.current.instanceColor.needsUpdate = true;
-
         }
       }, 1000);
     }
@@ -213,16 +217,21 @@ export const ElectrodeLoader = ({
         const isSourceElectrode = sourceElectrodes.has(
           electrode.electrode_number
         );
-        // based on the different ROI set different color
-        if(isSourceElectrode) {
+        if (index === selectedElectrodeIndex) {
+          console.log()
+          meshRef.current.setColorAt(index, new Color(0x00ff00)); 
+        } else if (isSourceElectrode) {
           allnetwork.forEach((network, netIndex) => {
             if (
               network.roi !== "roi" &&
               network.electrodes.includes(electrode.electrode_number)
             ) {
-              meshRef.current.setColorAt(index, new Color(colorslist[netIndex]));
+              meshRef.current.setColorAt(
+                index,
+                new Color(colorslist[netIndex])
+              );
               object.scale.set(2, 2, 2);
-            } 
+            }
           });
         } else {
           meshRef.current.setColorAt(index, new Color(0x000000));
@@ -237,14 +246,13 @@ export const ElectrodeLoader = ({
 
         object.updateMatrix();
         meshRef.current.setMatrixAt(index, object.matrix);
-
       });
 
       meshRef.current.instanceMatrix.needsUpdate = true;
       meshRef.current.instanceColor.needsUpdate = true;
     }
     return () => clearInterval(interval);
-  }, [electrodeData, sampleData, segement]);
+  }, [electrodeData, sampleData, segement, selectedElectrodeIndex]);
   return (
     <instancedMesh
       ref={meshRef}
