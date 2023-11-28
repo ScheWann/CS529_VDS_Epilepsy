@@ -71,8 +71,6 @@ export const NetworkViewer = ({
           }
         });
       });
-
-      console.log(freqData, "freqData checkcheck");
     }
 
     const projection = d3.geoOrthographic().scale(100).translate([200, 200]);

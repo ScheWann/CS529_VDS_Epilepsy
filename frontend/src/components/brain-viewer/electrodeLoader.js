@@ -26,7 +26,7 @@ export const ElectrodeLoader = ({
   segement,
   setSelectedElectrode,
   propagationData,
-  setHoveredElectrodeInfo
+  setHoveredElectrodeInfo,
 }) => {
   const isMountedRef = useRef(false);
   const meshRef = useRef();
@@ -67,14 +67,16 @@ export const ElectrodeLoader = ({
     const raycaster = new Raycaster();
     raycaster.setFromCamera({ x, y }, camera);
     const intersects = raycaster.intersectObject(meshRef.current, true);
-  
+
     if (intersects.length > 0) {
       const instanceId = intersects[0].instanceId;
       const hoveredElectrode = electrodeData[instanceId];
-  
+
       if (selectedEventRange && freqEleData) {
         for (let r = 0; r < freqEleData.length; r++) {
-          const activeIndex = freqEleData[r].activeElectrode.indexOf(hoveredElectrode.electrode_number);
+          const activeIndex = freqEleData[r].activeElectrode.indexOf(
+            hoveredElectrode.electrode_number
+          );
           if (activeIndex > -1) {
             const frequency = freqEleData[r].frequency[activeIndex];
             const roi = freqEleData[r].roi;
@@ -92,7 +94,7 @@ export const ElectrodeLoader = ({
       setHoveredElectrodeInfo(null);
     }
   };
-  
+
   // instancing
   useLayoutEffect(() => {
     if (!isMountedRef.current) return;
@@ -135,8 +137,8 @@ export const ElectrodeLoader = ({
       circleRadius = scaleLinear()
         .domain([0, max(freqDomain) === 0 ? 1 : max(freqDomain)])
         .range([1, 2]);
+        
       setFreqEleData(freqData);
-      console.log(freqData, freqDomain, "[][][][][[");
     }
 
     // Color electrodes in the same ROI
@@ -203,7 +205,14 @@ export const ElectrodeLoader = ({
       canvas.removeEventListener("click", handleCanvasClick);
       canvas.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [gl, camera, electrodeData, setSelectedElectrode, freqEleData, setHoveredElectrodeInfo]);
+  }, [
+    gl,
+    camera,
+    electrodeData,
+    setSelectedElectrode,
+    freqEleData,
+    setHoveredElectrodeInfo,
+  ]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;

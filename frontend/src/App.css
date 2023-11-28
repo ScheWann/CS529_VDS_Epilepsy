@@ -68,6 +68,14 @@ p {
   padding: 10px !important
 }
 
+.roiBrainCard .ant-card-body {
+  padding: 0 !important
+}
+
+.projectionNodeViewerClass .ant-card-body {
+  padding: 0 !important
+}
+
 .ant-card-body {
   width: 100%;
   padding: 5px !important;

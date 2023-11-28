@@ -312,7 +312,7 @@ const App = () => {
                 // />
                 <ProjectionNodeViewer
                   electrodeScreenPositions={electrodeScreenPositions}
-                  allnetwork={fullNetwork}
+                  allnetwork={fullNetwork.slice(0,-1)}
                   brainSvgData={svgData}
                 />
               ) : null}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Card } from "antd";
+import { Card, Spin } from "antd";
 
 const colorslist = [
   "#1f77b4",
@@ -18,7 +18,8 @@ export const ProjectionNodeViewer = ({
   allnetwork,
   brainSvgData,
 }) => {
-  const d3Container = useRef(null);
+  const svgRefs = useRef({});
+
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
   // Create a mapping from ROI to color
@@ -29,103 +30,131 @@ export const ProjectionNodeViewer = ({
 
   useEffect(() => {
     const updateSvgDimensions = () => {
-      if (d3Container.current && d3Container.current.parentNode) {
-        const cardWidth = d3Container.current.parentNode.clientWidth;
-        const cardHeight = d3Container.current.parentNode.clientHeight;
-        setSvgDimensions({ width: cardWidth, height: cardHeight });
-      }
+      allnetwork.forEach(({ roi }) => {
+        const svgContainer = svgRefs.current[roi];
+        if (svgContainer) {
+          const { clientWidth, clientHeight } = svgContainer;
+          setSvgDimensions((prevDimensions) => ({
+            ...prevDimensions,
+            [roi]: { width: clientWidth, height: clientHeight },
+          }));
+        }
+      });
     };
 
-    // Call the function and also set up a resize listener
-    updateSvgDimensions();
     window.addEventListener("resize", updateSvgDimensions);
+    updateSvgDimensions(); // Initial update
 
-    // Cleanup the listener on component unmount
-    return () => {
-      window.removeEventListener("resize", updateSvgDimensions);
-    };
-  }, []);
+    return () => window.removeEventListener("resize", updateSvgDimensions);
+  }, [allnetwork]);
 
   useEffect(() => {
-    if (
-      electrodeScreenPositions &&
-      d3Container.current &&
-      svgDimensions.width &&
-      svgDimensions.height &&
-      brainSvgData
-    ) {
-      d3.select(d3Container.current).selectAll("svg").remove();
-      const svg = d3
-        .select(d3Container.current)
-        .append("svg")
-        .attr("width", svgDimensions.width)
-        .attr("height", svgDimensions.height);
+    allnetwork.forEach(({ roi, electrodes }) => {
+      const svgContainer = svgRefs.current[roi];
+      if (svgContainer && svgDimensions[roi]) {
+        const { width, height } = svgDimensions[roi];
+        d3.select(svgContainer).selectAll("svg").remove();
+        const svg = d3
+          .select(svgContainer)
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height);
 
-      const hull = d3.polygonHull(brainSvgData.map((d) => [d.x, d.y]));
+        const centerX = width / 2;
+        const centerY = height / 2;
 
-      // Draw the convex hull as a path
-      svg
-        .append("path")
-        .data([hull])
-        .attr(
-          "d",
-          d3
-            .line()
-            .x((d) => d[0])
-            .y((d) => d[1])
-        )
-        .attr("stroke", "black")
-        .attr("fill", "none");
+        const brainOutline = d3.polygonHull(
+          brainSvgData.map((d) => [d.x, d.y])
+        );
 
-      // Calculate range of x,y values
-      const xValues = electrodeScreenPositions.map((d) => d.x);
-      const yValues = electrodeScreenPositions.map((d) => d.y);
-      const xMin = Math.min(...xValues);
-      const xMax = Math.max(...xValues);
-      const yMin = Math.min(...yValues);
-      const yMax = Math.max(...yValues);
+        const xExtent = d3.extent(brainOutline, (d) => d[0]);
+        const yExtent = d3.extent(brainOutline, (d) => d[1]);
+        const outlineWidth = xExtent[1] - xExtent[0];
+        const outlineHeight = yExtent[1] - yExtent[0];
 
-      // Calculate dynamic xOffset and yOffset to center circles
-      const xOffset = (svgDimensions.width - (xMax - xMin)) / 2 - xMin;
-      const yOffset = (svgDimensions.height - (yMax - yMin)) / 2 - yMin;
+        const scaleX = width / outlineWidth;
+        const scaleY = height / outlineHeight;
+        const scale = Math.min(scaleX, scaleY) * 0.8;
 
-      svg
-        .selectAll(".electrode-circle")
-        .data(electrodeScreenPositions)
-        .enter()
-        .append("circle")
-        .attr("class", "electrode-circle")
-        .attr("cx", (d) => d.x + xOffset)
-        .attr("cy", (d) => d.y + yOffset)
-        .attr("r", 5)
-        .attr("fill", (d) => roiColorMapping[d.label] || "blue");
-    }
-  }, [electrodeScreenPositions, roiColorMapping, svgDimensions, brainSvgData]);
+        const translateX = centerX - (xExtent[0] + outlineWidth / 2) * scale;
+        const translateY = centerY - (yExtent[0] + outlineHeight / 2) * scale;
+
+        // Apply translation to each point in the brain outline
+        const translatedOutline = brainOutline.map((point) => [
+          point[0] * scale + translateX,
+          point[1] * scale + translateY,
+        ]);
+
+        // Draw the convex hull as a path
+        svg
+          .append("path")
+          .data([translatedOutline])
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => d[0])
+              .y((d) => d[1])
+          )
+          .attr("stroke", "black")
+          .attr("fill", "none");
+
+        // Draw electrodes for this ROI
+        electrodeScreenPositions.forEach((electrode) => {
+          const position = electrode.label === String(roi) ? true : false;
+          if (position) {
+            const transformedX = electrode.x * scale + translateX * 0.5;
+            const transformedY = electrode.y * scale + 100;
+            svg
+              .append("circle")
+              .attr("cx", transformedX)
+              .attr("cy", transformedY)
+              .attr("r", 3) // Adjust radius as needed
+              .attr("fill", roiColorMapping[roi] || "blue"); // Use ROI color mapping
+          }
+        });
+      }
+    });
+  }, [
+    electrodeScreenPositions,
+    roiColorMapping,
+    svgDimensions,
+    brainSvgData,
+    allnetwork,
+  ]);
 
   return (
     <Card style={{ marginTop: 10, width: "49%" }}>
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        <div
-          id="electrodeScreenPositionSvg"
-          ref={d3Container}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        ></div>
-        <div
-          id="brainSvg"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        ></div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-around",
+          height: "100%",
+        }}
+      >
+        {allnetwork.map(({ roi }) => (
+          <Card
+            size="small"
+            title={"ROI" + " " + roi}
+            key={roi}
+            className="roiBrainCard"
+            style={{
+              position: "relative",
+              width: "20%",
+              margin: 1,
+            }}
+          >
+            <div
+              style={{
+                height: "99%",
+                width: "99%",
+              }}
+              key={roi}
+              ref={(el) => (svgRefs.current[roi] = el)}
+            ></div>
+          </Card>
+        ))}
       </div>
     </Card>
   );
