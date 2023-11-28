@@ -155,14 +155,14 @@ export const BrainViewer = (props) => {
       <Card
         className="brainViewerCard"
         style={{
-          width: 200,
+          width: width * 0.32,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           position: "absolute",
           top: "10px",
-          left: "calc(100% - 200px)",
+          left: `calc(100% - ${width * 0.32}px)`,
           zIndex: 100,
         }}
       >
@@ -172,12 +172,12 @@ export const BrainViewer = (props) => {
           defaultValue={"ROI 2"}
         />
         {/* left brain control */}
-        <Card className="leftBrainControlCard" size="small" title="Left Brain" style={{width: 180, margin: 5}}>
+        <Card className="leftBrainControlCard" size="small" title="Left Brain" style={{width: "98%", margin: 5}}>
           <p style={{marginLeft: 15}}>Opacity:</p>
           <Slider style={{width: "100%"}} defaultValue={1} step={0.1} max={1} onChange={changeLeftBrainOpacity} />
         </Card>
         {/* right brain control */}
-        <Card className="rightBrainControlCard" size="small" title="Right Brain" style={{width: 180, margin: 5}}>
+        <Card className="rightBrainControlCard" size="small" title="Right Brain" style={{width: "98%", margin: 5}}>
           <p style={{marginLeft: 15}}>Opacity:</p>
           <Slider style={{width: "100%"}} defaultValue={1} step={0.1} max={1} onChange={changeRightBrainOpacity}/>
         </Card>

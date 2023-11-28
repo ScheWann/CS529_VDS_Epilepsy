@@ -22,7 +22,7 @@ import { useEggData } from "./library/useEggData.js";
 const { Content, Footer, Sider } = Layout;
 
 const App = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   // use for controlling the patient chosen on main page
   const [selectedPatient, setSelectedPatient] = useState("ep187");
   // use for controlling the menu on main page
