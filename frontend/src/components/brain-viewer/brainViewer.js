@@ -18,9 +18,10 @@ export const BrainViewer = (props) => {
   const [selectedElectrode, setSelectedElectrode] = useState(null);
   const [segement, setSegment] = useState("ROI");
   const [brainModel, setBrainModel] = useState(null);
+  const [hoveredElectrodeInfo, setHoveredElectrodeInfo] = useState(null);
   // const [keyPointsData, setKeyPointsData] = useState([]);
   const cameraRef = useRef();
-
+  console.log(hoveredElectrodeInfo, "p[p[p[p[p[p[p");
   const handleButtonClick = () => {
     if (!cameraRef.current || !brainModel || !props.electrodeData) return;
     updateProjections();
@@ -155,6 +156,26 @@ export const BrainViewer = (props) => {
         />
         <button onClick={handleButtonClick}>Update Projection</button>
       </div>
+      {hoveredElectrodeInfo && (
+        <div
+          style={{
+            backgroundColor: "#F5F5F5",
+            opacity: "0.8",
+            position: "absolute",
+            zIndex: 1000,
+            padding: 10,
+            borderRadius: 5,
+            left: `${hoveredElectrodeInfo.position.x}px`,
+            top: `${hoveredElectrodeInfo.position.y}px`,
+          }}
+        >
+          Frequency: {hoveredElectrodeInfo.frequency}
+          <br />
+          ROI: {hoveredElectrodeInfo.roi}
+          <br />
+          Index: {hoveredElectrodeInfo.index}
+        </div>
+      )}
       <div style={{ height: height, width: width }}>
         <Canvas>
           <PerspectiveCamera
@@ -205,6 +226,7 @@ export const BrainViewer = (props) => {
             allnetwork={props.allnetwork}
             allnetworkWithEvent={props.allnetworksWithEvent}
             patientID={props.patientInformation.patientID}
+            setHoveredElectrodeInfo={setHoveredElectrodeInfo}
           />
           {segement == "Curve" ? (
             <CurveLoader

@@ -26,11 +26,13 @@ export const ElectrodeLoader = ({
   segement,
   setSelectedElectrode,
   propagationData,
+  setHoveredElectrodeInfo
 }) => {
   const isMountedRef = useRef(false);
   const meshRef = useRef();
   const { camera, gl } = useThree();
   const [selectedElectrodeIndex, setSelectedElectrodeIndex] = useState(null);
+  const [freqEleData, setFreqEleData] = useState([]);
 
   useLayoutEffect(() => {
     isMountedRef.current = true;
@@ -58,6 +60,39 @@ export const ElectrodeLoader = ({
     }
   };
 
+  const handleMouseMove = (event) => {
+    const rect = gl.domElement.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    const raycaster = new Raycaster();
+    raycaster.setFromCamera({ x, y }, camera);
+    const intersects = raycaster.intersectObject(meshRef.current, true);
+  
+    if (intersects.length > 0) {
+      const instanceId = intersects[0].instanceId;
+      const hoveredElectrode = electrodeData[instanceId];
+  
+      if (selectedEventRange && freqEleData) {
+        for (let r = 0; r < freqEleData.length; r++) {
+          const activeIndex = freqEleData[r].activeElectrode.indexOf(hoveredElectrode.electrode_number);
+          if (activeIndex > -1) {
+            const frequency = freqEleData[r].frequency[activeIndex];
+            const roi = freqEleData[r].roi;
+            setHoveredElectrodeInfo({
+              position: { x: event.clientX, y: event.clientY },
+              frequency,
+              roi,
+              index: instanceId,
+            });
+            break;
+          }
+        }
+      }
+    } else {
+      setHoveredElectrodeInfo(null);
+    }
+  };
+  
   // instancing
   useLayoutEffect(() => {
     if (!isMountedRef.current) return;
@@ -86,12 +121,11 @@ export const ElectrodeLoader = ({
               }
               return freq;
             }, 0);
-
             acc.activeElectrode.push(curr);
             acc.frequency.push(frequency);
             return acc;
           },
-          { activeElectrode: [], frequency: [] }
+          { activeElectrode: [], frequency: [], roi: allnetwork[i].roi }
         );
 
         freqData.push(result);
@@ -101,6 +135,8 @@ export const ElectrodeLoader = ({
       circleRadius = scaleLinear()
         .domain([0, max(freqDomain) === 0 ? 1 : max(freqDomain)])
         .range([1, 2]);
+      setFreqEleData(freqData);
+      console.log(freqData, freqDomain, "[][][][][[");
     }
 
     // Color electrodes in the same ROI
@@ -162,8 +198,12 @@ export const ElectrodeLoader = ({
   useEffect(() => {
     const canvas = gl.domElement;
     canvas.addEventListener("click", handleCanvasClick);
-    return () => canvas.removeEventListener("click", handleCanvasClick);
-  }, [gl, camera, electrodeData, setSelectedElectrode]);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      canvas.removeEventListener("click", handleCanvasClick);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [gl, camera, electrodeData, setSelectedElectrode, freqEleData, setHoveredElectrodeInfo]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;
@@ -218,8 +258,7 @@ export const ElectrodeLoader = ({
           electrode.electrode_number
         );
         if (index === selectedElectrodeIndex) {
-          console.log()
-          meshRef.current.setColorAt(index, new Color(0x00ff00)); 
+          meshRef.current.setColorAt(index, new Color(0x00ff00));
         } else if (isSourceElectrode) {
           allnetwork.forEach((network, netIndex) => {
             if (
@@ -254,13 +293,19 @@ export const ElectrodeLoader = ({
     return () => clearInterval(interval);
   }, [electrodeData, sampleData, segement, selectedElectrodeIndex]);
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[null, null, electrodeData.length]}
-      position={[bbox.x, bbox.y, bbox.z]}
-    >
-      <sphereGeometry args={[1.5, 32, 32]} />
-      <meshStandardMaterial attach="material" color="#fff" emissive={"#000"} />
-    </instancedMesh>
+    <>
+      <instancedMesh
+        ref={meshRef}
+        args={[null, null, electrodeData.length]}
+        position={[bbox.x, bbox.y, bbox.z]}
+      >
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <meshStandardMaterial
+          attach="material"
+          color="#fff"
+          emissive={"#000"}
+        />
+      </instancedMesh>
+    </>
   );
 };
