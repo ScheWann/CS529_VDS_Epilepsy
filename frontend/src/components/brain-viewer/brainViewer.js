@@ -9,7 +9,7 @@ import { BrainObjectLoader } from "./brainObjectLoader";
 import { ElectrodeLoader } from "./electrodeLoader";
 import { CurveLoader } from "./curveLoader";
 import { KeyPoints } from "./keyPoints";
-import { Segmented } from "antd";
+import { Segmented, Card, Button, Collapse, Slider, Switch } from "antd";
 
 const width = window.innerWidth / 2.5;
 const height = window.innerHeight / 2.5;
@@ -19,9 +19,10 @@ export const BrainViewer = (props) => {
   const [segement, setSegment] = useState("ROI");
   const [brainModel, setBrainModel] = useState(null);
   const [hoveredElectrodeInfo, setHoveredElectrodeInfo] = useState(null);
+  const [leftBrainOpacity, setLeftBrainOpacity] = useState(1)
+  const [rightBrainOpacity, setRightBrainOpacity] = useState(1)
   // const [keyPointsData, setKeyPointsData] = useState([]);
   const cameraRef = useRef();
-  console.log(hoveredElectrodeInfo, "p[p[p[p[p[p[p");
   const handleButtonClick = () => {
     if (!cameraRef.current || !brainModel || !props.electrodeData) return;
     updateProjections();
@@ -38,6 +39,14 @@ export const BrainViewer = (props) => {
 
   const changeSegement = (value) => {
     setSegment(value);
+  };
+
+  const changeLeftBrainOpacity = (value) => {
+    setLeftBrainOpacity(value)
+  };
+
+  const changeRightBrainOpacity = (value) => {
+    setRightBrainOpacity(value)
   };
 
   const changeROI = (value) => {
@@ -142,113 +151,143 @@ export const BrainViewer = (props) => {
   //     .then((data) => setKeyPointsData(data));
   // }, []);
   return (
-    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Segmented
-          options={["ROI", "Frequncy", "Propogation", "Curve"]}
-          onChange={changeSegement}
-          defaultValue={"ROI"}
-        />
+    <div style={{ position: "relative" }}>
+      <Card
+        className="brainViewerCard"
+        style={{
+          width: 200,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "absolute",
+          top: "10px",
+          left: "calc(100% - 200px)",
+          zIndex: 100,
+        }}
+      >
         <Segmented
           options={["ROI 0", "ROI 1", "ROI 2"]}
           onChange={changeROI}
           defaultValue={"ROI 2"}
         />
-        <button onClick={handleButtonClick}>Update Projection</button>
-      </div>
-      {hoveredElectrodeInfo && (
-        <div
-          style={{
-            backgroundColor: "#F5F5F5",
-            opacity: "0.8",
-            position: "absolute",
-            zIndex: 1000,
-            padding: 10,
-            borderRadius: 5,
-            left: `${hoveredElectrodeInfo.position.x}px`,
-            top: `${hoveredElectrodeInfo.position.y}px`,
-          }}
-        >
-          Frequency: {hoveredElectrodeInfo.frequency}
-          <br />
-          ROI: {hoveredElectrodeInfo.roi}
-          <br />
-          Index: {hoveredElectrodeInfo.index}
+        {/* left brain control */}
+        <Card className="leftBrainControlCard" size="small" title="Left Brain" style={{width: 180, margin: 5}}>
+          <p style={{marginLeft: 15}}>Opacity:</p>
+          <Slider style={{width: "100%"}} defaultValue={1} step={0.1} max={1} onChange={changeLeftBrainOpacity} />
+        </Card>
+        {/* right brain control */}
+        <Card className="rightBrainControlCard" size="small" title="Right Brain" style={{width: 180, margin: 5}}>
+          <p style={{marginLeft: 15}}>Opacity:</p>
+          <Slider style={{width: "100%"}} defaultValue={1} step={0.1} max={1} onChange={changeRightBrainOpacity}/>
+        </Card>
+        <Button onClick={handleButtonClick}>Update Projection</Button>
+      </Card>
+      <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Segmented
+            options={["ROI", "Frequncy", "Propogation", "Curve"]}
+            onChange={changeSegement}
+            defaultValue={"ROI"}
+          />
         </div>
-      )}
-      <div style={{ height: height, width: width }}>
-        <Canvas>
-          <PerspectiveCamera
-            makeDefault
-            ref={cameraRef}
-            position={[-250, -10, 0]}
-            up={[0, 0, 1]}
-            aspect={width / height}
-            near={1}
-            far={2000}
-            fov={40}
-          />
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} />
-          <directionalLight
-            castShadow
-            position={[0, 5, 5]}
-            intensity={1}
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
-            shadow-camera-near={0.5}
-            shadow-camera-far={500}
-            shadow-camera-left={-5}
-            shadow-camera-right={5}
-            shadow-camera-top={5}
-            shadow-camera-bottom={-5}
-          />
-          <directionalLight position={[-250, -10, 0]} />
-          <BrainObjectLoader
-            patientID={props.patientInformation.patientID}
-            lesionArray={props.lesionArray}
-            onModelLoaded={setBrainModel}
-          />
-          {/* {keyPointsData.length > 0 && (
-            <KeyPoints points={keyPointsData} color="red" position={{ x: -100, y: -110, z: -120 }} />
-          )} */}
-          <ElectrodeLoader
-            segement={segement}
-            cameraRef={cameraRef.current}
-            propagationData={props.propagationData}
-            setSelectedElectrode={setSelectedElectrode}
-            setElectrodeScreenPositions={props.setElectrodeScreenPositions}
-            electrodeData={props.electrodeData}
-            sampleData={props.sampleData}
-            bbox={dataRegisty[props.patientInformation.patientID].bbox}
-            selectedEventRange={props.selectedEventRange}
-            events={props.events}
-            allnetwork={props.allnetwork}
-            allnetworkWithEvent={props.allnetworksWithEvent}
-            patientID={props.patientInformation.patientID}
-            setHoveredElectrodeInfo={setHoveredElectrodeInfo}
-          />
-          {segement == "Curve" ? (
-            <CurveLoader
-              segement={segement}
-              bbox={dataRegisty[props.patientInformation.patientID].bbox}
-              patientID={props.patientInformation.patientID}
-              electrodeData={props.electrodeData}
-              propagationData={props.propagationData}
-              selectedElectrode={selectedElectrode}
-            />
-          ) : null}
-
-          <OrbitControls
-            ref={(control) => {
-              // Attach the controls to the camera ref
-              if (control && cameraRef.current) {
-                cameraRef.current.controls = control;
-              }
+        {/* tooltip */}
+        {hoveredElectrodeInfo && (
+          <div
+            style={{
+              backgroundColor: "#F5F5F5",
+              opacity: "0.8",
+              position: "absolute",
+              zIndex: 1000,
+              padding: 10,
+              borderRadius: 5,
+              left: `${hoveredElectrodeInfo.position.x}px`,
+              top: `${hoveredElectrodeInfo.position.y}px`,
             }}
-            enablePan={true}
-          />
-        </Canvas>
+          >
+            Frequency: {hoveredElectrodeInfo.frequency}
+            <br />
+            ROI: {hoveredElectrodeInfo.roi}
+            <br />
+            Index: {hoveredElectrodeInfo.index}
+          </div>
+        )}
+        <div style={{ height: height, width: width }}>
+          <Canvas>
+            <PerspectiveCamera
+              makeDefault
+              ref={cameraRef}
+              position={[-250, -10, 0]}
+              up={[0, 0, 1]}
+              aspect={width / height}
+              near={1}
+              far={2000}
+              fov={40}
+            />
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} />
+            <directionalLight
+              castShadow
+              position={[0, 5, 5]}
+              intensity={1}
+              shadow-mapSize-width={2048}
+              shadow-mapSize-height={2048}
+              shadow-camera-near={0.5}
+              shadow-camera-far={500}
+              shadow-camera-left={-5}
+              shadow-camera-right={5}
+              shadow-camera-top={5}
+              shadow-camera-bottom={-5}
+            />
+            <directionalLight position={[-250, -10, 0]} />
+            <BrainObjectLoader
+              patientID={props.patientInformation.patientID}
+              lesionArray={props.lesionArray}
+              onModelLoaded={setBrainModel}
+              leftBrainOpacity={leftBrainOpacity}
+              rightBrainOpacity={rightBrainOpacity}
+            />
+            {/* {keyPointsData.length > 0 && (
+              <KeyPoints points={keyPointsData} color="red" position={{ x: -100, y: -110, z: -120 }} />
+            )} */}
+            <ElectrodeLoader
+              segement={segement}
+              cameraRef={cameraRef.current}
+              propagationData={props.propagationData}
+              setSelectedElectrode={setSelectedElectrode}
+              setElectrodeScreenPositions={props.setElectrodeScreenPositions}
+              electrodeData={props.electrodeData}
+              sampleData={props.sampleData}
+              bbox={dataRegisty[props.patientInformation.patientID].bbox}
+              selectedEventRange={props.selectedEventRange}
+              events={props.events}
+              allnetwork={props.allnetwork}
+              allnetworkWithEvent={props.allnetworksWithEvent}
+              patientID={props.patientInformation.patientID}
+              setHoveredElectrodeInfo={setHoveredElectrodeInfo}
+            />
+            {segement == "Curve" ? (
+              <CurveLoader
+                segement={segement}
+                bbox={dataRegisty[props.patientInformation.patientID].bbox}
+                patientID={props.patientInformation.patientID}
+                electrodeData={props.electrodeData}
+                propagationData={props.propagationData}
+                selectedElectrode={selectedElectrode}
+              />
+            ) : null}
+
+            <OrbitControls
+              ref={(control) => {
+                // Attach the controls to the camera ref
+                if (control && cameraRef.current) {
+                  cameraRef.current.controls = control;
+                }
+              }}
+              enablePan={true}
+            />
+          </Canvas>
+        </div>
       </div>
     </div>
   );

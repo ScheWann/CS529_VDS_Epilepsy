@@ -2,6 +2,11 @@ body {
   margin: 0;
 }
 
+p {
+  width: 100%;
+  text-align: left;
+  margin: 0;
+}
 .App {
   text-align: center;
 }
@@ -44,6 +49,23 @@ body {
 /* modify antd css style */
 .ant-layout-header {
   padding: 0 20px
+}
+
+.brainViewerCard .ant-card-body {
+  width: 100%;
+  padding: 5px !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leftBrainControlCard .ant-card-body {
+  padding: 10px !important
+}
+
+.rightBrainControlCard .ant-card-body {
+  padding: 10px !important
 }
 
 .ant-card-body {

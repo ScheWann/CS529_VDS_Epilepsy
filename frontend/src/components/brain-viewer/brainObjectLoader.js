@@ -7,7 +7,7 @@ export const BrainObjectLoader = (props) => {
             <ModelLoader
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_left.obj`}
                 color="#F6D5A2"
-                opacity={1}
+                opacity={props.leftBrainOpacity}
                 transparent={true}
                 type="brain"
                 subType="left"
@@ -17,7 +17,7 @@ export const BrainObjectLoader = (props) => {
             <ModelLoader
                 url={`${partURL}${props.patientID}/${props.patientID}_brain_right.obj`}
                 color="#D6D0BA"
-                opacity={1}
+                opacity={props.rightBrainOpacity}
                 transparent={true}
                 type="brain"
                 subType="right"
