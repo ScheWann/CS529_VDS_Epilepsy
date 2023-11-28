@@ -33,6 +33,21 @@ export const ProjectionNodeViewer = ({
     setSelectedRoi(roi);
   };
 
+  // Handler to reset selection on outside clicks
+  const handleOutsideClick = (event) => {
+    if (selectedRoi && !event.target.closest('.roiBrainCard')) {
+      setSelectedRoi(null);
+    }
+  };
+
+  // Attach event listener
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [selectedRoi]);
+
   // Updating SVG Dimensions
   useEffect(() => {
     const updateSvgDimensions = () => {
@@ -111,8 +126,6 @@ export const ProjectionNodeViewer = ({
       electrodeScreenPositions.forEach((electrode) => {
         const position = electrode.label === String(selectedRoi) ? true : false;
         if (position) {
-          // const transformedX = electrode.x * scale + translateX;
-          // const transformedY = electrode.y * scale + translateY;
           const transformedX = electrode.x * scale + translateX * 0.5;
           const transformedY = electrode.y * scale + 70;
           svg
@@ -183,7 +196,6 @@ export const ProjectionNodeViewer = ({
           electrodeScreenPositions.forEach((electrode) => {
             const position = electrode.label === String(roi) ? true : false;
             if (position) {
-
               const transformedX = electrode.x * scale + translateX * 0.5;
               const transformedY = electrode.y * scale + 70;
 
@@ -224,7 +236,7 @@ export const ProjectionNodeViewer = ({
               maxHeight: 175,
               border:
                 roi === selectedRoi
-                  ? "2px solid blue"
+                  ? "2px solid #6495ED"
                   : "1px solid rgba(0, 0, 0, 0.125)",
             }}
             onClick={() => selectRoi(roi)}
