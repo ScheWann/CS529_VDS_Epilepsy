@@ -274,11 +274,11 @@ const App = () => {
                     lesionArray={lesionArray}
                     electrodeData={electrodeData}
                     sampleData={sampleData}
-                    timeRange={1000}
                     events={allEventData[patientInfo.sampleID]}
                     allnetwork={fullNetwork}
                     allnetworksWithEvent={fullEventNetwork}
-                    selectedEventRange={[103, 113]}
+                    // selectedEventRange={[103, 113]}
+                    selectedEventRange={[14000, 14500]}
                     setROI={setROI}
                     onSvgCreated={handleReceiveSvg}
                   />

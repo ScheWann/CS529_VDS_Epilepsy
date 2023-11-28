@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Card, Spin } from "antd";
+import { Card } from "antd";
 
 const colorslist = [
   "#1f77b4",

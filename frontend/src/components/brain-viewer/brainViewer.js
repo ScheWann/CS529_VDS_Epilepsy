@@ -201,7 +201,6 @@ export const BrainViewer = (props) => {
             sampleData={props.sampleData}
             bbox={dataRegisty[props.patientInformation.patientID].bbox}
             selectedEventRange={props.selectedEventRange}
-            timeRange={props.timeRange}
             events={props.events}
             allnetwork={props.allnetwork}
             allnetworkWithEvent={props.allnetworksWithEvent}
