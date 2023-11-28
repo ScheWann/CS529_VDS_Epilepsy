@@ -43,14 +43,13 @@ export const ElectrodeLoader = ({
     const rect = gl.domElement.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
     const raycaster = new Raycaster();
     raycaster.setFromCamera({ x, y }, camera);
     const intersects = raycaster.intersectObject(meshRef.current, true);
     if (intersects.length > 0) {
       const instanceId = intersects[0].instanceId;
       const selectedElectrode = electrodeData[instanceId];
-      setSelectedElectrode(selectedElectrode.electrode_number); // Assuming electrode_number is the ID
+      setSelectedElectrode(selectedElectrode.electrode_number);
     }
   };
 

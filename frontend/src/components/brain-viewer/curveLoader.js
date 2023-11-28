@@ -19,20 +19,39 @@ export const CurveLoader = ({
   const { scene } = useThree();
   const curveObjectsRef = useRef([]);
 
-  const drawCurve = (sourcePos, targetPos) => {
+  const calculateRadialOffset = (sourcePos, targetPos, radian, radialDistance) => {
+    // Calculate midpoint
     const midPoint = new Vector3(
       (sourcePos.x + targetPos.x) / 2,
-      (sourcePos.y + targetPos.y) / 2,
-      (sourcePos.z + targetPos.z) / 2
+      (sourcePos.y + targetPos.y) / 2 + 20,
+      (sourcePos.z + targetPos.z) / 2 + 20
     );
+  
+    // Calculate radial offset
+    const direction = new Vector3().subVectors(targetPos, sourcePos).normalize();
+    const perpendicular = new Vector3(-direction.z, 0, direction.x).normalize();
+  
+    // Offset midpoint
+    midPoint.addScaledVector(perpendicular, Math.cos(radian) * radialDistance);
+    midPoint.y += Math.sin(radian) * radialDistance; // Adjust Y to create a 3D curve effect
+  
+    return midPoint;
+  };  
 
+  const drawCurve = (sourcePos, targetPos) => {
+    const radian = 1
+    const radialDistance = 20;
+  
+    const midPoint = calculateRadialOffset(sourcePos, targetPos, radian, radialDistance);
+  
     const curve = new CatmullRomCurve3([sourcePos, midPoint, targetPos]);
     const points = curve.getPoints(50);
     const geometry = new BufferGeometry().setFromPoints(points);
-    const material = new LineBasicMaterial({ color: 0xff0000 }); // Curve color
-
+    const material = new LineBasicMaterial({ color: 0xff0000 });
+  
     return new Line(geometry, material);
   };
+  
 
   // initial curves
   const initialCurves = () => {
