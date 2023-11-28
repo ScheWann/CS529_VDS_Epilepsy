@@ -19,12 +19,12 @@ export const SimilarViewer = ({
     "#e377c2",
     "#bfa3a3",
   ];
-  const selectedROIColor = colorslist[ROI];
 
+  const [selectedROIColor, setSelectedROIColor] = useState("")
   const [similarNodesArray, setSimilarNodesArray] = useState([]);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
   const [similarEventsOptions, SetSimilarEventsOptions] = useState({});
-  const [selectedEvent, setSelectedEvent] = useState(2);
+  const [selectedEvent, setSelectedEvent] = useState(0);
   const [cardSize, setCardSize] = useState({});
 
   const ref = useRef();
@@ -61,6 +61,16 @@ export const SimilarViewer = ({
       }
     });
   }
+
+  useEffect(() => {
+    if(allnetworksWithEvent) {
+      allnetworksWithEvent[45].forEach((element, index) => {
+        if(element.roi === ROI) {
+          setSelectedROIColor(colorslist[index])
+        }
+      })
+    }
+  })
 
   useEffect(() => {
     let tempSimilarNodesArray = [];
@@ -101,9 +111,11 @@ export const SimilarViewer = ({
       tempSimilarNodesArray.length > 0 &&
       tempSimilarNodesArray[selectedEvent].network
     ) {
-      setSelectedNetwork(
-        tempSimilarNodesArray[selectedEvent].network[ROI]["network"]
-      );
+      tempSimilarNodesArray[selectedEvent].network.forEach(element => {
+        if(element.roi === ROI) {
+          setSelectedNetwork(element.network)
+        }
+      })
     }
   }, [allnetworksWithEvent, similarityData, ROI, selectedEvent]);
 

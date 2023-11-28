@@ -3,13 +3,13 @@ import * as THREE from "three";
 import * as d3 from "d3";
 
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import dataRegisty from "../../data/dataRegistry.json";
 import { BrainObjectLoader } from "./brainObjectLoader";
 import { ElectrodeLoader } from "./electrodeLoader";
 import { CurveLoader } from "./curveLoader";
 import { KeyPoints } from "./keyPoints";
-import { Segmented, Card, Button, Collapse, Slider, Switch } from "antd";
+import { Segmented, Card, Button, Select, Slider } from "antd";
 
 const width = window.innerWidth / 2.5;
 const height = window.innerHeight / 2.5;
@@ -19,8 +19,9 @@ export const BrainViewer = (props) => {
   const [segement, setSegment] = useState("ROI");
   const [brainModel, setBrainModel] = useState(null);
   const [hoveredElectrodeInfo, setHoveredElectrodeInfo] = useState(null);
-  const [leftBrainOpacity, setLeftBrainOpacity] = useState(1)
-  const [rightBrainOpacity, setRightBrainOpacity] = useState(1)
+  const [leftBrainOpacity, setLeftBrainOpacity] = useState(1);
+  const [rightBrainOpacity, setRightBrainOpacity] = useState(1);
+  const [roiOptions, setRoiOptions] = useState([]);
   // const [keyPointsData, setKeyPointsData] = useState([]);
   const cameraRef = useRef();
   const handleButtonClick = () => {
@@ -42,11 +43,11 @@ export const BrainViewer = (props) => {
   };
 
   const changeLeftBrainOpacity = (value) => {
-    setLeftBrainOpacity(value)
+    setLeftBrainOpacity(value);
   };
 
   const changeRightBrainOpacity = (value) => {
-    setRightBrainOpacity(value)
+    setRightBrainOpacity(value);
   };
 
   const changeROI = (value) => {
@@ -122,6 +123,16 @@ export const BrainViewer = (props) => {
     };
   };
 
+  useMemo(() => {
+    if (props.allnetwork) {
+      const options = props.allnetwork.slice(0, -1).map((item) => ({
+        value: item.roi.toString(),
+        label: `ROI ${item.roi}`,
+      }));
+      setRoiOptions(options);
+    }
+  }, []);
+
   useEffect(() => {
     if (brainModel && cameraRef.current) {
       projectBrainModelTo2D();
@@ -166,20 +177,45 @@ export const BrainViewer = (props) => {
           zIndex: 100,
         }}
       >
-        <Segmented
-          options={["ROI 0", "ROI 1", "ROI 2"]}
+        <Select
+          defaultValue="101"
+          style={{
+            width: "98%",
+          }}
           onChange={changeROI}
-          defaultValue={"ROI 2"}
+          options={roiOptions}
         />
         {/* left brain control */}
-        <Card className="leftBrainControlCard" size="small" title="Left Brain" style={{width: "98%", margin: 5}}>
-          <p style={{marginLeft: 15}}>Opacity:</p>
-          <Slider style={{width: "100%"}} defaultValue={1} step={0.1} max={1} onChange={changeLeftBrainOpacity} />
+        <Card
+          className="leftBrainControlCard"
+          size="small"
+          title="Left Brain"
+          style={{ width: "98%", margin: 5 }}
+        >
+          <p style={{ marginLeft: 15 }}>Opacity:</p>
+          <Slider
+            style={{ width: "100%" }}
+            defaultValue={1}
+            step={0.1}
+            max={1}
+            onChange={changeLeftBrainOpacity}
+          />
         </Card>
         {/* right brain control */}
-        <Card className="rightBrainControlCard" size="small" title="Right Brain" style={{width: "98%", margin: 5}}>
-          <p style={{marginLeft: 15}}>Opacity:</p>
-          <Slider style={{width: "100%"}} defaultValue={1} step={0.1} max={1} onChange={changeRightBrainOpacity}/>
+        <Card
+          className="rightBrainControlCard"
+          size="small"
+          title="Right Brain"
+          style={{ width: "98%", margin: 5 }}
+        >
+          <p style={{ marginLeft: 15 }}>Opacity:</p>
+          <Slider
+            style={{ width: "100%" }}
+            defaultValue={1}
+            step={0.1}
+            max={1}
+            onChange={changeRightBrainOpacity}
+          />
         </Card>
         <Button onClick={handleButtonClick}>Update Projection</Button>
       </Card>

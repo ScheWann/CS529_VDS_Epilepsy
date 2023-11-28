@@ -41,7 +41,7 @@ const App = () => {
   // for showing the corresponding color based on the 3D brain ROI color
   const [selectedROIColor, setSelectedROIColor] = useState("");
   // for choosing different ROI to show 2D nodes
-  const [ROI, setROI] = useState(2);
+  const [ROI, setROI] = useState(101);
   // for getting the 2D position in screen
   const [electrodeScreenPositions, setElectrodeScreenPositions] = useState([]);
   // for setting the 2D brain svg
