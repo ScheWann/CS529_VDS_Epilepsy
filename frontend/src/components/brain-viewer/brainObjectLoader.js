@@ -39,7 +39,7 @@ export const BrainObjectLoader = (props) => {
                     <ModelLoader
                         key={index}
                         url={`${partURL}${props.patientID}/${props.patientID}_lesion${lesion}.obj`}
-                        color="#999"
+                        color="#333"
                         opacity={1}
                         transparent={false}
                         type="lesion"
