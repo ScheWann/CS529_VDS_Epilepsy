@@ -104,7 +104,7 @@ export const ProjectionNodeViewer = ({
           const position = electrode.label === String(roi) ? true : false;
           if (position) {
             const transformedX = electrode.x * scale + translateX * 0.5;
-            const transformedY = electrode.y * scale + 100;
+            const transformedY = electrode.y * scale + 70;
             svg
               .append("circle")
               .attr("cx", transformedX)
@@ -143,6 +143,7 @@ export const ProjectionNodeViewer = ({
               position: "relative",
               width: "20%",
               margin: 1,
+              maxHeight: 175
             }}
           >
             <div

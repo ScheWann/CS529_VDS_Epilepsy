@@ -69,7 +69,8 @@ p {
 }
 
 .roiBrainCard .ant-card-body {
-  padding: 0 !important
+  padding: 0 !important;
+  max-height: 130px
 }
 
 .projectionNodeViewerClass .ant-card-body {
