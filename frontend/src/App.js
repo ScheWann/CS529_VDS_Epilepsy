@@ -6,8 +6,6 @@ import "./App.css";
 import dataRegistry from "./data/dataRegistry.json";
 import { BrainViewer } from "./components/brain-viewer/brainViewer.js";
 import { EEGDataViewer } from "./components/eeg-data-viewer/eegDataViewer.js";
-import { NodeViewer } from "./components/network-viewer/nodeViewer.js";
-import { SimilarViewer } from "./components/similar-viewer/similarViewer.js";
 import { ProjectionNodeViewer } from "./components/network-viewer/projectionNodeViewer.js";
 
 import { useFullNetwork } from "./library/useFullNetwork";
@@ -285,11 +283,6 @@ const App = () => {
               ) : null}
 
               {fullNetwork && svgData && similarityData && fullEventNetwork? (
-                // <NodeViewer
-                //   patientID={patientInfo.patientID}
-                //   allnetworksWithEvent={fullEventNetwork}
-                //   ROI={ROI}
-                // />
                 <ProjectionNodeViewer
                   electrodeScreenPositions={electrodeScreenPositions}
                   allnetwork={fullNetwork.slice(0,-1)}
@@ -319,16 +312,6 @@ const App = () => {
                   />
                 </Card>
               ) : null}
-
-              {/* {fullEventNetwork && similarityData ? (
-                <SimilarViewer
-                  patientID={patientInfo.patientID}
-                  allnetworksWithEvent={fullEventNetwork}
-                  similarityData={similarityData}
-                  ROI={ROI}
-                  selectedROIColor={selectedROIColor}
-                />
-              ) : null} */}
             </div>
           </div>
         </Content>
