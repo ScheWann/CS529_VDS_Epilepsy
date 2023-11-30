@@ -38,7 +38,7 @@ export const ModelLoader = ({
         obj.position.z += 10;
       }
     }
-    if (onLoaded && obj) {
+    if (onLoaded && type === "brain" && subType === "none" && obj) {
       onLoaded(obj);
     }
     obj.renderOrder = renderOrder;
