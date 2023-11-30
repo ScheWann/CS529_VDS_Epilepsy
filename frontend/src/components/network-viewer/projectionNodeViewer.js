@@ -66,10 +66,46 @@ export const ProjectionNodeViewer = ({
   // Function to render the ROI graph in the modal
   const renderRoiGraphInModal = (roi) => {
     const svgContainer = modalSvgRef.current;
-    if (!svgContainer || cardDimensions.width === 0 || cardDimensions.height === 0) return;
+    let filteredNetwork = [];
+    // Map to store references to all electrode text elements
+    const electrodeTextElements = {};
+
+    // Legend data
+    const legendData = [
+      { color: "green", label: "Source Electrode" },
+      { color: "purple", label: "Target Electrode" },
+      { color: roiColorMapping[roi] || "blue", label: "Other Electrode" },
+    ];
+    if (
+      !svgContainer ||
+      cardDimensions.width === 0 ||
+      cardDimensions.height === 0
+    )
+      return;
 
     const { width, height } = cardDimensions;
     d3.select(svgContainer).selectAll("svg").remove();
+
+    // Function to map electrode number to screen position
+    const mapElectrodeToPosition = (electrodeNumber) => {
+      return electrodeScreenPositions.find(
+        (e) => e.electrode_number === electrodeNumber
+      );
+    };
+
+    // Function to determine if an electrode is a source
+    const isSourceElectrode = (electrodeNumber) => {
+      return filteredNetwork.some(
+        (connection) => connection.source === electrodeNumber
+      );
+    };
+
+    // Function to determine if an electrode is a target
+    const isTargetElectrode = (electrodeNumber) => {
+      return filteredNetwork.some(
+        (connection) => connection.target === electrodeNumber
+      );
+    };
 
     const svg = d3
       .select(svgContainer)
@@ -114,6 +150,42 @@ export const ProjectionNodeViewer = ({
       .attr("stroke", "black")
       .attr("fill", "none");
 
+    // find the specific event
+    allnetworksWithEvent[45].forEach((connection) => {
+      if (connection.roi === selectedRoi) {
+        filteredNetwork = connection.network;
+      }
+    });
+
+    // draw connection between electrodes
+    const electrodeLines = filteredNetwork
+      .map((connection) => {
+        const sourcePosition = mapElectrodeToPosition(connection.source);
+        const targetPosition = mapElectrodeToPosition(connection.target);
+
+        if (sourcePosition && targetPosition) {
+          const sourceX = sourcePosition.x * scale + translateX * 0.5;
+          const sourceY = sourcePosition.y * scale + 280;
+          const targetX = targetPosition.x * scale + translateX * 0.5;
+          const targetY = targetPosition.y * scale + 280;
+
+          return svg
+            .append("line")
+            .attr("x1", sourceX)
+            .attr("y1", sourceY)
+            .attr("x2", targetX)
+            .attr("y2", targetY)
+            .attr("stroke", "#ddd")
+            .attr("stroke-width", 1)
+            .attr("data-source", connection.source)
+            .attr("data-target", connection.target)
+            .style("opacity", 0.5);
+        }
+
+        return null;
+      })
+      .filter((line) => line);
+
     // Draw electrodes for this ROI
     electrodeScreenPositions.forEach((electrode) => {
       const position = electrode.label === String(roi) ? true : false;
@@ -121,13 +193,114 @@ export const ProjectionNodeViewer = ({
         const transformedX = electrode.x * scale + translateX * 0.5;
         const transformedY = electrode.y * scale + 280;
 
-        svg
+        const electrodeCircle = svg
           .append("circle")
           .attr("cx", transformedX)
           .attr("cy", transformedY)
-          .attr("r", 3)
-          .attr("fill", roiColorMapping[roi] || "blue"); // Use ROI color mapping
+          .attr("r", 8)
+          .attr(
+            "fill",
+            isSourceElectrode(electrode.electrode_number)
+              ? "green"
+              : isTargetElectrode(electrode.electrode_number)
+              ? "purple"
+              : roiColorMapping[roi] || "blue"
+          )
+          .attr("stroke", "black")
+          .attr("stroke-width", 1)
+          .attr("data-electrode-number", electrode.electrode_number);
+
+        // set the electrode tooltip background
+        const electrodeTextBackground = svg
+          .append("rect")
+          .attr("x", transformedX) 
+          .attr("y", transformedY - 20) 
+          .attr("width", 25) 
+          .attr("height", 20) 
+          .attr("fill", "#FAEBD7")
+          .style("opacity", 0.8)
+          .attr("visibility", "hidden"); 
+
+        // set the electrode tooltip text
+        electrodeTextElements[electrode.electrode_number] = {
+          text: svg
+            .append("text")
+            .attr("x", transformedX + 5)
+            .attr("y", transformedY - 5)
+            .text(electrode.electrode_number)
+            .attr("visibility", "hidden"),
+          background: electrodeTextBackground,
+        };
+
+        if (isSourceElectrode(electrode.electrode_number)) {
+          electrodeCircle
+            .on("mouseover", function () {
+              // Show and raise source electrode ID
+              const sourceElement =
+                electrodeTextElements[electrode.electrode_number];
+              sourceElement.background.attr("visibility", "visible").raise();
+              sourceElement.text.attr("visibility", "visible").raise();
+
+              // Highlight lines connected to this source
+              electrodeLines.forEach((line) => {
+                if (line.attr("data-source") == electrode.electrode_number) {
+                  line.style("opacity", 1).attr("stroke", "red");
+                }
+              });
+              
+              // For showing tooltip
+              filteredNetwork.forEach((connection) => {
+                if (connection.source === electrode.electrode_number) {
+                  const targetElement =
+                    electrodeTextElements[connection.target];
+                  if (targetElement) {
+                    targetElement.background
+                      .attr("visibility", "visible")
+                      .raise();
+                    targetElement.text.attr("visibility", "visible").raise();
+                  }
+                }
+              });
+            })
+            .on("mouseout", function () {
+              // Reset line opacity
+              electrodeLines.forEach((line) => {
+                line.style("opacity", 0.5).attr("stroke", "#ddd");
+              });
+
+              // Hide all electrode IDs
+              Object.values(electrodeTextElements).forEach((element) => {
+                element.text.attr("visibility", "hidden");
+                element.background.attr("visibility", "hidden");
+              });
+            });
+        }
       }
+    });
+
+    // Draw legend
+    const legend = svg
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(10,20)");
+
+    legendData.forEach((item, index) => {
+      const legendItem = legend
+        .append("g")
+        .attr("transform", `translate(0, ${index * 25})`);
+
+      legendItem
+        .append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", item.color);
+
+      legendItem
+        .append("text")
+        .attr("x", 25)
+        .attr("y", 15)
+        .style("font-size", "12px")
+        .text(item.label);
     });
   };
 
@@ -136,7 +309,7 @@ export const ProjectionNodeViewer = ({
       const timeoutId = setTimeout(() => {
         setCardDimensions({
           width: cardRef.current.offsetWidth,
-          height: cardRef.current.offsetHeight
+          height: cardRef.current.offsetHeight,
         });
       }, 1);
 
@@ -395,11 +568,14 @@ export const ProjectionNodeViewer = ({
           onCancel={handleCancel}
           width={1200}
         >
-          <div style={{ display: "flex", justifyContent: "space-around", margin: "30px 0px 30px 0px" }}>
-            <Card
-              ref={cardRef}
-              style={{width: "48%", height: 500}}
-            >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              margin: "30px 0px 30px 0px",
+            }}
+          >
+            <Card ref={cardRef} style={{ width: "48%", height: 500 }}>
               <div ref={modalSvgRef}></div>
             </Card>
             <SimilarViewer
