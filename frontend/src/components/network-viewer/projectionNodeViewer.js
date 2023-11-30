@@ -22,7 +22,6 @@ export const ProjectionNodeViewer = ({
   allnetworksWithEvent,
   patientID,
   similarityData,
-  ROI,
 }) => {
   const svgRefs = useRef({});
   const modalSvgRef = useRef(null);

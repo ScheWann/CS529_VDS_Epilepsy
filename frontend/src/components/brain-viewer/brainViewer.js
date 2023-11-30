@@ -21,7 +21,6 @@ export const BrainViewer = (props) => {
   const [hoveredElectrodeInfo, setHoveredElectrodeInfo] = useState(null);
   const [leftBrainOpacity, setLeftBrainOpacity] = useState(1);
   const [rightBrainOpacity, setRightBrainOpacity] = useState(1);
-  const [roiOptions, setRoiOptions] = useState([]);
   // const [keyPointsData, setKeyPointsData] = useState([]);
   const cameraRef = useRef();
   const handleButtonClick = () => {
@@ -48,11 +47,6 @@ export const BrainViewer = (props) => {
 
   const changeRightBrainOpacity = (value) => {
     setRightBrainOpacity(value);
-  };
-
-  const changeROI = (value) => {
-    let roiIndex = parseInt(value.replace(/[^\d]/g, ""));
-    props.setROI(roiIndex);
   };
 
   const getScreenPosition = (object3D) => {
@@ -124,16 +118,6 @@ export const BrainViewer = (props) => {
     };
   };
 
-  useMemo(() => {
-    if (props.allnetwork) {
-      const options = props.allnetwork.slice(0, -1).map((item) => ({
-        value: item.roi.toString(),
-        label: `ROI ${item.roi}`,
-      }));
-      setRoiOptions(options);
-    }
-  }, []);
-
   useEffect(() => {
     if (brainModel && cameraRef.current) {
       projectBrainModelTo2D();
@@ -178,14 +162,6 @@ export const BrainViewer = (props) => {
           zIndex: 100,
         }}
       >
-        <Select
-          defaultValue="101"
-          style={{
-            width: "98%",
-          }}
-          onChange={changeROI}
-          options={roiOptions}
-        />
         {/* left brain control */}
         <Card
           className="leftBrainControlCard"

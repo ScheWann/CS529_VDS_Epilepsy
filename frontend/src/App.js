@@ -40,8 +40,6 @@ const App = () => {
   const [width, setWidth] = useState(0);
   // for showing the corresponding color based on the 3D brain ROI color
   const [selectedROIColor, setSelectedROIColor] = useState("");
-  // for choosing different ROI to show 2D nodes
-  const [ROI, setROI] = useState(101);
   // for getting the 2D position in screen
   const [electrodeScreenPositions, setElectrodeScreenPositions] = useState([]);
   // for setting the 2D brain svg
@@ -281,7 +279,6 @@ const App = () => {
                     allnetworksWithEvent={fullEventNetwork}
                     // selectedEventRange={[103, 113]}
                     selectedEventRange={[14000, 14500]}
-                    setROI={setROI}
                     onSvgCreated={handleReceiveSvg}
                   />
                 </Card>
@@ -300,7 +297,6 @@ const App = () => {
                   patientID={patientInfo.patientID}
                   allnetworksWithEvent={fullEventNetwork}
                   similarityData={similarityData}
-                  ROI={ROI}
                   selectedROIColor={selectedROIColor}
                 />
               ) : null}
