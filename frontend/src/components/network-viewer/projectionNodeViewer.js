@@ -352,7 +352,6 @@ export const ProjectionNodeViewer = ({
   useEffect(() => {
     if (selectedRoi === null || !projectionFlag) return;
     
-    // setPreviousROI(selectedRoi)
     const svgContainer = svgRefs.current[selectedRoi];
     d3.select(svgContainer).selectAll("svg").remove(); 
     if (svgContainer && svgDimensions[selectedRoi]) {
@@ -402,7 +401,6 @@ export const ProjectionNodeViewer = ({
         )
         .attr("stroke", "black")
         .attr("fill", "none");
-      console.log(scale, 'scaleeee')
       // Draw electrodes for this selected ROI
       electrodeScreenPositions.forEach((electrode) => {
         const position = electrode.label === String(selectedRoi) ? true : false;
@@ -422,8 +420,7 @@ export const ProjectionNodeViewer = ({
 
   // Initial Rendering of All SVGs
   useEffect(() => {
-    console.log(123)
-    // if (!selectedRoi) {
+    if (!selectedRoi) {
       allnetwork.forEach(({ roi, electrodes }) => {
         const svgContainer = svgRefs.current[roi];
         if (svgContainer && svgDimensions[roi]) {
@@ -492,7 +489,7 @@ export const ProjectionNodeViewer = ({
           });
         }
       });
-    // }
+    }
   }, [svgDimensions]);
 
   return (
