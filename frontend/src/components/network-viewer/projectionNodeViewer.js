@@ -213,13 +213,13 @@ export const ProjectionNodeViewer = ({
         // set the electrode tooltip background
         const electrodeTextBackground = svg
           .append("rect")
-          .attr("x", transformedX) 
-          .attr("y", transformedY - 20) 
-          .attr("width", 25) 
-          .attr("height", 20) 
+          .attr("x", transformedX)
+          .attr("y", transformedY - 20)
+          .attr("width", 25)
+          .attr("height", 20)
           .attr("fill", "#FAEBD7")
           .style("opacity", 0.8)
-          .attr("visibility", "hidden"); 
+          .attr("visibility", "hidden");
 
         // set the electrode tooltip text
         electrodeTextElements[electrode.electrode_number] = {
@@ -247,7 +247,7 @@ export const ProjectionNodeViewer = ({
                   line.style("opacity", 1).attr("stroke", "red");
                 }
               });
-              
+
               // For showing tooltip
               filteredNetwork.forEach((connection) => {
                 if (connection.source === electrode.electrode_number) {
@@ -423,7 +423,7 @@ export const ProjectionNodeViewer = ({
             .append("circle")
             .attr("cx", transformedX)
             .attr("cy", transformedY)
-            .attr("r", 3) // Adjust radius as needed
+            .attr("r", 3) 
             .attr("fill", roiColorMapping[selectedRoi] || "blue");
         }
       });
@@ -578,12 +578,17 @@ export const ProjectionNodeViewer = ({
             <Card ref={cardRef} style={{ width: "48%", height: 500 }}>
               <div ref={modalSvgRef}></div>
             </Card>
-            <SimilarViewer
-              patientID={patientID}
-              allnetworksWithEvent={allnetworksWithEvent}
-              similarityData={similarityData}
-              ROI={ROI}
-            />
+            {allnetwork && similarityData && brainSvgData && electrodeScreenPositions? (
+              <SimilarViewer
+                allnetwork={allnetwork}
+                patientID={patientID}
+                allnetworksWithEvent={allnetworksWithEvent}
+                similarityData={similarityData}
+                selectedRoi={selectedRoi}
+                brainSvgData={brainSvgData}
+                electrodeScreenPositions={electrodeScreenPositions}
+              />
+            ) : null}
           </div>
         </Modal>
       </div>
