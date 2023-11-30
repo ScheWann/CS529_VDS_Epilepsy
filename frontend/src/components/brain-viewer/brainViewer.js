@@ -28,8 +28,8 @@ export const BrainViewer = (props) => {
   };
 
   const updateProjections = () => {
-
     if (!cameraRef.current || !brainModel || !props.electrodeData) return;
+    props.setProjectionFlag(true)
     const screenPositions = getElectrodeScreenPositions();
     props.setElectrodeScreenPositions(screenPositions);
     projectBrainModelTo2D();

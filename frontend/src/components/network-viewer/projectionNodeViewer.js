@@ -22,6 +22,8 @@ export const ProjectionNodeViewer = ({
   allnetworksWithEvent,
   patientID,
   similarityData,
+  projectionFlag,
+  setProjectionFlag
 }) => {
   const svgRefs = useRef({});
   const modalSvgRef = useRef(null);
@@ -40,6 +42,7 @@ export const ProjectionNodeViewer = ({
 
   const selectRoi = (roi) => {
     setSelectedRoi(roi);
+    setProjectionFlag(false)
   };
 
   const showModal = (roi) => {
@@ -347,9 +350,11 @@ export const ProjectionNodeViewer = ({
 
   // Updating the SVG of the Selected ROI
   useEffect(() => {
-    if (selectedRoi === null) return;
-
+    if (selectedRoi === null || !projectionFlag) return;
+    
+    // setPreviousROI(selectedRoi)
     const svgContainer = svgRefs.current[selectedRoi];
+    d3.select(svgContainer).selectAll("svg").remove(); 
     if (svgContainer && svgDimensions[selectedRoi]) {
       const { width, height } = svgDimensions[selectedRoi];
       d3.select(svgContainer).selectAll("svg").remove();
@@ -357,7 +362,8 @@ export const ProjectionNodeViewer = ({
         .select(svgContainer)
         .append("svg")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .style('max-height', '130px'); 
 
       // Drawing logic for the selected ROI
       const centerX = width / 2;
@@ -396,7 +402,7 @@ export const ProjectionNodeViewer = ({
         )
         .attr("stroke", "black")
         .attr("fill", "none");
-
+      console.log(scale, 'scaleeee')
       // Draw electrodes for this selected ROI
       electrodeScreenPositions.forEach((electrode) => {
         const position = electrode.label === String(selectedRoi) ? true : false;
@@ -412,11 +418,12 @@ export const ProjectionNodeViewer = ({
         }
       });
     }
-  }, [selectedRoi, allnetwork, svgDimensions]);
+  }, [selectedRoi, allnetwork, svgDimensions, projectionFlag]);
 
   // Initial Rendering of All SVGs
   useEffect(() => {
-    if (!selectedRoi) {
+    console.log(123)
+    // if (!selectedRoi) {
       allnetwork.forEach(({ roi, electrodes }) => {
         const svgContainer = svgRefs.current[roi];
         if (svgContainer && svgDimensions[roi]) {
@@ -426,7 +433,8 @@ export const ProjectionNodeViewer = ({
             .select(svgContainer)
             .append("svg")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", height)
+            .style('max-height', '130px'); 
 
           const centerX = width / 2;
           const centerY = height / 2;
@@ -484,8 +492,8 @@ export const ProjectionNodeViewer = ({
           });
         }
       });
-    }
-  }, [svgDimensions, brainSvgData, allnetwork]);
+    // }
+  }, [svgDimensions]);
 
   return (
     <Card style={{ marginTop: 10, width: "100%", height: "95%" }}>

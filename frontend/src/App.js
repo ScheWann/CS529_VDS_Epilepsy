@@ -42,6 +42,8 @@ const App = () => {
   const [electrodeScreenPositions, setElectrodeScreenPositions] = useState([]);
   // for setting the 2D brain svg
   const [svgData, setSvgData] = useState(null);
+  // for setting whether has updated the projection
+  const [projectionFlag, setProjectionFlag] = useState(false)
 
   const parentRef = useCallback((node) => {
     if (node !== null) {
@@ -274,6 +276,7 @@ const App = () => {
                     sampleData={sampleData}
                     events={allEventData[patientInfo.sampleID]}
                     allnetwork={fullNetwork}
+                    setProjectionFlag={setProjectionFlag}
                     // selectedEventRange={[103, 113]}
                     selectedEventRange={[14000, 14500]}
                     onSvgCreated={handleReceiveSvg}
@@ -286,6 +289,8 @@ const App = () => {
                   electrodeScreenPositions={electrodeScreenPositions}
                   allnetwork={fullNetwork.slice(0,-1)}
                   brainSvgData={svgData}
+                  projectionFlag={projectionFlag}
+                  setProjectionFlag={setProjectionFlag}
                   patientID={patientInfo.patientID}
                   allnetworksWithEvent={fullEventNetwork}
                   similarityData={similarityData}
