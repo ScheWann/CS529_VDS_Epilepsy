@@ -19,10 +19,16 @@ export const ProjectionNodeViewer = ({
   electrodeScreenPositions,
   allnetwork,
   brainSvgData,
+  allnetworksWithEvent,
+  patientID,
+  similarityData,
+  ROI,
 }) => {
   const svgRefs = useRef({});
   const modalSvgRef = useRef(null);
+  const cardRef = useRef(null);
 
+  const [cardDimensions, setCardDimensions] = useState({ width: 0, height: 0 });
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
   const [selectedRoi, setSelectedRoi] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,11 +66,10 @@ export const ProjectionNodeViewer = ({
   // Function to render the ROI graph in the modal
   const renderRoiGraphInModal = (roi) => {
     const svgContainer = modalSvgRef.current;
-    if (!svgContainer) return;
+    if (!svgContainer || cardDimensions.width === 0 || cardDimensions.height === 0) return;
 
-    const width = 500; // Adjust modal SVG width as needed
-    const height = 500; // Adjust modal SVG height as needed
-    d3.select(svgContainer).selectAll("svg").remove(); // Clear previous SVG
+    const { width, height } = cardDimensions;
+    d3.select(svgContainer).selectAll("svg").remove();
 
     const svg = d3
       .select(svgContainer)
@@ -72,61 +77,79 @@ export const ProjectionNodeViewer = ({
       .attr("width", width)
       .attr("height", height);
 
-      const centerX = width / 2;
-      const centerY = height / 2;
+    const centerX = width / 2;
+    const centerY = height / 2;
 
-      const brainOutline = d3.polygonHull(
-        brainSvgData.map((d) => [d.x, d.y])
-      );
+    const brainOutline = d3.polygonHull(brainSvgData.map((d) => [d.x, d.y]));
 
-      const xExtent = d3.extent(brainOutline, (d) => d[0]);
-      const yExtent = d3.extent(brainOutline, (d) => d[1]);
-      const outlineWidth = xExtent[1] - xExtent[0];
-      const outlineHeight = yExtent[1] - yExtent[0];
+    const xExtent = d3.extent(brainOutline, (d) => d[0]);
+    const yExtent = d3.extent(brainOutline, (d) => d[1]);
+    const outlineWidth = xExtent[1] - xExtent[0];
+    const outlineHeight = yExtent[1] - yExtent[0];
 
-      const scaleX = width / outlineWidth;
-      const scaleY = height / outlineHeight;
-      const scale = Math.min(scaleX, scaleY) * 0.8;
+    const scaleX = width / outlineWidth;
+    const scaleY = height / outlineHeight;
+    const scale = Math.min(scaleX, scaleY) * 0.8;
 
-      const translateX = centerX - (xExtent[0] + outlineWidth / 2) * scale;
-      const translateY = centerY - (yExtent[0] + outlineHeight / 2) * scale;
+    const translateX = centerX - (xExtent[0] + outlineWidth / 2) * scale;
+    const translateY = centerY - (yExtent[0] + outlineHeight / 2) * scale;
 
-      // Apply translation to each point in the brain outline
-      const translatedOutline = brainOutline.map((point) => [
-        point[0] * scale + translateX,
-        point[1] * scale + translateY,
-      ]);
+    // Apply translation to each point in the brain outline
+    const translatedOutline = brainOutline.map((point) => [
+      point[0] * scale + translateX,
+      point[1] * scale + translateY,
+    ]);
 
-      // Draw the convex hull as a path
-      svg
-        .append("path")
-        .data([translatedOutline])
-        .attr(
-          "d",
-          d3
-            .line()
-            .x((d) => d[0])
-            .y((d) => d[1])
-        )
-        .attr("stroke", "black")
-        .attr("fill", "none");
+    // Draw the convex hull as a path
+    svg
+      .append("path")
+      .data([translatedOutline])
+      .attr(
+        "d",
+        d3
+          .line()
+          .x((d) => d[0])
+          .y((d) => d[1])
+      )
+      .attr("stroke", "black")
+      .attr("fill", "none");
 
-      // Draw electrodes for this ROI
-      electrodeScreenPositions.forEach((electrode) => {
-        const position = electrode.label === String(roi) ? true : false;
-        if (position) {
-          const transformedX = electrode.x * scale + translateX * 0.5;
-          const transformedY = electrode.y * scale + 280;
+    // Draw electrodes for this ROI
+    electrodeScreenPositions.forEach((electrode) => {
+      const position = electrode.label === String(roi) ? true : false;
+      if (position) {
+        const transformedX = electrode.x * scale + translateX * 0.5;
+        const transformedY = electrode.y * scale + 280;
 
-          svg
-            .append("circle")
-            .attr("cx", transformedX)
-            .attr("cy", transformedY)
-            .attr("r", 3)
-            .attr("fill", roiColorMapping[roi] || "blue"); // Use ROI color mapping
-        }
-      });
+        svg
+          .append("circle")
+          .attr("cx", transformedX)
+          .attr("cy", transformedY)
+          .attr("r", 3)
+          .attr("fill", roiColorMapping[roi] || "blue"); // Use ROI color mapping
+      }
+    });
   };
+
+  useEffect(() => {
+    if (isModalOpen && cardRef.current) {
+      const timeoutId = setTimeout(() => {
+        setCardDimensions({
+          width: cardRef.current.offsetWidth,
+          height: cardRef.current.offsetHeight
+        });
+      }, 1);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isModalOpen]);
+
+  // Effect to re-render SVG when card dimensions change
+  useEffect(() => {
+    if (selectedRoi && cardDimensions.width && cardDimensions.height) {
+      renderRoiGraphInModal(selectedRoi);
+    }
+  }, [cardDimensions, selectedRoi]);
 
   // For showing detailed brain model
   useEffect(() => {
@@ -167,12 +190,12 @@ export const ProjectionNodeViewer = ({
 
   // Updating the SVG of the Selected ROI
   useEffect(() => {
-    if (selectedRoi === null) return; // Skip if no ROI is selected
+    if (selectedRoi === null) return;
 
     const svgContainer = svgRefs.current[selectedRoi];
     if (svgContainer && svgDimensions[selectedRoi]) {
       const { width, height } = svgDimensions[selectedRoi];
-      d3.select(svgContainer).selectAll("svg").remove(); // Clear previous SVG
+      d3.select(svgContainer).selectAll("svg").remove();
       const svg = d3
         .select(svgContainer)
         .append("svg")
@@ -322,7 +345,6 @@ export const ProjectionNodeViewer = ({
           <Card
             size="small"
             hoverable
-            // title={"ROI" + " " + roi}
             title={
               <div
                 style={{
@@ -359,7 +381,7 @@ export const ProjectionNodeViewer = ({
               style={{
                 height: "99%",
                 width: "99%",
-                minHeight: '130px'
+                minHeight: "130px",
               }}
               key={roi}
               ref={(el) => (svgRefs.current[roi] = el)}
@@ -367,12 +389,26 @@ export const ProjectionNodeViewer = ({
           </Card>
         ))}
         <Modal
-          title="Detailed ROI View"
+          title="Similar View"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
+          width={1200}
         >
-         <div ref={modalSvgRef}></div> 
+          <div style={{ display: "flex", justifyContent: "space-around", margin: "30px 0px 30px 0px" }}>
+            <Card
+              ref={cardRef}
+              style={{width: "48%", height: 500}}
+            >
+              <div ref={modalSvgRef}></div>
+            </Card>
+            <SimilarViewer
+              patientID={patientID}
+              allnetworksWithEvent={allnetworksWithEvent}
+              similarityData={similarityData}
+              ROI={ROI}
+            />
+          </div>
         </Modal>
       </div>
     </Card>

@@ -287,7 +287,7 @@ const App = () => {
                 </Card>
               ) : null}
 
-              {fullNetwork && svgData? (
+              {fullNetwork && svgData && similarityData && fullEventNetwork? (
                 // <NodeViewer
                 //   patientID={patientInfo.patientID}
                 //   allnetworksWithEvent={fullEventNetwork}
@@ -297,6 +297,11 @@ const App = () => {
                   electrodeScreenPositions={electrodeScreenPositions}
                   allnetwork={fullNetwork.slice(0,-1)}
                   brainSvgData={svgData}
+                  patientID={patientInfo.patientID}
+                  allnetworksWithEvent={fullEventNetwork}
+                  similarityData={similarityData}
+                  ROI={ROI}
+                  selectedROIColor={selectedROIColor}
                 />
               ) : null}
             </div>

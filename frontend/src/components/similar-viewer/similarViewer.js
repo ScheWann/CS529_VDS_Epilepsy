@@ -269,12 +269,12 @@ export const SimilarViewer = ({
         style={{
           display: "flex",
           flexDirection: "column",
-          width: "49%",
+          width: "48%",
         }}
       >
         <Card
           ref={cardRef}
-          style={{ marginTop: 10, height: "calc(100% - 10px)" }}
+          style={{ height: "100%" }}
         >
           <div
             style={{
