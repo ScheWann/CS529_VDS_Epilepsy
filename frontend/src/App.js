@@ -263,7 +263,7 @@ const App = () => {
             }}
           >
             <div style={{ display: "flex", flexDirection:"column", width: "51vw"}}>
-              {allEventData && fullNetwork && electrodeData ? (
+              {allEventData && sampleData && fullNetwork && electrodeData ? (
                 <Card className="brainViewer">
                   <BrainViewer
                     propagationData={propagationData}
@@ -274,7 +274,6 @@ const App = () => {
                     sampleData={sampleData}
                     events={allEventData[patientInfo.sampleID]}
                     allnetwork={fullNetwork}
-                    allnetworksWithEvent={fullEventNetwork}
                     // selectedEventRange={[103, 113]}
                     selectedEventRange={[14000, 14500]}
                     onSvgCreated={handleReceiveSvg}

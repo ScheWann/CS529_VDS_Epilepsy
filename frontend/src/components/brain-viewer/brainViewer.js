@@ -1,15 +1,13 @@
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
-import * as d3 from "d3";
 
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import dataRegisty from "../../data/dataRegistry.json";
 import { BrainObjectLoader } from "./brainObjectLoader";
 import { ElectrodeLoader } from "./electrodeLoader";
 import { CurveLoader } from "./curveLoader";
-import { KeyPoints } from "./keyPoints";
-import { Segmented, Card, Button, Select, Slider } from "antd";
+import { Segmented, Card, Button, Slider } from "antd";
 
 const width = window.innerWidth / 2.5;
 const height = window.innerHeight / 2.5;
@@ -21,8 +19,9 @@ export const BrainViewer = (props) => {
   const [hoveredElectrodeInfo, setHoveredElectrodeInfo] = useState(null);
   const [leftBrainOpacity, setLeftBrainOpacity] = useState(1);
   const [rightBrainOpacity, setRightBrainOpacity] = useState(1);
-  // const [keyPointsData, setKeyPointsData] = useState([]);
+
   const cameraRef = useRef();
+
   const handleButtonClick = () => {
     if (!cameraRef.current || !brainModel || !props.electrodeData) return;
     updateProjections();
@@ -80,6 +79,16 @@ export const BrainViewer = (props) => {
     });
   };
 
+  const projectToScreen = (vertex, object3D, camera) => {
+    const worldVertex = vertex.clone().applyMatrix4(object3D.matrixWorld);
+    worldVertex.project(camera);
+    return {
+      x: (worldVertex.x * 0.5 + 0.5) * width,
+      y: -(worldVertex.y * 0.5 - 0.5) * height,
+    };
+  };
+
+  // Function to get the 3D brain outline based on current camera angle
   const projectBrainModelTo2D = () => {
     if (!brainModel || !brainModel.children) return;
 
@@ -109,43 +118,36 @@ export const BrainViewer = (props) => {
     }
   };
 
-  const projectToScreen = (vertex, object3D, camera) => {
-    const worldVertex = vertex.clone().applyMatrix4(object3D.matrixWorld);
-    worldVertex.project(camera);
-    return {
-      x: (worldVertex.x * 0.5 + 0.5) * width,
-      y: -(worldVertex.y * 0.5 - 0.5) * height,
-    };
-  };
-
   useEffect(() => {
-    if (brainModel && cameraRef.current) {
+    if (brainModel && cameraRef.current && props.electrodeData) {
       projectBrainModelTo2D();
+      const screenPositions = getElectrodeScreenPositions();
+      props.setElectrodeScreenPositions(screenPositions);
     }
   }, [brainModel]);
 
   useEffect(() => {
-    const checkCameraAndCalculatePositions = () => {
-      if (cameraRef.current && props.electrodeData) {
-        clearInterval(intervalId);
-        const screenPositions = getElectrodeScreenPositions();
-        props.setElectrodeScreenPositions(screenPositions);
-      } else {
-        console.log("Waiting for camera and electrode data...");
+    // Function to handle camera change
+    const onCameraChange = () => {
+      console.log('cameraaaaa')
+      const updatedScreenPositions = getElectrodeScreenPositions();
+      props.setElectrodeScreenPositions(updatedScreenPositions);
+    };
+  
+    // Add event listener to camera controls
+    const controls = cameraRef.current?.controls;
+    if (controls) {
+      controls.addEventListener('change', onCameraChange);
+    }
+  
+    // Clean up
+    return () => {
+      if (controls) {
+        controls.removeEventListener('change', onCameraChange);
       }
     };
+  }, [cameraRef, props.electrodeData]); 
 
-    // Set up an interval to repeatedly check for the camera and electrode data
-    const intervalId = setInterval(checkCameraAndCalculatePositions, 500);
-
-    // Clean up the interval
-    return () => clearInterval(intervalId);
-  }, [props.electrodeData]);
-  // useEffect(() => {
-  //   fetch("/key_points.json")
-  //     .then((response) => response.json())
-  //     .then((data) => setKeyPointsData(data));
-  // }, []);
   return (
     <div style={{ position: "relative" }}>
       <Card
@@ -260,23 +262,16 @@ export const BrainViewer = (props) => {
               leftBrainOpacity={leftBrainOpacity}
               rightBrainOpacity={rightBrainOpacity}
             />
-            {/* {keyPointsData.length > 0 && (
-              <KeyPoints points={keyPointsData} color="red" position={{ x: -100, y: -110, z: -120 }} />
-            )} */}
             <ElectrodeLoader
               segement={segement}
-              cameraRef={cameraRef.current}
               propagationData={props.propagationData}
               setSelectedElectrode={setSelectedElectrode}
-              setElectrodeScreenPositions={props.setElectrodeScreenPositions}
               electrodeData={props.electrodeData}
               sampleData={props.sampleData}
               bbox={dataRegisty[props.patientInformation.patientID].bbox}
               selectedEventRange={props.selectedEventRange}
               events={props.events}
               allnetwork={props.allnetwork}
-              allnetworkWithEvent={props.allnetworksWithEvent}
-              patientID={props.patientInformation.patientID}
               setHoveredElectrodeInfo={setHoveredElectrodeInfo}
             />
             {segement == "Curve" ? (
@@ -289,9 +284,9 @@ export const BrainViewer = (props) => {
                 selectedElectrode={selectedElectrode}
               />
             ) : null}
-
             <OrbitControls
               ref={(control) => {
+                console.log(control, cameraRef.current?.controls, 'camera control')
                 // Attach the controls to the camera ref
                 if (control && cameraRef.current) {
                   cameraRef.current.controls = control;

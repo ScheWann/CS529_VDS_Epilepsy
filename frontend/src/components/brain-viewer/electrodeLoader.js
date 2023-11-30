@@ -207,11 +207,7 @@ export const ElectrodeLoader = ({
     };
   }, [
     gl,
-    camera,
-    electrodeData,
-    setSelectedElectrode,
-    freqEleData,
-    setHoveredElectrodeInfo,
+    camera
   ]);
 
   useEffect(() => {
