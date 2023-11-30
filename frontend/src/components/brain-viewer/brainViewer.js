@@ -28,7 +28,6 @@ export const BrainViewer = (props) => {
   };
 
   const updateProjections = () => {
-    console.log("changed projection");
 
     if (!cameraRef.current || !brainModel || !props.electrodeData) return;
     const screenPositions = getElectrodeScreenPositions();
@@ -125,28 +124,6 @@ export const BrainViewer = (props) => {
       props.setElectrodeScreenPositions(screenPositions);
     }
   }, [brainModel]);
-
-  useEffect(() => {
-    // Function to handle camera change
-    const onCameraChange = () => {
-      console.log('cameraaaaa')
-      const updatedScreenPositions = getElectrodeScreenPositions();
-      props.setElectrodeScreenPositions(updatedScreenPositions);
-    };
-  
-    // Add event listener to camera controls
-    const controls = cameraRef.current?.controls;
-    if (controls) {
-      controls.addEventListener('change', onCameraChange);
-    }
-  
-    // Clean up
-    return () => {
-      if (controls) {
-        controls.removeEventListener('change', onCameraChange);
-      }
-    };
-  }, [cameraRef, props.electrodeData]); 
 
   return (
     <div style={{ position: "relative" }}>
@@ -286,7 +263,6 @@ export const BrainViewer = (props) => {
             ) : null}
             <OrbitControls
               ref={(control) => {
-                console.log(control, cameraRef.current?.controls, 'camera control')
                 // Attach the controls to the camera ref
                 if (control && cameraRef.current) {
                   cameraRef.current.controls = control;
