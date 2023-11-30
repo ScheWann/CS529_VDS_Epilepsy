@@ -35,11 +35,13 @@ export const SimilarViewer = ({
     setSelectedEvent(value);
   };
 
+  // For setting the right ROI color
   const roiColorMapping = allnetwork.reduce((acc, data, index) => {
     acc[data.roi] = colorslist[index % colorslist.length];
     return acc;
   }, {});
 
+  // Use Card size to set the size of svg size
   useEffect(() => {
     if (cardRef.current) {
       const { width, height } = cardRef.current.getBoundingClientRect();
@@ -47,6 +49,7 @@ export const SimilarViewer = ({
     }
   }, [allnetworksWithEvent, selectedNetwork]);
 
+  // Based on different patient to get different similar events and network data
   useEffect(() => {
     let tempSimilarNodesArray = [];
     let tempSimilarEventsOptions = [];
@@ -94,9 +97,46 @@ export const SimilarViewer = ({
     }
   }, [allnetworksWithEvent, similarityData, selectedRoi, selectedEvent]);
 
+  // useEffect(() => {
+  //   if (similarNodesArray.length > 0) {
+  //     console.log(similarNodesArray, '/similary arrayyay')
+  //     const networkForSelectedEvent = similarNodesArray[selectedEvent].network;
+  //     networkForSelectedEvent.forEach((element) => {
+  //       if (element.roi === selectedRoi) {
+  //         setSelectedNetwork(element.network);
+  //       }
+  //     });
+  //     console.log(selectedNetwork, '//////')
+  //   }
+  // }, [selectedEvent, similarNodesArray, selectedRoi]);
+  
+
   useEffect(() => {
+    console.log(selectedEvent, '????')
     if (!brainSvgData || !electrodeScreenPositions) return;
     if (selectedNetwork && cardSize.width && cardSize.height) {
+      const electrodeTextElements = {};
+      // Function to map electrode number to screen position
+      const mapElectrodeToPosition = (electrodeNumber) => {
+        return electrodeScreenPositions.find(
+          (e) => e.electrode_number === electrodeNumber
+        );
+      };
+
+      // Function to determine if an electrode is a source
+      const isSourceElectrode = (electrodeNumber) => {
+        return selectedNetwork.some(
+          (connection) => connection.source === electrodeNumber
+        );
+      };
+
+      // Function to determine if an electrode is a target
+      const isTargetElectrode = (electrodeNumber) => {
+        return selectedNetwork.some(
+          (connection) => connection.target === electrodeNumber
+        );
+      };
+
       const svg = d3
         .select(svgRef.current)
         .attr("width", cardSize.width)
@@ -142,24 +182,128 @@ export const SimilarViewer = ({
         .attr("stroke", "black")
         .attr("fill", "none");
 
+      // draw connection between electrodes
+      const electrodeLines = selectedNetwork
+        .map((connection) => {
+          const sourcePosition = mapElectrodeToPosition(connection.source);
+          const targetPosition = mapElectrodeToPosition(connection.target);
+
+          if (sourcePosition && targetPosition) {
+            const sourceX = sourcePosition.x * scale + translateX * 0.5;
+            const sourceY = sourcePosition.y * scale + 280;
+            const targetX = targetPosition.x * scale + translateX * 0.5;
+            const targetY = targetPosition.y * scale + 280;
+
+            return svg
+              .append("line")
+              .attr("x1", sourceX)
+              .attr("y1", sourceY)
+              .attr("x2", targetX)
+              .attr("y2", targetY)
+              .attr("stroke", "#ddd")
+              .attr("stroke-width", 1)
+              .attr("data-source", connection.source)
+              .attr("data-target", connection.target)
+              .style("opacity", 0.5);
+          }
+
+          return null;
+        })
+        .filter((line) => line);
+
       // Draw electrodes for this selected ROI
       electrodeScreenPositions.forEach((electrode) => {
         const position = electrode.label === String(selectedRoi) ? true : false;
         if (position) {
           const transformedX = electrode.x * scale + translateX * 0.5;
           const transformedY = electrode.y * scale + 280;
-          svg
+          const electrodeCircle = svg
             .append("circle")
             .attr("cx", transformedX)
             .attr("cy", transformedY)
             .attr("r", 8)
+            .attr(
+              "fill",
+              isSourceElectrode(electrode.electrode_number)
+                ? "green"
+                : isTargetElectrode(electrode.electrode_number)
+                ? "purple"
+                : roiColorMapping[selectedRoi] || "blue"
+            )
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .attr("fill", roiColorMapping[selectedRoi] || "blue");
+            .attr("data-electrode-number", electrode.electrode_number);
+
+          // set the electrode tooltip background
+          const electrodeTextBackground = svg
+            .append("rect")
+            .attr("x", transformedX)
+            .attr("y", transformedY - 20)
+            .attr("width", 25)
+            .attr("height", 20)
+            .attr("fill", "#FAEBD7")
+            .style("opacity", 0.8)
+            .attr("visibility", "hidden");
+
+          // set the electrode tooltip text
+          electrodeTextElements[electrode.electrode_number] = {
+            text: svg
+              .append("text")
+              .attr("x", transformedX + 5)
+              .attr("y", transformedY - 5)
+              .text(electrode.electrode_number)
+              .attr("visibility", "hidden"),
+            background: electrodeTextBackground,
+          };
+
+          if (isSourceElectrode(electrode.electrode_number)) {
+            electrodeCircle
+              .on("mouseover", function () {
+                // Show and raise source electrode ID
+                const sourceElement =
+                  electrodeTextElements[electrode.electrode_number];
+                sourceElement.background.attr("visibility", "visible").raise();
+                sourceElement.text.attr("visibility", "visible").raise();
+
+                // Highlight lines connected to this source
+                electrodeLines.forEach((line) => {
+                  if (line.attr("data-source") == electrode.electrode_number) {
+                    line.style("opacity", 1).attr("stroke", "red");
+                  }
+                });
+
+                // For showing tooltip
+                selectedNetwork.forEach((connection) => {
+                  if (connection.source === electrode.electrode_number) {
+                    const targetElement =
+                      electrodeTextElements[connection.target];
+                    if (targetElement) {
+                      targetElement.background
+                        .attr("visibility", "visible")
+                        .raise();
+                      targetElement.text.attr("visibility", "visible").raise();
+                    }
+                  }
+                });
+              })
+              .on("mouseout", function () {
+                // Reset line opacity
+                electrodeLines.forEach((line) => {
+                  line.style("opacity", 0.5).attr("stroke", "#ddd");
+                });
+
+                // Hide all electrode IDs
+                Object.values(electrodeTextElements).forEach((element) => {
+                  element.text.attr("visibility", "hidden");
+                  element.background.attr("visibility", "hidden");
+                });
+              });
+          }
         }
       });
     }
-  }, [brainSvgData, electrodeScreenPositions, selectedNetwork, cardSize]);
+  }, [brainSvgData, electrodeScreenPositions, selectedEvent, cardSize]);
+
   if (selectedNetwork) {
     return (
       <div
@@ -169,7 +313,10 @@ export const SimilarViewer = ({
           width: "48%",
         }}
       >
-        <Card ref={cardRef} style={{ width: "100%", height: 500, position: "relative" }}>
+        <Card
+          ref={cardRef}
+          style={{ width: "100%", height: 500, position: "relative" }}
+        >
           <div
             style={{
               display: "flex",
@@ -181,9 +328,7 @@ export const SimilarViewer = ({
               zIndex: 100,
             }}
           >
-            <div
-              style={{ display: "flex", alignItems: "center" }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               <div style={{ marginRight: 10, color: "#333" }}>Events:</div>
               <Select
                 size={"middle"}

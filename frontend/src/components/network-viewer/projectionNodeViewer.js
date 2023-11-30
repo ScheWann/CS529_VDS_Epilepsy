@@ -76,6 +76,7 @@ export const ProjectionNodeViewer = ({
       { color: "purple", label: "Target Electrode" },
       { color: roiColorMapping[roi] || "blue", label: "Other Electrode" },
     ];
+    
     if (
       !svgContainer ||
       cardDimensions.width === 0 ||
