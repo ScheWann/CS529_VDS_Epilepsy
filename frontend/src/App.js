@@ -282,7 +282,7 @@ const App = () => {
                 </Card>
               ) : null}
 
-              {fullNetwork && svgData && similarityData && fullEventNetwork? (
+              {fullNetwork && svgData && similarityData && fullEventNetwork && electrodeScreenPositions ? (
                 <ProjectionNodeViewer
                   electrodeScreenPositions={electrodeScreenPositions}
                   allnetwork={fullNetwork.slice(0,-1)}
