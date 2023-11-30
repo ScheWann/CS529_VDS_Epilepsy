@@ -43,7 +43,6 @@ export const ProjectionNodeViewer = ({
   };
 
   const showModal = (roi) => {
-    setSelectedRoi(roi);
     setIsModalOpen(true);
   };
 
@@ -53,13 +52,6 @@ export const ProjectionNodeViewer = ({
 
   const handleCancel = () => {
     setIsModalOpen(false);
-  };
-
-  // Handler to reset selection on outside clicks
-  const handleOutsideClick = (event) => {
-    if (selectedRoi && !event.target.closest(".roiBrainCard")) {
-      setSelectedRoi(null);
-    }
   };
 
   // Function to render the ROI graph in the modal
@@ -330,14 +322,6 @@ export const ProjectionNodeViewer = ({
       renderRoiGraphInModal(selectedRoi);
     }
   }, [isModalOpen, selectedRoi]);
-
-  // Attach event listener
-  useEffect(() => {
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, [selectedRoi]);
 
   // Updating SVG Dimensions
   useEffect(() => {

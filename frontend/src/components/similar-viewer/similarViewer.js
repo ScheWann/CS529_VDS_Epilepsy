@@ -97,22 +97,19 @@ export const SimilarViewer = ({
     }
   }, [allnetworksWithEvent, similarityData, selectedRoi, selectedEvent]);
 
-  // useEffect(() => {
-  //   if (similarNodesArray.length > 0) {
-  //     console.log(similarNodesArray, '/similary arrayyay')
-  //     const networkForSelectedEvent = similarNodesArray[selectedEvent].network;
-  //     networkForSelectedEvent.forEach((element) => {
-  //       if (element.roi === selectedRoi) {
-  //         setSelectedNetwork(element.network);
-  //       }
-  //     });
-  //     console.log(selectedNetwork, '//////')
-  //   }
-  // }, [selectedEvent, similarNodesArray, selectedRoi]);
+  useEffect(() => {
+    if (similarNodesArray.length > 0 && similarNodesArray[selectedEvent]) {
+      const networkForSelectedEvent = similarNodesArray[selectedEvent].network;
+      networkForSelectedEvent.forEach((element) => {
+        if (element.roi === selectedRoi) {
+          setSelectedNetwork(element.network);
+        }
+      });
+    }
+  }, [selectedEvent, similarNodesArray, selectedRoi]);
   
 
   useEffect(() => {
-    console.log(selectedEvent, '????')
     if (!brainSvgData || !electrodeScreenPositions) return;
     if (selectedNetwork && cardSize.width && cardSize.height) {
       const electrodeTextElements = {};
