@@ -33,7 +33,7 @@ const App = () => {
     sampleID: "sample1",
   });
   // use for showing lesion array and send it to 3D brain to display
-  const [lesionArray, SetlesionArray] = useState([1, 2]);
+  const [lesionArray, SetlesionArray] = useState([1, 2, 3]);
   // use for set EEG container width and height set
   const [width, setWidth] = useState(0);
   // for showing the corresponding color based on the 3D brain ROI color
