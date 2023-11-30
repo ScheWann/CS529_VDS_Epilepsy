@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://schewann.github.io/CS529_VDS_Epilepsy/",
   "dependencies": {
     "@react-three/drei": "^9.88.12",
     "@react-three/fiber": "^8.15.10",
