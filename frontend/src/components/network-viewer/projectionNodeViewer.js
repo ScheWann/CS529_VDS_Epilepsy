@@ -308,12 +308,13 @@ export const ProjectionNodeViewer = ({
   }, [svgDimensions, brainSvgData, allnetwork]);
 
   return (
-    <Card style={{ marginTop: 10, width: "49%" }}>
+    <Card style={{ marginTop: 10, width: "100%", height: "95%" }}>
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-around",
+          alignItems: "center",
           height: "100%",
         }}
       >
@@ -346,7 +347,7 @@ export const ProjectionNodeViewer = ({
               position: "relative",
               width: "20%",
               margin: 1,
-              maxHeight: 175,
+              maxHeight: 200,
               border:
                 roi === selectedRoi
                   ? "1px solid #6495ED"
@@ -358,6 +359,7 @@ export const ProjectionNodeViewer = ({
               style={{
                 height: "99%",
                 width: "99%",
+                minHeight: '130px'
               }}
               key={roi}
               ref={(el) => (svgRefs.current[roi] = el)}

@@ -259,12 +259,14 @@ const App = () => {
           />
           <div
             style={{
+              display: "flex",
               padding: 20,
               minHeight: 360,
               background: "white",
+              justifyContent: "space-between"
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", flexDirection:"column", width: "51vw"}}>
               {allEventData && fullNetwork && electrodeData ? (
                 <Card className="brainViewer">
                   <BrainViewer
@@ -285,25 +287,6 @@ const App = () => {
                 </Card>
               ) : null}
 
-              {eegData ? (
-                <Card ref={parentRef} className="eegContainer">
-                  <EEGDataViewer
-                    containerWidth={width}
-                    patientID={selectedPatient}
-                    lesionArray={lesionArray}
-                    data={eegData}
-                  />
-                </Card>
-              ) : null}
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                height: "40vh",
-                justifyContent: "space-between",
-              }}
-            >
               {fullNetwork && svgData? (
                 // <NodeViewer
                 //   patientID={patientInfo.patientID}
@@ -316,8 +299,27 @@ const App = () => {
                   brainSvgData={svgData}
                 />
               ) : null}
+            </div>
 
-              {fullEventNetwork && similarityData ? (
+            <div
+              style={{
+                display: "flex",
+                height: "90vh",
+                width: "40vw"
+              }}
+            >
+              {eegData ? (
+                <Card ref={parentRef} className="eegContainer">
+                  <EEGDataViewer
+                    containerWidth={width}
+                    patientID={selectedPatient}
+                    lesionArray={lesionArray}
+                    data={eegData}
+                  />
+                </Card>
+              ) : null}
+
+              {/* {fullEventNetwork && similarityData ? (
                 <SimilarViewer
                   patientID={patientInfo.patientID}
                   allnetworksWithEvent={fullEventNetwork}
@@ -325,7 +327,7 @@ const App = () => {
                   ROI={ROI}
                   selectedROIColor={selectedROIColor}
                 />
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </Content>
