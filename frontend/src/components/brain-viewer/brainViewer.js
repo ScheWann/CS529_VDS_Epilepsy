@@ -214,8 +214,8 @@ export const BrainViewer = (props) => {
               zIndex: 1000,
               padding: 10,
               borderRadius: 5,
-              left: `${hoveredElectrodeInfo.position.x}px`,
-              top: `${hoveredElectrodeInfo.position.y}px`,
+              left: `${hoveredElectrodeInfo.position.x - 100}px`,
+              top: `${hoveredElectrodeInfo.position.y - 80}px`,
             }}
           >
             Frequency: {hoveredElectrodeInfo.frequency}
