@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/CS529_VDS_Epilepsy/static/css/main.cf99f18e.css",
-    "main.js": "/CS529_VDS_Epilepsy/static/js/main.53a6f3b0.js",
+    "main.css": "/CS529_VDS_Epilepsy/static/css/main.2ea75657.css",
+    "main.js": "/CS529_VDS_Epilepsy/static/js/main.e0ba4373.js",
     "static/js/787.9e9f4ffd.chunk.js": "/CS529_VDS_Epilepsy/static/js/787.9e9f4ffd.chunk.js",
     "index.html": "/CS529_VDS_Epilepsy/index.html",
-    "main.cf99f18e.css.map": "/CS529_VDS_Epilepsy/static/css/main.cf99f18e.css.map",
-    "main.53a6f3b0.js.map": "/CS529_VDS_Epilepsy/static/js/main.53a6f3b0.js.map",
+    "main.2ea75657.css.map": "/CS529_VDS_Epilepsy/static/css/main.2ea75657.css.map",
+    "main.e0ba4373.js.map": "/CS529_VDS_Epilepsy/static/js/main.e0ba4373.js.map",
     "787.9e9f4ffd.chunk.js.map": "/CS529_VDS_Epilepsy/static/js/787.9e9f4ffd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cf99f18e.css",
-    "static/js/main.53a6f3b0.js"
+    "static/css/main.2ea75657.css",
+    "static/js/main.e0ba4373.js"
   ]
 }
