@@ -81,6 +81,7 @@ export const BrainViewer = (props) => {
       return {
         ...screenPosition,
         label: electrode.label,
+        electrode_number: electrode.electrode_number
       };
     });
   };
@@ -217,7 +218,7 @@ export const BrainViewer = (props) => {
             onChange={changeRightBrainOpacity}
           />
         </Card>
-        <Button onClick={handleButtonClick}>Update Projection</Button>
+        <Button onClick={handleButtonClick} style={{marginTop: 20, marginBottom: 20}}>Update Projection</Button>
       </Card>
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
