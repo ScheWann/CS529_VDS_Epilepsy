@@ -567,7 +567,7 @@ export const ProjectionNodeViewer = ({
             <Card ref={cardRef} style={{ width: "48%", height: 500 }}>
               <div ref={modalSvgRef}></div>
             </Card>
-            {allnetwork && similarityData && brainSvgData && electrodeScreenPositions? (
+            {allnetwork && similarityData && brainSvgData && electrodeScreenPositions ? (
               <SimilarViewer
                 allnetwork={allnetwork}
                 patientID={patientID}
