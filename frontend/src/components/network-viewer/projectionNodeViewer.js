@@ -238,7 +238,7 @@ export const ProjectionNodeViewer = ({
 
               // Highlight lines connected to this source
               electrodeLines.forEach((line) => {
-                if (line.attr("data-source") == electrode.electrode_number) {
+                if (line.attr("data-source") === electrode.electrode_number) {
                   line.style("opacity", 1).attr("stroke", "red");
                 }
               });
