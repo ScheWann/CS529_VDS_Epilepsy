@@ -4,6 +4,8 @@
 
 **Team Members:** Siyuan Zhao, Nasibeh Heshmati, Hamed Khaleghi
 
+<img src="./index.png">
+
 # Run
 
 1. Go to frontend folder
