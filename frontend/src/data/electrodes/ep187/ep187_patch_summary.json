@@ -22,10 +22,12 @@
     "view": "left-right",
     "orientation": "Horizontal",
     "matrix": [
-      [null, 124, 123, null, null, 121],
-      [117, 116, 114, null, null, 113],
-      [108, 107, 106, null, null, 105],
-      [100, 99, 98, 44, 43, 97]
+      [null, 124, 123, 122, 121],
+      [117, 116, 115, 114, 113],
+      [null, 108, 107, 106, 105],
+      [null, 100, 99, 98, 97],
+      [null, null, null, null, 44],
+      [null, null, null, null, 43]
     ]
   },
   "6": {
