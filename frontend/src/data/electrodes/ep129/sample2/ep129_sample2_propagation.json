@@ -1,397 +1,555 @@
 [
     {
-        "electrode_id": 84,
-        "source_counts": 1,
-        "target_counts": 4
+        "electrode_id": 85,
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
-        "electrode_id": 85,
-        "source_counts": 0,
-        "target_counts": 10
+        "electrode_id": 84,
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 1,
+        "targetCount": 4
     },
     {
         "electrode_id": 112,
-        "source_counts": 89,
-        "target_counts": 121
+        "propagation": 56,
+        "nonPropagation": 8,
+        "sourceCount": 89,
+        "targetCount": 121
     },
     {
         "electrode_id": 107,
-        "source_counts": 117,
-        "target_counts": 168
-    },
-    {
-        "electrode_id": 31,
-        "source_counts": 90,
-        "target_counts": 175
+        "propagation": 56,
+        "nonPropagation": 9,
+        "sourceCount": 117,
+        "targetCount": 168
     },
     {
         "electrode_id": 38,
-        "source_counts": 52,
-        "target_counts": 118
+        "propagation": 29,
+        "nonPropagation": 2,
+        "sourceCount": 52,
+        "targetCount": 118
     },
     {
-        "electrode_id": 36,
-        "source_counts": 88,
-        "target_counts": 184
+        "electrode_id": 31,
+        "propagation": 49,
+        "nonPropagation": 1,
+        "sourceCount": 90,
+        "targetCount": 175
     },
     {
         "electrode_id": 20,
-        "source_counts": 205,
-        "target_counts": 176
-    },
-    {
-        "electrode_id": 103,
-        "source_counts": 153,
-        "target_counts": 97
+        "propagation": 59,
+        "nonPropagation": 3,
+        "sourceCount": 205,
+        "targetCount": 176
     },
     {
         "electrode_id": 27,
-        "source_counts": 342,
-        "target_counts": 127
+        "propagation": 48,
+        "nonPropagation": 1,
+        "sourceCount": 342,
+        "targetCount": 127
+    },
+    {
+        "electrode_id": 36,
+        "propagation": 48,
+        "nonPropagation": 0,
+        "sourceCount": 88,
+        "targetCount": 184
     },
     {
         "electrode_id": 28,
-        "source_counts": 180,
-        "target_counts": 120
+        "propagation": 34,
+        "nonPropagation": 1,
+        "sourceCount": 180,
+        "targetCount": 120
     },
     {
         "electrode_id": 53,
-        "source_counts": 28,
-        "target_counts": 82
+        "propagation": 17,
+        "nonPropagation": 0,
+        "sourceCount": 28,
+        "targetCount": 82
     },
     {
         "electrode_id": 102,
-        "source_counts": 32,
-        "target_counts": 89
+        "propagation": 20,
+        "nonPropagation": 1,
+        "sourceCount": 32,
+        "targetCount": 89
+    },
+    {
+        "electrode_id": 103,
+        "propagation": 24,
+        "nonPropagation": 1,
+        "sourceCount": 153,
+        "targetCount": 97
     },
     {
         "electrode_id": 108,
-        "source_counts": 122,
-        "target_counts": 101
-    },
-    {
-        "electrode_id": 30,
-        "source_counts": 186,
-        "target_counts": 139
-    },
-    {
-        "electrode_id": 43,
-        "source_counts": 204,
-        "target_counts": 46
-    },
-    {
-        "electrode_id": 21,
-        "source_counts": 118,
-        "target_counts": 128
-    },
-    {
-        "electrode_id": 44,
-        "source_counts": 142,
-        "target_counts": 62
-    },
-    {
-        "electrode_id": 23,
-        "source_counts": 11,
-        "target_counts": 101
-    },
-    {
-        "electrode_id": 45,
-        "source_counts": 39,
-        "target_counts": 40
-    },
-    {
-        "electrode_id": 35,
-        "source_counts": 147,
-        "target_counts": 69
-    },
-    {
-        "electrode_id": 37,
-        "source_counts": 54,
-        "target_counts": 156
-    },
-    {
-        "electrode_id": 39,
-        "source_counts": 5,
-        "target_counts": 82
-    },
-    {
-        "electrode_id": 51,
-        "source_counts": 83,
-        "target_counts": 117
-    },
-    {
-        "electrode_id": 52,
-        "source_counts": 33,
-        "target_counts": 115
-    },
-    {
-        "electrode_id": 22,
-        "source_counts": 35,
-        "target_counts": 148
+        "propagation": 30,
+        "nonPropagation": 0,
+        "sourceCount": 122,
+        "targetCount": 101
     },
     {
         "electrode_id": 29,
-        "source_counts": 68,
-        "target_counts": 163
+        "propagation": 57,
+        "nonPropagation": 4,
+        "sourceCount": 68,
+        "targetCount": 163
+    },
+    {
+        "electrode_id": 37,
+        "propagation": 42,
+        "nonPropagation": 2,
+        "sourceCount": 54,
+        "targetCount": 156
+    },
+    {
+        "electrode_id": 39,
+        "propagation": 24,
+        "nonPropagation": 0,
+        "sourceCount": 5,
+        "targetCount": 82
+    },
+    {
+        "electrode_id": 44,
+        "propagation": 10,
+        "nonPropagation": 0,
+        "sourceCount": 142,
+        "targetCount": 62
+    },
+    {
+        "electrode_id": 45,
+        "propagation": 6,
+        "nonPropagation": 0,
+        "sourceCount": 39,
+        "targetCount": 40
+    },
+    {
+        "electrode_id": 23,
+        "propagation": 20,
+        "nonPropagation": 0,
+        "sourceCount": 11,
+        "targetCount": 101
+    },
+    {
+        "electrode_id": 30,
+        "propagation": 39,
+        "nonPropagation": 0,
+        "sourceCount": 186,
+        "targetCount": 139
+    },
+    {
+        "electrode_id": 43,
+        "propagation": 8,
+        "nonPropagation": 0,
+        "sourceCount": 204,
+        "targetCount": 46
+    },
+    {
+        "electrode_id": 51,
+        "propagation": 26,
+        "nonPropagation": 0,
+        "sourceCount": 83,
+        "targetCount": 117
+    },
+    {
+        "electrode_id": 52,
+        "propagation": 24,
+        "nonPropagation": 0,
+        "sourceCount": 33,
+        "targetCount": 115
+    },
+    {
+        "electrode_id": 35,
+        "propagation": 12,
+        "nonPropagation": 0,
+        "sourceCount": 147,
+        "targetCount": 69
+    },
+    {
+        "electrode_id": 21,
+        "propagation": 38,
+        "nonPropagation": 3,
+        "sourceCount": 118,
+        "targetCount": 128
+    },
+    {
+        "electrode_id": 22,
+        "propagation": 37,
+        "nonPropagation": 2,
+        "sourceCount": 35,
+        "targetCount": 148
     },
     {
         "electrode_id": 19,
-        "source_counts": 68,
-        "target_counts": 74
+        "propagation": 17,
+        "nonPropagation": 0,
+        "sourceCount": 68,
+        "targetCount": 74
     },
     {
         "electrode_id": 32,
-        "source_counts": 70,
-        "target_counts": 81
-    },
-    {
-        "electrode_id": 26,
-        "source_counts": 253,
-        "target_counts": 68
+        "propagation": 23,
+        "nonPropagation": 0,
+        "sourceCount": 70,
+        "targetCount": 81
     },
     {
         "electrode_id": 34,
-        "source_counts": 172,
-        "target_counts": 41
+        "propagation": 7,
+        "nonPropagation": 0,
+        "sourceCount": 172,
+        "targetCount": 41
     },
     {
-        "electrode_id": 74,
-        "source_counts": 163,
-        "target_counts": 42
-    },
-    {
-        "electrode_id": 75,
-        "source_counts": 110,
-        "target_counts": 35
-    },
-    {
-        "electrode_id": 76,
-        "source_counts": 48,
-        "target_counts": 34
+        "electrode_id": 26,
+        "propagation": 13,
+        "nonPropagation": 1,
+        "sourceCount": 253,
+        "targetCount": 68
     },
     {
         "electrode_id": 81,
-        "source_counts": 0,
-        "target_counts": 16
+        "propagation": 3,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 16
+    },
+    {
+        "electrode_id": 74,
+        "propagation": 8,
+        "nonPropagation": 0,
+        "sourceCount": 163,
+        "targetCount": 42
+    },
+    {
+        "electrode_id": 75,
+        "propagation": 6,
+        "nonPropagation": 0,
+        "sourceCount": 110,
+        "targetCount": 35
+    },
+    {
+        "electrode_id": 76,
+        "propagation": 6,
+        "nonPropagation": 0,
+        "sourceCount": 48,
+        "targetCount": 34
     },
     {
         "electrode_id": 109,
-        "source_counts": 55,
-        "target_counts": 40
+        "propagation": 7,
+        "nonPropagation": 0,
+        "sourceCount": 55,
+        "targetCount": 40
     },
     {
         "electrode_id": 97,
-        "source_counts": 0,
-        "target_counts": 43
-    },
-    {
-        "electrode_id": 49,
-        "source_counts": 82,
-        "target_counts": 72
+        "propagation": 8,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 43
     },
     {
         "electrode_id": 50,
-        "source_counts": 93,
-        "target_counts": 74
+        "propagation": 14,
+        "nonPropagation": 0,
+        "sourceCount": 93,
+        "targetCount": 74
+    },
+    {
+        "electrode_id": 49,
+        "propagation": 10,
+        "nonPropagation": 0,
+        "sourceCount": 82,
+        "targetCount": 72
     },
     {
         "electrode_id": 73,
-        "source_counts": 140,
-        "target_counts": 41
-    },
-    {
-        "electrode_id": 18,
-        "source_counts": 34,
-        "target_counts": 46
-    },
-    {
-        "electrode_id": 33,
-        "source_counts": 47,
-        "target_counts": 58
-    },
-    {
-        "electrode_id": 40,
-        "source_counts": 20,
-        "target_counts": 50
-    },
-    {
-        "electrode_id": 41,
-        "source_counts": 58,
-        "target_counts": 57
+        "propagation": 6,
+        "nonPropagation": 0,
+        "sourceCount": 140,
+        "targetCount": 41
     },
     {
         "electrode_id": 42,
-        "source_counts": 0,
-        "target_counts": 27
+        "propagation": 3,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 27
     },
     {
-        "electrode_id": 47,
-        "source_counts": 0,
-        "target_counts": 11
-    },
-    {
-        "electrode_id": 48,
-        "source_counts": 0,
-        "target_counts": 17
+        "electrode_id": 41,
+        "propagation": 9,
+        "nonPropagation": 0,
+        "sourceCount": 58,
+        "targetCount": 57
     },
     {
         "electrode_id": 54,
-        "source_counts": 0,
-        "target_counts": 45
+        "propagation": 6,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 45
+    },
+    {
+        "electrode_id": 47,
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 11
+    },
+    {
+        "electrode_id": 18,
+        "propagation": 9,
+        "nonPropagation": 0,
+        "sourceCount": 34,
+        "targetCount": 46
+    },
+    {
+        "electrode_id": 33,
+        "propagation": 10,
+        "nonPropagation": 0,
+        "sourceCount": 47,
+        "targetCount": 58
+    },
+    {
+        "electrode_id": 48,
+        "propagation": 3,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 17
+    },
+    {
+        "electrode_id": 40,
+        "propagation": 8,
+        "nonPropagation": 0,
+        "sourceCount": 20,
+        "targetCount": 50
     },
     {
         "electrode_id": 17,
-        "source_counts": 0,
-        "target_counts": 24
-    },
-    {
-        "electrode_id": 55,
-        "source_counts": 18,
-        "target_counts": 23
-    },
-    {
-        "electrode_id": 99,
-        "source_counts": 67,
-        "target_counts": 6
-    },
-    {
-        "electrode_id": 100,
-        "source_counts": 61,
-        "target_counts": 9
-    },
-    {
-        "electrode_id": 101,
-        "source_counts": 28,
-        "target_counts": 8
+        "propagation": 3,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 24
     },
     {
         "electrode_id": 24,
-        "source_counts": 12,
-        "target_counts": 39
-    },
-    {
-        "electrode_id": 106,
-        "source_counts": 19,
-        "target_counts": 9
+        "propagation": 4,
+        "nonPropagation": 0,
+        "sourceCount": 12,
+        "targetCount": 39
     },
     {
         "electrode_id": 46,
-        "source_counts": 0,
-        "target_counts": 21
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 21
+    },
+    {
+        "electrode_id": 55,
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 18,
+        "targetCount": 23
     },
     {
         "electrode_id": 56,
-        "source_counts": 0,
-        "target_counts": 3
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 3
     },
     {
         "electrode_id": 77,
-        "source_counts": 0,
-        "target_counts": 8
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 8
     },
     {
         "electrode_id": 78,
-        "source_counts": 0,
-        "target_counts": 10
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
         "electrode_id": 79,
-        "source_counts": 0,
-        "target_counts": 8
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 8
     },
     {
         "electrode_id": 80,
-        "source_counts": 0,
-        "target_counts": 10
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
         "electrode_id": 82,
-        "source_counts": 0,
-        "target_counts": 9
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 9
     },
     {
         "electrode_id": 83,
-        "source_counts": 0,
-        "target_counts": 10
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
         "electrode_id": 86,
-        "source_counts": 0,
-        "target_counts": 12
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 12
     },
     {
         "electrode_id": 87,
-        "source_counts": 0,
-        "target_counts": 9
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 9
     },
     {
         "electrode_id": 88,
-        "source_counts": 0,
-        "target_counts": 10
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
         "electrode_id": 89,
-        "source_counts": 0,
-        "target_counts": 8
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 8
     },
     {
         "electrode_id": 90,
-        "source_counts": 0,
-        "target_counts": 8
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 8
     },
     {
         "electrode_id": 91,
-        "source_counts": 0,
-        "target_counts": 10
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
         "electrode_id": 92,
-        "source_counts": 0,
-        "target_counts": 9
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 9
     },
     {
         "electrode_id": 93,
-        "source_counts": 0,
-        "target_counts": 7
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 7
     },
     {
         "electrode_id": 94,
-        "source_counts": 0,
-        "target_counts": 7
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 7
     },
     {
         "electrode_id": 95,
-        "source_counts": 0,
-        "target_counts": 2
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 2
     },
     {
         "electrode_id": 96,
-        "source_counts": 0,
-        "target_counts": 2
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 2
     },
     {
         "electrode_id": 98,
-        "source_counts": 0,
-        "target_counts": 11
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 11
+    },
+    {
+        "electrode_id": 99,
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 67,
+        "targetCount": 6
+    },
+    {
+        "electrode_id": 100,
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 61,
+        "targetCount": 9
+    },
+    {
+        "electrode_id": 101,
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 28,
+        "targetCount": 8
     },
     {
         "electrode_id": 104,
-        "source_counts": 22,
-        "target_counts": 35
+        "propagation": 5,
+        "nonPropagation": 0,
+        "sourceCount": 22,
+        "targetCount": 35
     },
     {
         "electrode_id": 105,
-        "source_counts": 0,
-        "target_counts": 9
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 9
+    },
+    {
+        "electrode_id": 106,
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 19,
+        "targetCount": 9
     },
     {
         "electrode_id": 110,
-        "source_counts": 0,
-        "target_counts": 10
+        "propagation": 2,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 10
     },
     {
         "electrode_id": 111,
-        "source_counts": 0,
-        "target_counts": 8
+        "propagation": 1,
+        "nonPropagation": 0,
+        "sourceCount": 0,
+        "targetCount": 8
     }
 ]
